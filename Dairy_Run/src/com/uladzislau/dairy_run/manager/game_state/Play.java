@@ -74,6 +74,7 @@ public class Play extends GameState {
 
 		//TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.set
 		//test
+		//test2
 		
 	}
 
