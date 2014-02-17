@@ -1,4 +1,4 @@
-package com.uladzislau.dairy_run.manager.entity;
+package com.uladzislau.dairy_run.entity;
 
 import com.uladzislau.dairy_run.information.ScreenUtil;
 

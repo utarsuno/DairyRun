@@ -1,17 +1,18 @@
-package com.uladzislau.dairy_run.manager.game_state;
+package com.uladzislau.dairy_run.game_state;
 
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.entity.Background;
+import com.uladzislau.dairy_run.entity.GroundBlock;
+import com.uladzislau.dairy_run.entity.House;
+import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
-import com.uladzislau.dairy_run.manager.entity.Background;
-import com.uladzislau.dairy_run.manager.entity.GroundBlock;
-import com.uladzislau.dairy_run.manager.entity.House;
-import com.uladzislau.dairy_run.manager.entity.Map;
 import com.uladzislau.dairy_run.math.Dice;
 
 public class Play extends GameState {

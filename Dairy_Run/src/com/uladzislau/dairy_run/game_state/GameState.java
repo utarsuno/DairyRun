@@ -1,4 +1,4 @@
-package com.uladzislau.dairy_run.manager.game_state;
+package com.uladzislau.dairy_run.game_state;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;

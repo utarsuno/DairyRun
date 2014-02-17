@@ -11,14 +11,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.uladzislau.dairy_run.game_state.GameState;
+import com.uladzislau.dairy_run.game_state.MainMenu;
+import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
-import com.uladzislau.dairy_run.manager.game_state.GameState;
-import com.uladzislau.dairy_run.manager.game_state.MainMenu;
-import com.uladzislau.dairy_run.manager.game_state.Play;
 
 public class DairyRun implements ApplicationListener {
 

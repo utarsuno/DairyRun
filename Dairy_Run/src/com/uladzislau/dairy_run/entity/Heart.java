@@ -1,4 +1,4 @@
-package com.uladzislau.dairy_run.manager.entity;
+package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 

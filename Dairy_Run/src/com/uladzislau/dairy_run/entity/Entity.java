@@ -1,4 +1,4 @@
-package com.uladzislau.dairy_run.manager.entity;
+package com.uladzislau.dairy_run.entity;
 
 public class Entity {
 
