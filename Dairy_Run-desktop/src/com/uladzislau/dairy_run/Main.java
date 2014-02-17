@@ -11,6 +11,7 @@ public class Main {
 		cfg.width = 1400;
 		cfg.height = 800;
 		cfg.samples = 2;
+		cfg.resizable = false;
 
 		new LwjglApplication(new DairyRun(), cfg);
 	}

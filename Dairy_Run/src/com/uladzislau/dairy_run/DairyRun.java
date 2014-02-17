@@ -13,7 +13,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
+import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
+import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.manager.game_state.GameState;
 import com.uladzislau.dairy_run.manager.game_state.MainMenu;
 import com.uladzislau.dairy_run.manager.game_state.Play;
@@ -51,19 +53,8 @@ public class DairyRun implements ApplicationListener {
 		this.play = new Play();
 		this.main_menu.initialize(this.shapeRenderer, this.batch);
 		this.play.initialize(this.shapeRenderer, this.batch);
+		this.play.update(0);
 		this.current_state = this.play;
-
-		// Establish the camera.
-		// this.camera = new OrthographicCamera(ScreenUtil.screen_width,
-		// ScreenUtil.screen_height);
-		// this.camera.setToOrtho(false, ScreenUtil.screen_width,
-		// ScreenUtil.screen_height);
-		// this.camera.position.set(ScreenUtil.screen_width / 2,
-		// ScreenUtil.screen_height / 2, 0);
-		// this.camera.update();
-
-//		sb = new SpriteBatch();
-//		camera = new OrthographicCamera(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
 		System.out.println("Init Time: " + (System.currentTimeMillis() - start) + "ms");
 	}
@@ -81,14 +72,17 @@ public class DairyRun implements ApplicationListener {
 
 		update((Gdx.graphics.getDeltaTime()));
 
-//		Gdx.gl.glClearColor(1, 1, 1, 1);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
-//
-//		camera.update();
-//		camera.apply(Gdx.gl10);
-//
-//		// set viewport
-//		Gdx.gl.glViewport((int) viewport.x, (int) viewport.y, (int) viewport.width, (int) viewport.height);
+		// Gdx.gl.glClearColor(1, 1, 1, 1);
+		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT |
+		// (Gdx.graphics.getBufferFormat().coverageSampling ?
+		// GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+		//
+		// camera.update();
+		// camera.apply(Gdx.gl10);
+		//
+		// // set viewport
+		// Gdx.gl.glViewport((int) viewport.x, (int) viewport.y, (int)
+		// viewport.width, (int) viewport.height);
 
 		this.current_state.render();
 
@@ -123,8 +117,21 @@ public class DairyRun implements ApplicationListener {
 	}
 
 	public void exit() {
-		this.main_menu.dispose();
-		this.play.dispose();
+		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
+			texture.dispose();
+		}
+		for (TextureManager.SPRITESHEET sprite_sheet : TextureManager.SPRITESHEET.values()) {
+			sprite_sheet.dispose();
+		}
+		for (TextureManager.ANIMATION_SPRITESHEET animation_sprite_sheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
+			animation_sprite_sheet.dispose();
+		}
+		for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
+			sound.dispose();
+		}
+		for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
+			music.dispose();
+		}
 		Gdx.app.exit();
 	}
 

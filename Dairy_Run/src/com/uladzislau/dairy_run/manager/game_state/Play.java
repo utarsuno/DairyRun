@@ -1,5 +1,6 @@
 package com.uladzislau.dairy_run.manager.game_state;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
@@ -7,22 +8,44 @@ import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
+import com.uladzislau.dairy_run.manager.entity.Background;
+import com.uladzislau.dairy_run.manager.entity.GroundBlock;
 import com.uladzislau.dairy_run.manager.entity.House;
+import com.uladzislau.dairy_run.manager.entity.Map;
+import com.uladzislau.dairy_run.math.Dice;
 
 public class Play extends GameState {
-
-	private int scroll;
+	
+	private Background[] backgrounds;
+	private House[] houses;
+	private GroundBlock[] ground_blocks;
+	
 	private int current_scroll;
 	private float velocity = 2;
 	private float acceleration;
-
-	private int number_of_vertical_blocks = 7;
 
 	@Override
 	public void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch) {
 		this.state_id = DairyRun.PLAY;
 		this.shapeRenderer = shapeRenderer;
 		this.batch = batch;
+		TextureManager.SPRITESHEET.BACKGROUNDS.setHeight((int) (ScreenUtil.screen_height));
+		TextureManager.SPRITESHEET.BACKGROUNDS.setWidth((int) (ScreenUtil.screen_height / 63.0f * 231.0f));
+		this.backgrounds = new Background[2];
+		this.backgrounds[0] = new Background(0, Background.BLUE);
+		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), Background.BLUE);
+		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.init();
+		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setHeight(Map.size);
+		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setWidth(Map.size);
+		this.houses = new House[10];
+		for (int i = 0; i < this.houses.length; i++) {  
+			this.houses[i] = new House(i * Map.size * 8 +
+					Dice.get_Random_Integer_From_Min_To_Max(1, 4) * i * Map.size, Map.size);
+		}
+		this.ground_blocks = new GroundBlock[(int) (ScreenUtil.screen_width / Map.size) + 2];
+		for (int i = 0; i < this.ground_blocks.length; i++) {
+			this.ground_blocks[i] = new GroundBlock(i * Map.size);
+		}
 	}
 
 	boolean play_sound = true;
@@ -30,98 +53,93 @@ public class Play extends GameState {
 	@Override
 	public void update(float delta) {
 		if (this.first_update) {
-			TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.init();
-			TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.setHeight((int) (ScreenUtil.screen_height / number_of_vertical_blocks));
-			TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.setWidth(TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getHeight());
-			TextureManager.TEXTURE.COLOR_208_244_247.init();
-			TextureManager.TEXTURE.COLOR_208_244_247.setWidth((int) ScreenUtil.screen_width);
-			TextureManager.TEXTURE.COLOR_208_244_247.setHeight((int) ScreenUtil.screen_height);
-			TextureManager.ANIMATION_SPRITESHEET.PLAYER_WALKING.init();
-			TextureManager.ANIMATION_SPRITESHEET.PLAYER_WALKING.setHeight((int) (ScreenUtil.screen_height / number_of_vertical_blocks));
-			TextureManager.ANIMATION_SPRITESHEET.PLAYER_WALKING.setWidth(TextureManager.ANIMATION_SPRITESHEET.PLAYER_WALKING.getHeight());
-			TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.init();
-			TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setHeight((int) (ScreenUtil.screen_height / number_of_vertical_blocks));
-			TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setWidth(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight());
-			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.init();
-			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setHeight((int) (ScreenUtil.screen_height / number_of_vertical_blocks));
-			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setWidth(TextureManager.ANIMATION_SPRITESHEET.PLAYER_WALKING.getHeight());
 			TextureManager.SPRITESHEET.BACKGROUNDS.init();
-			TextureManager.SPRITESHEET.BACKGROUNDS.setHeight((int) (ScreenUtil.screen_height));
-			TextureManager.SPRITESHEET.BACKGROUNDS.setWidth((int) (ScreenUtil.screen_height / 63.0f * 231.0f));
 			AudioManager.MUSIC.TEMP_MUSIC.init();
-			// AudioManager.MUSIC.TEMP_MUSIC.play(.5f);
+			AudioManager.MUSIC.TEMP_MUSIC.play(.5f);
 			AudioManager.SOUND.COMPLETED.init();
 			AudioManager.SOUND.COIN_ECHO.init();
 			this.first_update = false;
 		}
 		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
+		acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
+		this.velocity += this.acceleration;
+		current_scroll -= this.velocity;
+				
+		// If the background has moved off the screen, shift it back into view.
+		for (Background background : this.backgrounds) {
+			if (background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + this.current_scroll / 10 < 0) {
+				background.setX(background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() * 2);
+			}
+		}
+		
+		for (int i = 0; i < this.houses.length; i++) {
+			if (this.houses[i].getX() + ((this.houses[i].getWidth() + 2) *
+					TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight() * 2) < 0) {
+				this.houses[i].randomize();
+				this.houses[i].setX(this.houses[i].getX() +
+						Dice.get_Random_Integer_From_Min_To_Max(10, 30) * Map.size + 10 * 20 * Map.size);
+			}
+			this.houses[i].update(this.current_scroll);
+		}
+		boolean mouseClickedOnHouse = false;
 		if (InputManager.pointersDown[0]) {
 			if (play_sound) {
-				if (InputManager.pointers[0].x < 500) {
-					AudioManager.SOUND.COMPLETED.playSound();
-				} else {
+				for (int i = 0; i < this.houses.length; i++) {
+					if (this.houses[i].isMouseDownOnMe()) {
+						mouseClickedOnHouse = true;
+					}
+				}
+				if (!mouseClickedOnHouse) {
 					AudioManager.SOUND.COIN_ECHO.playSound();
+				} else {
+					AudioManager.SOUND.COMPLETED.playSound();
 				}
 				this.play_sound = false;
 			}
 		} else {
 			this.play_sound = true;
 		}
-		scroll = (int) (ScreenUtil.screen_width * 0.01f);
-		acceleration = 0.05f * delta * 1;
-		this.velocity += this.acceleration;
-		current_scroll -= this.velocity;
-
-		//TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.set
-		//test
-		//test2
-		
+		// If the ground block has moved off the screen, shift it back into view.
+		for (GroundBlock gb : this.ground_blocks) {
+			if (gb.getX() + Map.size + this.current_scroll < 0) {
+				gb.setX(gb.getX() + this.ground_blocks.length * Map.size);
+			}
+		}
+		//System.out.println(Gdx.graphics.getFramesPerSecond());
 	}
-
-	private int ground_block_positions[];
-	private House houses[];
-	private House house = new House();
 
 	@Override
 	public void render() {
 		this.batch.begin();
 
-		TextureManager.SPRITESHEET.BACKGROUNDS.render(this.batch, 0, 0 + this.current_scroll / 10, 0);
-		if (this.current_scroll / 25 + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() < 0) {
-			
+		// Render the background.
+		for (Background background : this.backgrounds) {
+			// Make sure background is on-screen before rendering.
+			if (background.getX() + this.current_scroll / 10 < ScreenUtil.screen_width) {
+				background.render(this.batch, background.getX() + this.current_scroll / 10);
+			}
 		}
 		
-		if (this.first_render) {
-			ground_block_positions = new int[((int) (ScreenUtil.screen_width * 2.0f) / TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getWidth())];
-			houses = new House[10];
-			for (int i = 0; i < houses.length; i++) {
-				// houses[i] = new House();
+		// Render the ground.
+		for (GroundBlock gb : this.ground_blocks) {
+			// Every block is visible 99% of the time, thus there is no need to check if off-screen.
+			gb.render(this.batch, gb.getX() + this.current_scroll);
+		}
+
+		// Render the houses.
+		for (House house : this.houses) {
+			// Make sure the house is on-screen before rendering.
+			//TODO: Remove the checking for left of the screen because the houses should have been moved by then.
+			if (house.getX() + this.current_scroll < ScreenUtil.screen_width &&
+					house.getX() + ((house.getWidth() + 1) * Map.size) + this.current_scroll  > 0) {
+				house.render(this.batch, house.getX() + this.current_scroll);
 			}
-			this.first_render = false;
 		}
-
-		for (int i = 0; i < this.ground_block_positions.length; i++) {
-			this.ground_block_positions[i] = TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getWidth() * i;
-		}
-
-		for (int i = 0; i < this.ground_block_positions.length; i++) {
-			while (this.ground_block_positions[i] + this.current_scroll < -TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getWidth()) {
-				this.ground_block_positions[i] += this.ground_block_positions.length * TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getWidth();
-			}
-			this.batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 3), this.ground_block_positions[i]
-					+ this.current_scroll, 0, TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getWidth(),
-					TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getHeight());
-		}
-
+		
+		// Render the player.
 		this.batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(),
-				TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getWidth() * .5f, TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getHeight(),
-				TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getWidth(),
-				TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getHeight());
-//		 this.house.render(this.batch,
-//		 TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getHeight() * 2,
-//		 TextureManager.TEXTURE.GRASS_BLOCK_SQUARE.getHeight(), 4, 2,
-//		 House.DARK_BLUE_HOUSE, House.YELLOW_ROOF);
-
+				Map.size * .5f, Map.size, Map.size, Map.size);
+		
 		this.batch.end();
 	}
 

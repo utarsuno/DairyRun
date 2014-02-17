@@ -1,19 +1,17 @@
 package com.uladzislau.dairy_run.manager;
 
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class TextureManager {
 
 	public static enum TEXTURE {
-		GRASS_BLOCK_SQUARE("grass_block_square", "alfonso has it"), GRASS_BLOCK_ROUNDED("grass_block_rounded", "alfonso has it"), COLOR_208_244_247(
-				"color_208_244_247", "self-created");
+		NONE("none", "none");
 
 		private final String name;
 		private final String source;
@@ -153,11 +151,19 @@ public class TextureManager {
 			sb.draw(getFrame(i), j, k, this.width, this.height);
 		}
 
+		public void dispose() {
+			if (this.texture != null) {
+				this.texture.dispose();
+			}
+		}
+
 	}
 
 	public static enum ANIMATION_SPRITESHEET {
-		PLAYER_WALKING("player_walking_sh", "alfonso has it", 4, 3, 67, 94, 80, (4 * 3) - 1), PIXEL_WALKING("pixel_walking_sh",
-				"http://opengameart.org/content/platformer-art-pixel-redux", 1, 2, 16, 21, 80, 2);
+		PIXEL_WALKING("pixel_walking","http://opengameart.org/content/platformer-art-pixel-redux", 90,
+				new TextureRegion[]{TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(28),
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(29),
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(20)});
 
 		private final String name;
 		private final String source;
@@ -173,7 +179,8 @@ public class TextureManager {
 		private int max_frames;
 		private Texture texture;
 		private TextureRegion[] frames;
-
+		private boolean needToInit;
+		
 		ANIMATION_SPRITESHEET(String name, String source, int cols, int rows, int subimage_pixel_width, int subimage_pixel_height,
 				int frame_time, int max_frames) {
 			this.name = name;
@@ -186,9 +193,24 @@ public class TextureManager {
 			this.frame_time = frame_time;
 			this.frames = new TextureRegion[this.rows * this.cols];
 			this.max_frames = max_frames;
+			this.needToInit = true;
+		}
+		
+		ANIMATION_SPRITESHEET(String name, String source, int frame_time, TextureRegion frames[]) {
+			this.name = name;
+			this.source = source;
+			this.setDeltaTimer(new DeltaTimer());
+			this.frames = frames;
+			this.setSubimage_pixel_width(frames[0].getRegionWidth());
+			this.setSubimage_pixel_height(frames[0].getRegionHeight());
+			this.frame_time = frame_time;
+			this.max_frames = this.frames.length;
+			this.needToInit = false;
 		}
 
 		public void init() {
+			//TODO: Format code lol
+			if (this.needToInit) {
 			if (this.texture == null) {
 				this.texture = new Texture(Gdx.files.internal("data/texture/" + name + ".png"));
 			} else {
@@ -207,6 +229,7 @@ public class TextureManager {
 				} else {
 					x += this.subimage_pixel_width;
 				}
+			}
 			}
 		}
 
