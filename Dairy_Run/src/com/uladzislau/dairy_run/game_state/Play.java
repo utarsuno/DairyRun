@@ -1,7 +1,5 @@
 package com.uladzislau.dairy_run.game_state;
 
-import com.badlogic.gdx.Gdx;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
@@ -16,11 +14,11 @@ import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 
 public class Play extends GameState {
-	
+
 	private Background[] backgrounds;
 	private House[] houses;
 	private GroundBlock[] ground_blocks;
-	
+
 	private int current_scroll;
 	private float velocity = 2;
 	private float acceleration;
@@ -39,9 +37,8 @@ public class Play extends GameState {
 		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setHeight(Map.size);
 		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setWidth(Map.size);
 		this.houses = new House[10];
-		for (int i = 0; i < this.houses.length; i++) {  
-			this.houses[i] = new House(i * Map.size * 8 +
-					Dice.get_Random_Integer_From_Min_To_Max(1, 4) * i * Map.size, Map.size);
+		for (int i = 0; i < this.houses.length; i++) {
+			this.houses[i] = new House(i * Map.size * 8 + Dice.get_Random_Integer_From_Min_To_Max(1, 4) * i * Map.size, Map.size);
 		}
 		this.ground_blocks = new GroundBlock[(int) (ScreenUtil.screen_width / Map.size) + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
@@ -56,7 +53,7 @@ public class Play extends GameState {
 		if (this.first_update) {
 			TextureManager.SPRITESHEET.BACKGROUNDS.init();
 			AudioManager.MUSIC.TEMP_MUSIC.init();
-			AudioManager.MUSIC.TEMP_MUSIC.play(.5f);
+			// AudioManager.MUSIC.TEMP_MUSIC.play(.5f);
 			AudioManager.SOUND.COMPLETED.init();
 			AudioManager.SOUND.COIN_ECHO.init();
 			this.first_update = false;
@@ -65,20 +62,19 @@ public class Play extends GameState {
 		acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
 		this.velocity += this.acceleration;
 		current_scroll -= this.velocity;
-				
+
 		// If the background has moved off the screen, shift it back into view.
 		for (Background background : this.backgrounds) {
-			if (background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + this.current_scroll / 10 < 0) {
+			if (background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + this.current_scroll * Background.SCROLL_RATE < 0) {
 				background.setX(background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() * 2);
 			}
 		}
-		
+
 		for (int i = 0; i < this.houses.length; i++) {
-			if (this.houses[i].getX() + ((this.houses[i].getWidth() + 2) *
-					TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight() * 2) < 0) {
+			if (houses[i].getX() + ((houses[i].getWidth() + 1) * Map.size) + this.current_scroll < 0) {
 				this.houses[i].randomize();
-				this.houses[i].setX(this.houses[i].getX() +
-						Dice.get_Random_Integer_From_Min_To_Max(10, 30) * Map.size + 10 * 20 * Map.size);
+				this.houses[i]
+						.setX(this.houses[i].getX() + Dice.get_Random_Integer_From_Min_To_Max(10, 30) * Map.size + 10 * 20 * Map.size);
 			}
 			this.houses[i].update(this.current_scroll);
 		}
@@ -106,7 +102,8 @@ public class Play extends GameState {
 				gb.setX(gb.getX() + this.ground_blocks.length * Map.size);
 			}
 		}
-		//System.out.println(Gdx.graphics.getFramesPerSecond());
+		// System.out.println(Gdx.graphics.getFramesPerSecond());
+		// System.out.println(this.velocity);
 	}
 
 	@Override
@@ -120,7 +117,7 @@ public class Play extends GameState {
 				background.render(this.batch, background.getX() + this.current_scroll / 10);
 			}
 		}
-		
+
 		// Render the ground.
 		for (GroundBlock gb : this.ground_blocks) {
 			// Every block is visible 99% of the time, thus there is no need to check if off-screen.
@@ -130,17 +127,14 @@ public class Play extends GameState {
 		// Render the houses.
 		for (House house : this.houses) {
 			// Make sure the house is on-screen before rendering.
-			//TODO: Remove the checking for left of the screen because the houses should have been moved by then.
-			if (house.getX() + this.current_scroll < ScreenUtil.screen_width &&
-					house.getX() + ((house.getWidth() + 1) * Map.size) + this.current_scroll  > 0) {
+			if (house.getX() + this.current_scroll < ScreenUtil.screen_width) {
 				house.render(this.batch, house.getX() + this.current_scroll);
 			}
 		}
-		
+
 		// Render the player.
-		this.batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(),
-				Map.size * .5f, Map.size, Map.size, Map.size);
-		
+		this.batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), Map.size * .5f, Map.size, Map.size, Map.size);
+
 		this.batch.end();
 	}
 

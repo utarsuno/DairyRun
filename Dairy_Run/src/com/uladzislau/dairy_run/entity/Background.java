@@ -5,6 +5,8 @@ import com.uladzislau.dairy_run.manager.TextureManager;
 
 public class Background {
 
+	public static final float SCROLL_RATE = (1.0f/6.0f);
+	
 	public static final byte BLUE = 0;
 	public static final byte GREEN = 1;
 	public static final byte BROWN = 2;

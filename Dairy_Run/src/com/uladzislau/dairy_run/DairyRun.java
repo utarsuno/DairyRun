@@ -3,14 +3,8 @@ package com.uladzislau.dairy_run;
 import com.badlogic.gdx.ApplicationListener;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.uladzislau.dairy_run.game_state.GameState;
 import com.uladzislau.dairy_run.game_state.MainMenu;
 import com.uladzislau.dairy_run.game_state.Play;
@@ -71,18 +65,6 @@ public class DairyRun implements ApplicationListener {
 	public void render() {
 
 		update((Gdx.graphics.getDeltaTime()));
-
-		// Gdx.gl.glClearColor(1, 1, 1, 1);
-		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT |
-		// (Gdx.graphics.getBufferFormat().coverageSampling ?
-		// GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
-		//
-		// camera.update();
-		// camera.apply(Gdx.gl10);
-		//
-		// // set viewport
-		// Gdx.gl.glViewport((int) viewport.x, (int) viewport.y, (int)
-		// viewport.width, (int) viewport.height);
 
 		this.current_state.render();
 
