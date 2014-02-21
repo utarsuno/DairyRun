@@ -9,7 +9,9 @@ import com.uladzislau.dairy_run.entity.House;
 import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
+import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 
@@ -20,7 +22,7 @@ public class Play extends GameState {
 	private GroundBlock[] ground_blocks;
 
 	private int current_scroll;
-	private float velocity = 2;
+	private float velocity = 5;
 	private float acceleration;
 
 	@Override
@@ -28,14 +30,9 @@ public class Play extends GameState {
 		this.state_id = DairyRun.PLAY;
 		this.shapeRenderer = shapeRenderer;
 		this.batch = batch;
-		TextureManager.SPRITESHEET.BACKGROUNDS.setHeight((int) (ScreenUtil.screen_height));
-		TextureManager.SPRITESHEET.BACKGROUNDS.setWidth((int) (ScreenUtil.screen_height / 63.0f * 231.0f));
 		this.backgrounds = new Background[2];
 		this.backgrounds[0] = new Background(0, Background.BLUE);
 		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), Background.BLUE);
-		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.init();
-		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setHeight(Map.size);
-		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setWidth(Map.size);
 		this.houses = new House[10];
 		for (int i = 0; i < this.houses.length; i++) {
 			this.houses[i] = new House(i * Map.size * 8 + Dice.get_Random_Integer_From_Min_To_Max(1, 4) * i * Map.size, Map.size);
@@ -47,18 +44,19 @@ public class Play extends GameState {
 	}
 
 	boolean play_sound = true;
+	private boolean sound_played = false;
 
 	@Override
 	public void update(float delta) {
 		if (this.first_update) {
-			TextureManager.SPRITESHEET.BACKGROUNDS.init();
-			AudioManager.MUSIC.TEMP_MUSIC.init();
-			// AudioManager.MUSIC.TEMP_MUSIC.play(.5f);
-			AudioManager.SOUND.COMPLETED.init();
-			AudioManager.SOUND.COIN_ECHO.init();
 			this.first_update = false;
 		}
+		if (ResourceManager.audio_initialized && !sound_played) {
+			AudioManager.MUSIC.TEMP_MUSIC.play(.5f);
+			sound_played = true;
+		}
 		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
+		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (80 / (this.velocity / 5)));
 		acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
 		this.velocity += this.acceleration;
 		current_scroll -= this.velocity;
@@ -113,14 +111,14 @@ public class Play extends GameState {
 		// Render the background.
 		for (Background background : this.backgrounds) {
 			// Make sure background is on-screen before rendering.
-			if (background.getX() + this.current_scroll / 10 < ScreenUtil.screen_width) {
-				background.render(this.batch, background.getX() + this.current_scroll / 10);
+			if (background.getX() + this.current_scroll * Background.SCROLL_RATE < ScreenUtil.screen_width) {
+				background.render(this.batch, (int) (background.getX() + this.current_scroll * Background.SCROLL_RATE));
 			}
 		}
 
 		// Render the ground.
 		for (GroundBlock gb : this.ground_blocks) {
-			// Every block is visible 99% of the time, thus there is no need to check if off-screen.
+			// Every block is visible majority of the time, thus there is no need to check if off-screen.
 			gb.render(this.batch, gb.getX() + this.current_scroll);
 		}
 
@@ -135,7 +133,20 @@ public class Play extends GameState {
 		// Render the player.
 		this.batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), Map.size * .5f, Map.size, Map.size, Map.size);
 
+		if (ResourceManager.font_initialized) {
+			if (FontManager.FONT.DEFAULT_FONT.isInitialized()) {
+				FontManager.FONT.DEFAULT_FONT.setColor(0, 0, 0, 1);
+				FontManager.FONT.DEFAULT_FONT.setXScale(1.25f);
+				FontManager.FONT.DEFAULT_FONT.setYScale(3.0f);
+				FontManager.FONT.DEFAULT_FONT.render(this.batch, "Sample text here " + this.velocity, 0,
+						(int) (ScreenUtil.screen_height * .8));
+			}
+		}
+		
+		FontManager.FONT.TEST_FONT.get(50).draw(batch);
+
 		this.batch.end();
+
 	}
 
 	@Override

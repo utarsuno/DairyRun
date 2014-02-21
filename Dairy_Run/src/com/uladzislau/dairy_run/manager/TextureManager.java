@@ -26,7 +26,8 @@ public class TextureManager {
 
 		public void init() {
 			if (this.texture == null) {
-				this.texture = new Texture(Gdx.files.internal("data/texture/" + name + ".png"));
+				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator + name
+						+ ".png"));
 			} else {
 				StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
 			}
@@ -80,6 +81,7 @@ public class TextureManager {
 		private int subimage_pixel_height;
 		private Texture texture;
 		private TextureRegion[] frames;
+		private boolean initialized;
 
 		SPRITESHEET(String name, String source, int cols, int rows, int x_padding, int y_padding, int subimage_pixel_width,
 				int subimage_pixel_height) {
@@ -96,26 +98,28 @@ public class TextureManager {
 
 		public void init() {
 			if (this.texture == null) {
-				this.texture = new Texture(Gdx.files.internal("data/texture/" + name + ".png"));
+				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator + name
+						+ ".png"));
 				// this.texture.setFilter(TextureFilter.MipMapNearestNearest,
 				// TextureFilter.MipMapNearestNearest);
+				int x = 0;
+				int y = 0;
+				int r = 0;
+				for (int i = 0; i < this.cols * this.rows; i++) {
+					this.frames[i] = new TextureRegion(this.texture, x + this.x_padding, y + this.y_padding, this.subimage_pixel_width,
+							this.subimage_pixel_height);
+					r++;
+					if (r == this.rows) {
+						x = 0;
+						y += this.subimage_pixel_height + this.y_padding;
+						r = 0;
+					} else {
+						x += this.subimage_pixel_width + this.x_padding;
+					}
+				}
+				initialized = true;
 			} else {
 				StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
-			}
-			int x = 0;
-			int y = 0;
-			int r = 0;
-			for (int i = 0; i < this.cols * this.rows; i++) {
-				this.frames[i] = new TextureRegion(this.texture, x + this.x_padding, y + this.y_padding, this.subimage_pixel_width,
-						this.subimage_pixel_height);
-				r++;
-				if (r == this.rows) {
-					x = 0;
-					y += this.subimage_pixel_height + this.y_padding;
-					r = 0;
-				} else {
-					x += this.subimage_pixel_width + this.x_padding;
-				}
 			}
 		}
 
@@ -157,13 +161,15 @@ public class TextureManager {
 			}
 		}
 
+		public boolean isInitialized() {
+			return initialized;
+		}
+
 	}
 
 	public static enum ANIMATION_SPRITESHEET {
-		PIXEL_WALKING("pixel_walking","http://opengameart.org/content/platformer-art-pixel-redux", 90,
-				new TextureRegion[]{TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(28),
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(29),
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(20)});
+		PIXEL_WALKING("pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new TextureRegion[] {
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(28), TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(29) });
 
 		private final String name;
 		private final String source;
@@ -180,7 +186,8 @@ public class TextureManager {
 		private Texture texture;
 		private TextureRegion[] frames;
 		private boolean needToInit;
-		
+		private boolean initialized;
+
 		ANIMATION_SPRITESHEET(String name, String source, int cols, int rows, int subimage_pixel_width, int subimage_pixel_height,
 				int frame_time, int max_frames) {
 			this.name = name;
@@ -194,8 +201,9 @@ public class TextureManager {
 			this.frames = new TextureRegion[this.rows * this.cols];
 			this.max_frames = max_frames;
 			this.needToInit = true;
+			this.initialized = false;
 		}
-		
+
 		ANIMATION_SPRITESHEET(String name, String source, int frame_time, TextureRegion frames[]) {
 			this.name = name;
 			this.source = source;
@@ -206,30 +214,32 @@ public class TextureManager {
 			this.frame_time = frame_time;
 			this.max_frames = this.frames.length;
 			this.needToInit = false;
+			this.initialized = false;
 		}
 
 		public void init() {
-			//TODO: Format code lol
 			if (this.needToInit) {
-			if (this.texture == null) {
-				this.texture = new Texture(Gdx.files.internal("data/texture/" + name + ".png"));
-			} else {
-				StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
-			}
-			int x = 0;
-			int y = 0;
-			int r = 0;
-			for (int i = 0; i < this.cols * this.rows; i++) {
-				this.frames[i] = new TextureRegion(this.texture, x, y, this.subimage_pixel_width, this.subimage_pixel_height);
-				r++;
-				if (r == this.rows) {
-					x = 0;
-					y += this.subimage_pixel_height;
-					r = 0;
+				if (this.texture == null) {
+					this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
+							+ name + ".png"));
+					int x = 0;
+					int y = 0;
+					int r = 0;
+					for (int i = 0; i < this.cols * this.rows; i++) {
+						this.frames[i] = new TextureRegion(this.texture, x, y, this.subimage_pixel_width, this.subimage_pixel_height);
+						r++;
+						if (r == this.rows) {
+							x = 0;
+							y += this.subimage_pixel_height;
+							r = 0;
+						} else {
+							x += this.subimage_pixel_width;
+						}
+					}
+					initialized = true;
 				} else {
-					x += this.subimage_pixel_width;
+					StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
 				}
-			}
 			}
 		}
 
@@ -316,6 +326,14 @@ public class TextureManager {
 
 		public void setHeight(int height) {
 			this.height = height;
+		}
+
+		public void setFrameTime(int delta_time) {
+			this.frame_time = delta_time;
+		}
+
+		public boolean isInitialized() {
+			return this.initialized;
 		}
 
 	}

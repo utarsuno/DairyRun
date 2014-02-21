@@ -13,7 +13,6 @@ public class InfoUtil {
 	public static byte CURRENT_PLATEFORM;
 
 	public static void init() {
-
 		switch (Gdx.app.getType()) {
 		case Android:
 			CURRENT_PLATEFORM = ANDRIOD;

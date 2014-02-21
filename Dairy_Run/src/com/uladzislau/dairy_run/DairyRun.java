@@ -5,6 +5,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.game_state.GameState;
 import com.uladzislau.dairy_run.game_state.MainMenu;
 import com.uladzislau.dairy_run.game_state.Play;
@@ -12,6 +13,7 @@ import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 
 public class DairyRun implements ApplicationListener {
@@ -35,7 +37,10 @@ public class DairyRun implements ApplicationListener {
 
 		ScreenUtil.init();
 		InfoUtil.init();
+		Map.init();
+		ResourceManager.initialize_all_resources();
 
+		// Receive the user's input.
 		InputManager inputManager = new InputManager(this);
 		Gdx.input.setInputProcessor(inputManager);
 		Gdx.input.setCatchBackKey(true);
@@ -47,7 +52,6 @@ public class DairyRun implements ApplicationListener {
 		this.play = new Play();
 		this.main_menu.initialize(this.shapeRenderer, this.batch);
 		this.play.initialize(this.shapeRenderer, this.batch);
-		this.play.update(0);
 		this.current_state = this.play;
 
 		System.out.println("Init Time: " + (System.currentTimeMillis() - start) + "ms");

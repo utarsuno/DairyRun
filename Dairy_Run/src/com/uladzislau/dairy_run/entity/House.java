@@ -28,6 +28,9 @@ public class House {
 	public static final byte DOOR_TWO = 12;
 	public static final byte DOOR_THREE = 13;
 
+	public static final byte WINDOW_ONE = 10;
+	public static final byte WINDOW_TWO = 12;
+
 	private int x;
 	private int y;
 	private int width;
@@ -35,6 +38,7 @@ public class House {
 	private byte house;
 	private byte roof;
 	private byte door;
+	private byte[][] brick_layers;
 
 	private int door_location;
 
@@ -46,22 +50,26 @@ public class House {
 		this.y = y;
 		this.houseRectanglei = new Rectanglei(x, y, -1, -1);
 		this.roofRectanglei = new Rectanglei(x, -1, -1, -1);
+		this.brick_layers = new byte[2][6];
 		randomize();
 	}
 
 	public void randomize() {
-		this.width = Dice.get_Random_Integer_From_Min_To_Max(4, 5);
+		this.width = Dice.get_Random_Integer_From_Min_To_Max(4, 6);
 		this.height = Dice.get_Random_Integer_From_Min_To_Max(4, 4);
 		int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
 		if (r == 0) {
 			house = TAN_HOUSE;
 			roof = BROWN_ROOF;
+			initBrickLayerWith(TAN_BRICK_ONE);
 		} else if (r == 1) {
 			house = DARK_BLUE_HOUSE;
 			roof = YELLOW_ROOF;
+			initBrickLayerWith(BLUE_BRICK_ONE);
 		} else {
 			house = LIGHT_BLUE_HOUSE;
 			roof = BLUE_ROOF;
+			initBrickLayerWith(LIGHT_BLUE_BRICK_ONE);
 		}
 		r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
 		if (r == 0) {
@@ -83,6 +91,22 @@ public class House {
 		this.roofRectanglei.setHeight(this.houseRectanglei.getHeight());
 	}
 
+	private void initBrickLayerWith(byte layer) {
+		for (int y = 0; y < this.brick_layers.length; y++) {
+			for (int x = 0; x < this.brick_layers[y].length; x++) {
+				if (Dice.nextFloat() < 0.2) {
+					if (Dice.nextBoolean()) {
+						this.brick_layers[y][x] = (byte) (0 + layer);
+					} else {
+						this.brick_layers[y][x] = (byte) (3 + layer);
+					}
+				} else {
+					this.brick_layers[y][x] = -1;
+				}
+			}
+		}
+	}
+
 	public void update(int offset) {
 		this.houseRectanglei.setX(this.x + offset);
 		this.roofRectanglei.setX(this.x + offset);
@@ -97,7 +121,7 @@ public class House {
 
 		renderDoorLayer(sb, 24, x + this.door_location, y, door);
 		renderDoorLayer(sb, 23, x + this.door_location, y + Map.size, door);
-		
+
 		for (int i = height / 2; i < height - 1; i++) {
 			renderRoofLayer(sb, 27, x, y + TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight() * i, width, roof);
 		}
@@ -110,22 +134,25 @@ public class House {
 
 	private void renderHouseLayer(SpriteBatch sb, int layer, int x, int y, int w, byte house) {
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + house), x, y, Map.size, Map.size);
-
+		int current_height_layer = (y / Map.size) - 1;
 		for (int i = 1; i < w - 1; i++) {
 			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 1 + house), x + Map.size * i, y, Map.size, Map.size);
+			for (int j = 0; j < this.brick_layers[current_height_layer].length; j++) {
+				if (current_height_layer > 0 && j > 0 && j < w - 1 && this.brick_layers[current_height_layer][j] != -1) {
+					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * this.brick_layers[current_height_layer][j] + 9), x
+							+ Map.size * j, y, Map.size, Map.size);
+				}
+			}
 		}
-
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 2 + house), x + Map.size * (w - 1), y, Map.size,
 				Map.size);
 	}
 
 	private void renderRoofLayer(SpriteBatch sb, int layer, int x, int y, int w, byte roof) {
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + roof), x - Map.size, y, Map.size, Map.size);
-
 		for (int i = 0; i < w; i++) {
 			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 1 + roof), x + Map.size * i, y, Map.size, Map.size);
 		}
-
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 2 + roof), x + Map.size * w, y, Map.size, Map.size);
 	}
 

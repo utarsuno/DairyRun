@@ -34,15 +34,19 @@ public class AudioManager {
 		private final String name;
 		private final String source;
 		private Sound sound;
+		private boolean initialized;
 
 		SOUND(String name, String source) {
 			this.name = name;
 			this.source = source;
+			this.initialized = false;
 		}
 
 		public void init() {
 			if (this.sound == null) {
-				this.sound = Gdx.audio.newSound(Gdx.files.internal("data/audio/sound/" + this.name + ".mp3"));
+				this.sound = Gdx.audio.newSound(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator
+						+ "sound" + java.io.File.separator + this.name + ".mp3"));
+				this.initialized = true;
 			} else {
 				StaticUtil.error("Audio Error", "You are trying to init " + this.name + " twice.");
 			}
@@ -69,6 +73,11 @@ public class AudioManager {
 		public String getSource() {
 			return source;
 		}
+
+		public boolean isInitialized() {
+			return initialized;
+		}
+
 	}
 
 	public static enum MUSIC {
@@ -86,7 +95,8 @@ public class AudioManager {
 
 		public void init() {
 			if (this.music == null) {
-				this.music = Gdx.audio.newMusic(Gdx.files.internal("data/audio/music/" + name + ".mp3"));
+				this.music = Gdx.audio.newMusic(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator
+						+ "music" + java.io.File.separator + name + ".mp3"));
 			} else {
 				StaticUtil.error("Audio Error", "You are trying to init + " + this.name + " twice.");
 			}
