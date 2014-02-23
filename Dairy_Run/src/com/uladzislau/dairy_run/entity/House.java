@@ -113,19 +113,19 @@ public class House {
 	}
 
 	public void render(SpriteBatch sb, int x) {
-		renderHouseLayer(sb, 25, x, y + TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight() * 0, width, house);
+		renderHouseLayer(sb, 25, x, y, width, house);
 		for (int i = 1; i < height / 2 - 1; i++) {
-			renderHouseLayer(sb, 23, x, y + TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight() * i, width, house);
+			renderHouseLayer(sb, 23, x, y + Map.size * i, width, house);
 		}
-		renderHouseLayer(sb, 24, x, y + TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight() * (height / 2 - 1), width, house);
+		renderHouseLayer(sb, 24, x, y + Map.size * (height / 2 - 1), width, house);
 
 		renderDoorLayer(sb, 24, x + this.door_location, y, door);
 		renderDoorLayer(sb, 23, x + this.door_location, y + Map.size, door);
 
 		for (int i = height / 2; i < height - 1; i++) {
-			renderRoofLayer(sb, 27, x, y + TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight() * i, width, roof);
+			renderRoofLayer(sb, 27, x, y + Map.size * i, width, roof);
 		}
-		renderRoofLayer(sb, 26, x, y + TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getHeight() * (height - 1), width, roof);
+		renderRoofLayer(sb, 26, x, y + Map.size * (height - 1), width, roof);
 	}
 
 	public void renderDoorLayer(SpriteBatch sb, int layer, int x, int y, byte door) {

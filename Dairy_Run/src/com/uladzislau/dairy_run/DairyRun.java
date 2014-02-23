@@ -3,6 +3,7 @@ package com.uladzislau.dairy_run;
 import com.badlogic.gdx.ApplicationListener;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.entity.Map;
@@ -30,10 +31,12 @@ public class DairyRun implements ApplicationListener {
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch batch;
 
+	public static long start_time;
+
 	@Override
 	public void create() {
 
-		long start = System.currentTimeMillis();
+		start_time = System.currentTimeMillis();
 
 		ScreenUtil.init();
 		InfoUtil.init();
@@ -54,11 +57,7 @@ public class DairyRun implements ApplicationListener {
 		this.play.initialize(this.shapeRenderer, this.batch);
 		this.current_state = this.play;
 
-		System.out.println("Init Time: " + (System.currentTimeMillis() - start) + "ms");
-	}
-
-	@Override
-	public void dispose() {
+		System.out.println("Create Method Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}
 
 	public void update(float delta) {
@@ -69,6 +68,8 @@ public class DairyRun implements ApplicationListener {
 	public void render() {
 
 		update((Gdx.graphics.getDeltaTime()));
+
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		this.current_state.render();
 
@@ -92,6 +93,7 @@ public class DairyRun implements ApplicationListener {
 	@Override
 	public void resize(int width, int height) {
 		ScreenUtil.init();
+		Map.init();
 	}
 
 	@Override
@@ -102,7 +104,8 @@ public class DairyRun implements ApplicationListener {
 	public void resume() {
 	}
 
-	public void exit() {
+	@Override
+	public void dispose() {
 		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
 			texture.dispose();
 		}
@@ -118,6 +121,10 @@ public class DairyRun implements ApplicationListener {
 		for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
 			music.dispose();
 		}
+	}
+
+	public void exit() {
+		dispose();
 		Gdx.app.exit();
 	}
 

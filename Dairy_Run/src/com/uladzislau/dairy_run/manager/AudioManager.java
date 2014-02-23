@@ -86,6 +86,7 @@ public class AudioManager {
 		private final String source;
 		private boolean paused;
 		private Music music;
+		private static DeltaTimer fade_timer;
 
 		MUSIC(String name, String source) {
 			this.name = name;
@@ -124,6 +125,7 @@ public class AudioManager {
 
 		public void pause() {
 			this.music.pause();
+			this.paused = true;
 		}
 
 		public void stop() {
@@ -283,7 +285,25 @@ public class AudioManager {
 			music.dispose();
 		}
 	}
+	
 
+	private static void startAllMusic() {
+		for (MUSIC music : MUSIC.values()) {
+			if (music.isInitialized() && music.isPaused()) {
+				music.play();
+			}
+		}
+	}
+
+	public static void pauseAllMusic() {
+		for (MUSIC music : MUSIC.values()) {
+			if (music.isInitialized() && music.isPlaying()) {
+				System.out.println();
+				music.pause();
+			}
+		}
+	}
+	
 	public static void stopAllMusic() {
 		for (MUSIC music : MUSIC.values()) {
 			if (music.isInitialized() && music.isPlaying()) {
@@ -318,6 +338,15 @@ public class AudioManager {
 
 	public static void setSoundOn(boolean b) {
 		sound_on = b;
+	}
+
+	public static void inverseMusic() {
+		music_on ^= true;
+		if (music_on) {
+			startAllMusic();
+		} else {
+			pauseAllMusic();
+		}
 	}
 
 }

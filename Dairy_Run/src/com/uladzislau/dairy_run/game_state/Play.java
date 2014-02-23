@@ -1,12 +1,18 @@
 package com.uladzislau.dairy_run.game_state;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.entity.Background;
 import com.uladzislau.dairy_run.entity.GroundBlock;
 import com.uladzislau.dairy_run.entity.House;
 import com.uladzislau.dairy_run.entity.Map;
+import com.uladzislau.dairy_run.entity.Player;
+import com.uladzislau.dairy_run.entity.Tree;
+import com.uladzislau.dairy_run.entity.button.Button;
+import com.uladzislau.dairy_run.entity.button.JumpButton;
+import com.uladzislau.dairy_run.entity.button.RunButton;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
@@ -14,33 +20,50 @@ import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
+import com.uladzislau.dairy_run.math_utility.MathUtil;
 
 public class Play extends GameState {
 
 	private Background[] backgrounds;
 	private House[] houses;
 	private GroundBlock[] ground_blocks;
+	private Tree[] trees;
+	private Player player;
+
+	private Button[] buttons;
 
 	private int current_scroll;
-	private float velocity = 5;
+	private float velocity = 3;
 	private float acceleration;
+
+	public int ground_level;
 
 	@Override
 	public void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch) {
 		this.state_id = DairyRun.PLAY;
 		this.shapeRenderer = shapeRenderer;
 		this.batch = batch;
+		this.ground_level = (int) (Map.size * 1.5);
 		this.backgrounds = new Background[2];
 		this.backgrounds[0] = new Background(0, Background.BLUE);
 		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), Background.BLUE);
 		this.houses = new House[10];
 		for (int i = 0; i < this.houses.length; i++) {
-			this.houses[i] = new House(i * Map.size * 8 + Dice.get_Random_Integer_From_Min_To_Max(1, 4) * i * Map.size, Map.size);
+			this.houses[i] = new House(i * Map.size * 8 + Dice.get_Random_Integer_From_Min_To_Max(1, 4) * i * Map.size, ground_level);
 		}
 		this.ground_blocks = new GroundBlock[(int) (ScreenUtil.screen_width / Map.size) + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, ground_level, this.ground_blocks.length);
 		}
+		this.trees = new Tree[30];
+		for (int i = 0; i < this.trees.length; i++) {
+			this.trees[i] = new Tree(this.ground_level);
+		}
+		this.buttons = new Button[5];
+		this.buttons[0] = new RunButton((ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f, this);
+		this.buttons[1] = new JumpButton((ScreenUtil.screen_width / 5) * 4 + (ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8
+				+ Map.size / 2, Map.size * 0.6f, this);
+		this.player = new Player((int) (Map.size * 1.5f), this.ground_level, this);
 	}
 
 	boolean play_sound = true;
@@ -55,8 +78,9 @@ public class Play extends GameState {
 			AudioManager.MUSIC.TEMP_MUSIC.play(.5f);
 			sound_played = true;
 		}
-		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
-		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (80 / (this.velocity / 5)));
+
+		this.player.update(delta);
+
 		acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
 		this.velocity += this.acceleration;
 		current_scroll -= this.velocity;
@@ -68,6 +92,7 @@ public class Play extends GameState {
 			}
 		}
 
+		// TODO: move all this to houses[i].update
 		for (int i = 0; i < this.houses.length; i++) {
 			if (houses[i].getX() + ((houses[i].getWidth() + 1) * Map.size) + this.current_scroll < 0) {
 				this.houses[i].randomize();
@@ -94,18 +119,26 @@ public class Play extends GameState {
 		} else {
 			this.play_sound = true;
 		}
+
 		// If the ground block has moved off the screen, shift it back into view.
 		for (GroundBlock gb : this.ground_blocks) {
-			if (gb.getX() + Map.size + this.current_scroll < 0) {
-				gb.setX(gb.getX() + this.ground_blocks.length * Map.size);
-			}
+			gb.update(this.current_scroll);
+		}
+
+		for (Tree tree : this.trees) {
+			tree.update(this.current_scroll);
 		}
 		// System.out.println(Gdx.graphics.getFramesPerSecond());
 		// System.out.println(this.velocity);
+
+		// Check for button press. If pressed they will do their respective actions.
+		this.buttons[0].update(delta);
+		this.buttons[1].update(delta);
 	}
 
 	@Override
 	public void render() {
+
 		this.batch.begin();
 
 		// Render the background.
@@ -122,28 +155,34 @@ public class Play extends GameState {
 			gb.render(this.batch, gb.getX() + this.current_scroll);
 		}
 
+		// Render the trees.
+		for (Tree tree : this.trees) {
+			tree.render(this.batch, this.current_scroll);
+		}
+
 		// Render the houses.
 		for (House house : this.houses) {
-			// Make sure the house is on-screen before rendering.
+			// Make sure the house is on-screen before rendering it.
 			if (house.getX() + this.current_scroll < ScreenUtil.screen_width) {
 				house.render(this.batch, house.getX() + this.current_scroll);
 			}
 		}
 
-		// Render the player.
-		this.batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), Map.size * .5f, Map.size, Map.size, Map.size);
+		// Render the buttons.s
+		this.buttons[0].render(this.batch);
+		this.buttons[1].render(this.batch);
+		this.batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 20), (ScreenUtil.screen_width / 5) * 1
+				+ (ScreenUtil.screen_width / 20), Map.size / 8, Map.size, Map.size);
+		this.batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 21), (ScreenUtil.screen_width / 5) * 2
+				+ (ScreenUtil.screen_width / 20), Map.size / 8, Map.size, Map.size);
+		this.batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 22), (ScreenUtil.screen_width / 5) * 3
+				+ (ScreenUtil.screen_width / 20), Map.size / 8, Map.size, Map.size);
 
-		if (ResourceManager.font_initialized) {
-			if (FontManager.FONT.DEFAULT_FONT.isInitialized()) {
-				FontManager.FONT.DEFAULT_FONT.setColor(0, 0, 0, 1);
-				FontManager.FONT.DEFAULT_FONT.setXScale(1.25f);
-				FontManager.FONT.DEFAULT_FONT.setYScale(3.0f);
-				FontManager.FONT.DEFAULT_FONT.render(this.batch, "Sample text here " + this.velocity, 0,
-						(int) (ScreenUtil.screen_height * .8));
-			}
-		}
-		
-		FontManager.FONT.TEST_FONT.get(50).draw(batch);
+		FontManager.FONT.DEFAULT_FONT.render(this.batch, "" + MathUtil.round(this.velocity), 0, ScreenUtil.screen_height - Map.size,
+				Map.size);
+
+		// Render the player.
+		this.player.render(this.batch, this.current_scroll);
 
 		this.batch.end();
 
@@ -159,6 +198,18 @@ public class Play extends GameState {
 
 	@Override
 	public void dispose() {
+	}
+
+	public void setVelocity(float v) {
+		this.velocity = v;
+	}
+
+	public float getVelocity() {
+		return this.velocity;
+	}
+
+	public Player getPlayer() {
+		return this.player;
 	}
 
 }

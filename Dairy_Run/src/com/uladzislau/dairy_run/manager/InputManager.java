@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.math.Vector2i;
+import com.uladzislau.dairy_run.math.geometry.Circlef;
 
 public class InputManager implements InputProcessor, GestureListener {
 
@@ -15,7 +16,7 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	public static Vector2i pointers[];
 	public static boolean pointersDown[];
-
+	
 	private final DairyRun dairy_run;
 
 	public InputManager(DairyRun dairy_run) {
@@ -30,7 +31,7 @@ public class InputManager implements InputProcessor, GestureListener {
 			pointersDown[i] = false;
 		}
 	}
-
+	
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
 		return false;
@@ -73,7 +74,7 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	public static final int A = 29, B = 30, C = 31, D = 32, E = 33, F = 34, G = 35, H = 36, I = 37, J = 38, K = 39, L = 40, M = 41, N = 42,
 			O = 43, P = 44, Q = 45, R = 46, S = 47, T = 48, U = 49, V = 50, W = 51, X = 52, Y = 53, Z = 54, UP = 19, LEFT = 21, DOWN = 20,
-			RIGHT = 22, DELETE = 67, ESCAPE = 131;
+			RIGHT = 22, DELETE = 67, LEFT_CONTROL = 129, RIGHT_CONTROL = 130, ESCAPE = 131;
 
 	public static boolean isKeyDown(int keycode) {
 		return keyDown[keycode];
@@ -90,7 +91,7 @@ public class InputManager implements InputProcessor, GestureListener {
 		if (!ignore_input) {
 			switch (keycode) {
 			case ESCAPE:
-				dairy_run.changeState(DairyRun.TERMINATE);
+				this.dairy_run.changeState(DairyRun.TERMINATE);
 				break;
 			default:
 				break;
@@ -101,9 +102,17 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	@Override
 	public boolean keyUp(int keycode) {
+		// System.out.println(keycode);
+		if (keyDown[LEFT_CONTROL] || keyDown[RIGHT_CONTROL]) {
+			if (keyDown[M] == true) {
+				AudioManager.inverseMusic();
+			}
+		}
 		keyDown[keycode] = false;
 		return false;
 	}
+
+	public static final char SPACE_CHARACTER = 32, M_CHARACTER = 109;
 
 	@Override
 	public boolean keyTyped(char character) {
