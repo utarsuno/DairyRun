@@ -1,78 +1,126 @@
 package com.uladzislau.dairy_run.manager;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.entity.Map;
+import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class FontManager {
 
-	public static final short _0 = 31 * 14 + 14;
-	public static final short _1 = 31 * 14 + 15;
-	public static final short _2 = 31 * 14 + 16;
-	public static final short _3 = 31 * 14 + 17;
-	public static final short _4 = 31 * 14 + 18;
-	public static final short _5 = 31 * 14 + 19;
-	public static final short _6 = 31 * 15 + 13;
-	public static final short _7 = 31 * 15 + 14;
-	public static final short _8 = 31 * 15 + 15;
-	public static final short _9 = 31 * 15 + 16;
-	public static final short _x = 31 * 15 + 17;
-	public static final short _period = 31 * 15 + 18;
+	// BMFont from http://www.angelcode.com/products/bmfont/ was used to generate the .fnt file.
 
-	public static enum FONT {
-		DEFAULT_FONT("Default font");
+	public enum FONT {
+		BLOCK_FONT("block_font", "Kenny Donation Pack", 1.0f, 1.0f);
 
 		private final String name;
+		private final String source;
+		private BitmapFont font;
+		private float x_scale;
+		private float y_scale;
+		private boolean initialized;
 
-		FONT(String name) {
+		FONT(String name, String source, float x_scale, float y_scale) {
 			this.name = name;
+			this.source = source;
+			this.setXScale(x_scale);
+			this.setYScale(y_scale);
+			initialized = false;
 		}
 
-		public void render(SpriteBatch sb, String string, int x, int y, int size) {
-			char[] c = string.toCharArray();
-			for (int i = 0; i < c.length; i++) {
-				switch (c[i]) {
-				case '0':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_0), x + i * ((size / 2)), y, size, size);
-					break;
-				case '1':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_1), x + i * (size / 2), y, size, size);
-					break;
-				case '2':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_2), x + i * (size / 2), y, size, size);
-					break;
-				case '3':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_3), x + i * (size / 2), y, size, size);
-					break;
-				case '4':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_4), x + i * (size / 2), y, size, size);
-					break;
-				case '5':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_5), x + i * (size / 2), y, size, size);
-					break;
-				case '6':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_6), x + i * (size / 2), y, size, size);
-					break;
-				case '7':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_7), x + i * (size / 2), y, size, size);
-					break;
-				case '8':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_8), x + i * (size / 2), y, size, size);
-					break;
-				case '9':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_9), x + i * (size / 2), y, size, size);
-					break;
-				case 'x':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_x), x + i * (size / 2), y, size, size);
-					break;
-				case '.':
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(_period), x + i * (size / 2), y, size, size);
-				default:
-					break;
+		public void init() {
+			if (this.font == null) {
+				this.font = new BitmapFont(Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + name
+						+ ".fnt"), Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + name + ".png"),
+						false);
+				while (Math.abs(this.getWidth("A") - Map.size) > 0.1f) {
+					if (this.getWidth("Hello World") - Map.size < 0.1f) {
+						this.setXScale(this.getXScale() - 0.01f);
+					} else {
+						this.setXScale(this.getXScale() + 0.01f);
+					}
 				}
+				while (Math.abs(this.getHeight("Hello World") - Map.size) > 0.1f) {
+					if (this.getHeight("Hello World") - Map.size < 0.1f) {
+						this.setYScale(this.getYScale() + 0.01f);
+					} else {
+						this.setYScale(this.getYScale() - 0.01f);
+					}
+				}
+				this.font.setScale(this.x_scale, this.y_scale);
+				this.initialized = true;
+			} else {
+				StaticUtil.error("Font Error", "You are trying to init " + this.name + " twice.");
 			}
 		}
 
-		public String getName() {
-			return name;
+		public void render(SpriteBatch sb, String string, int x, int y) {
+			this.font.draw(sb, string, x, y);
+		}
+
+		public void render(SpriteBatch sb, Color color, String string, int x, int y) {
+			this.font.setColor(color);
+			this.font.draw(sb, string, x, y);
+			this.font.setColor(Color.WHITE);
+		}
+
+		public BitmapFont getTexture() {
+			return this.font;
+		}
+
+		public int getWidth(String string) {
+			return (int) this.font.getBounds(string).width;
+		}
+
+		public int getHeight(String string) {
+			return (int) this.font.getBounds(string).height;
+		}
+
+		public void dispose() {
+			if (this.font != null) {
+				initialized = false;
+				this.font.dispose();
+				this.font = null;
+			}
+		}
+
+		public float getXScale() {
+			return x_scale;
+		}
+
+		public void setXScale(float x_scale) {
+			if (this.font != null) {
+				this.font.setScale(x_scale, y_scale);
+			}
+			this.x_scale = x_scale;
+		}
+
+		public float getYScale() {
+			return y_scale;
+		}
+
+		public void setYScale(float y_scale) {
+			if (this.font != null) {
+				this.font.setScale(x_scale, y_scale);
+			}
+			this.y_scale = y_scale;
+		}
+
+		public boolean isInitialized() {
+			return initialized;
+		}
+
+		public void setColor(float r, float g, float b, float a) {
+			this.font.setColor(r, g, b, a);
+		}
+
+		public BitmapFont getFont() {
+			return this.font;
+		}
+
+		public String getSource() {
+			return source;
 		}
 
 	}

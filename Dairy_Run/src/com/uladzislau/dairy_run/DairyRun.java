@@ -13,12 +13,15 @@ import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
+import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
+import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class DairyRun implements ApplicationListener {
 
+	public static final byte PREVIOUS_STATE = -2;
 	public static final byte TERMINATE = -1;
 	public static final byte MAIN_MENU = 0;
 	public static final byte PLAY = 1;
@@ -33,6 +36,10 @@ public class DairyRun implements ApplicationListener {
 
 	public static long start_time;
 
+	private ResourceManager resourceManager;
+
+	public static boolean paused = false;
+
 	@Override
 	public void create() {
 
@@ -41,7 +48,8 @@ public class DairyRun implements ApplicationListener {
 		ScreenUtil.init();
 		InfoUtil.init();
 		Map.init();
-		ResourceManager.initialize_all_resources();
+		this.resourceManager = new ResourceManager();
+		this.resourceManager.initialize_all_resources();
 
 		// Receive the user's input.
 		InputManager inputManager = new InputManager(this);
@@ -51,33 +59,45 @@ public class DairyRun implements ApplicationListener {
 		this.shapeRenderer = new ShapeRenderer();
 		this.batch = new SpriteBatch();
 
-		this.main_menu = new MainMenu();
-		this.play = new Play();
+		this.main_menu = new MainMenu(this);
+		this.play = new Play(this);
 		this.main_menu.initialize(this.shapeRenderer, this.batch);
 		this.play.initialize(this.shapeRenderer, this.batch);
-		this.current_state = this.play;
+		this.current_state = this.main_menu;
+		this.previous_state = this.current_state;
+
+		paused = false;
 
 		System.out.println("Create Method Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}
 
 	public void update(float delta) {
-		this.current_state.update(delta);
+		if (!paused) {
+			this.current_state.update(delta);
+		}
 	}
 
 	@Override
 	public void render() {
-
 		update((Gdx.graphics.getDeltaTime()));
 
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		if (!paused) {
+			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		this.current_state.render();
-
+			this.current_state.render();
+		}
 	}
 
 	public void changeState(byte state_id) {
-		this.previous_state = this.current_state;
+		if (state_id != PREVIOUS_STATE) {
+			this.previous_state = this.current_state;
+		}
 		switch (state_id) {
+		case PREVIOUS_STATE:
+			GameState tempstate = this.previous_state;
+			this.current_state = this.previous_state;
+			this.previous_state = tempstate;
+			break;
 		case TERMINATE:
 			this.exit();
 			break;
@@ -98,14 +118,22 @@ public class DairyRun implements ApplicationListener {
 
 	@Override
 	public void pause() {
+		paused = true;
+		AudioManager.pauseAllMusic();
+		StaticUtil.log("State", "paused");
 	}
 
 	@Override
 	public void resume() {
+		paused = false;
+		AudioManager.resumeAllMusic();
+		StaticUtil.log("State", "resumed");
 	}
 
 	@Override
 	public void dispose() {
+		this.batch.dispose();
+		this.shapeRenderer.dispose();
 		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
 			texture.dispose();
 		}
@@ -121,11 +149,18 @@ public class DairyRun implements ApplicationListener {
 		for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
 			music.dispose();
 		}
+		for (FontManager.FONT font : FontManager.FONT.values()) {
+			font.dispose();
+		}
 	}
 
 	public void exit() {
-		dispose();
+		// This function will eventually have the pause and dispose functions called.
 		Gdx.app.exit();
+	}
+
+	public ResourceManager getResourceManager() {
+		return this.resourceManager;
 	}
 
 }

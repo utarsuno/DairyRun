@@ -2,17 +2,18 @@ package com.uladzislau.dairy_run.entity.button;
 
 import java.util.ArrayList;
 
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.ScreenUtil;
-import com.uladzislau.dairy_run.manager.InputManager;
+import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 
-public class RunButton extends Button {
+public class RunButton extends CircleButton {
 
 	private float velocity_increase;
 	private float player_position_increase;
@@ -24,12 +25,12 @@ public class RunButton extends Button {
 	private ArrayList<Float> pixels;
 
 	private Play play;
-
+	
 	public RunButton(float x, float y, float radius, Play play) {
 		super(x, y, radius);
 		this.play = play;
-		this.velocity_increase = 0.05f;
-		this.player_position_increase = ScreenUtil.screen_width * 0.01f;
+		this.velocity_increase = 0.50f;
+		this.player_position_increase = ScreenUtil.screen_width * 0.02f;
 		for (int i = 0; i < this.track.length; i++) {
 			track[i] = true;
 		}
@@ -37,27 +38,10 @@ public class RunButton extends Button {
 		this.timer_transition = new ArrayList<Boolean>();
 		this.pixels = new ArrayList<Float>();
 	}
-
+	
 	@Override
 	public void update(float delta) {
-		for (int i = 0; i < InputManager.pointers.length; i++) {
-			pointerCircles[i].setX(InputManager.pointers[i].x);
-			pointerCircles[i].setY(InputManager.pointers[i].y);
-		}
-		for (int j = 0; j < InputManager.pointersDown.length; j++) {
-			if (InputManager.pointersDown[j]) {
-				if (this.isCollidingWithAnotherCirclef(pointerCircles[j])) {
-					if (track[j]) {
-						this.increments[j] = true;
-						this.track[j] = false;
-					}
-				} else {
-					this.increments[j] = false;
-				}
-			} else {
-				this.track[j] = true;
-			}
-		}
+		super.update(delta);
 		for (int i = 0; i < this.increments.length; i++) {
 			if (this.increments[i]) {
 				this.play.setVelocity(this.play.getVelocity() + this.velocity_increase);
@@ -65,12 +49,12 @@ public class RunButton extends Button {
 				this.deltaTimers.add(new DeltaTimer());
 				this.timer_transition.add(true);
 				this.pixels.add(0f);
+				AudioManager.SOUND.POP.playSound();
 				this.increments[i] = false;
 			}
 		}
 		for (int i = 0; i < this.deltaTimers.size(); i++) {
 			this.deltaTimers.get(i).update(delta);
-
 			if (this.timer_transition.get(i)) {
 				this.pixels.set(i, this.player_position_increase * ((float) this.deltaTimers.get(i).getTotalDelta() / acceleration_time));
 				if (this.deltaTimers.get(i).getTotalDelta() > acceleration_time) {
@@ -95,8 +79,10 @@ public class RunButton extends Button {
 
 	@Override
 	public void render(SpriteBatch sb) {
+		sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 0.9f);
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 19), this.getX() - Map.size / 2, this.getY() - Map.size / 2,
 				Map.size, Map.size);
+		sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f);
 	}
 
 	@Override

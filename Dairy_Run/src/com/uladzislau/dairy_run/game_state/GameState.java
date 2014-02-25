@@ -2,12 +2,19 @@ package com.uladzislau.dairy_run.game_state;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.uladzislau.dairy_run.DairyRun;
 
 public abstract class GameState {
 
 	protected ShapeRenderer shapeRenderer;
 	protected SpriteBatch batch;
-	
+
+	protected DairyRun dairy_run;
+
+	public GameState(DairyRun dairy_run) {
+		this.dairy_run = dairy_run;
+	}
+
 	public byte state_id;
 
 	protected boolean first_update = true;

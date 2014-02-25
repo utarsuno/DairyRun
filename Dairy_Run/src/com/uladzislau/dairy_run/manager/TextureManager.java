@@ -10,7 +10,7 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class TextureManager {
 
-	public static enum TEXTURE {
+	public enum TEXTURE {
 		NONE("none", "none");
 
 		private final String name;
@@ -157,7 +157,9 @@ public class TextureManager {
 
 		public void dispose() {
 			if (this.texture != null) {
+				initialized = false;
 				this.texture.dispose();
+				this.texture = null;
 			}
 		}
 
@@ -167,80 +169,27 @@ public class TextureManager {
 
 	}
 
-	public static enum ANIMATION_SPRITESHEET {
-		PIXEL_WALKING("pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new TextureRegion[] {
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(28), TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(29) });
+	public enum ANIMATION_SPRITESHEET {
+		PIXEL_WALKING("pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 28, 29 });
 
-		private final String name;
-		private final String source;
-		private int width;
-		private int height;
-		private int cols;
-		private int rows;
-		private int subimage_pixel_width;
-		private int subimage_pixel_height;
+		private String name;
+		private String source;
 		private DeltaTimer deltaTimer;
+		private int frames[];
 		private int frame_time;
 		private int current_frame;
-		private int max_frames;
-		private Texture texture;
-		private TextureRegion[] frames;
-		private boolean needToInit;
 		private boolean initialized;
 
-		ANIMATION_SPRITESHEET(String name, String source, int cols, int rows, int subimage_pixel_width, int subimage_pixel_height,
-				int frame_time, int max_frames) {
-			this.name = name;
-			this.source = source;
-			this.setDeltaTimer(new DeltaTimer());
-			this.setCols(cols);
-			this.setRows(rows);
-			this.setSubimage_pixel_width(subimage_pixel_width);
-			this.setSubimage_pixel_height(subimage_pixel_height);
-			this.frame_time = frame_time;
-			this.frames = new TextureRegion[this.rows * this.cols];
-			this.max_frames = max_frames;
-			this.needToInit = true;
-			this.initialized = false;
-		}
-
-		ANIMATION_SPRITESHEET(String name, String source, int frame_time, TextureRegion frames[]) {
-			this.name = name;
+		ANIMATION_SPRITESHEET(String name, String source, int frame_time, int frames[]) {
+			this.setName(name);
 			this.source = source;
 			this.setDeltaTimer(new DeltaTimer());
 			this.frames = frames;
-			this.setSubimage_pixel_width(frames[0].getRegionWidth());
-			this.setSubimage_pixel_height(frames[0].getRegionHeight());
 			this.frame_time = frame_time;
-			this.max_frames = this.frames.length;
-			this.needToInit = false;
 			this.initialized = false;
 		}
 
 		public void init() {
-			if (this.needToInit) {
-				if (this.texture == null) {
-					this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
-							+ name + ".png"));
-					int x = 0;
-					int y = 0;
-					int r = 0;
-					for (int i = 0; i < this.cols * this.rows; i++) {
-						this.frames[i] = new TextureRegion(this.texture, x, y, this.subimage_pixel_width, this.subimage_pixel_height);
-						r++;
-						if (r == this.rows) {
-							x = 0;
-							y += this.subimage_pixel_height;
-							r = 0;
-						} else {
-							x += this.subimage_pixel_width;
-						}
-					}
-					initialized = true;
-				} else {
-					StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
-				}
-			}
 		}
 
 		public void update(float delta) {
@@ -248,18 +197,14 @@ public class TextureManager {
 			if (this.deltaTimer.isGreaterThanOrEqualTo(this.frame_time)) {
 				this.deltaTimer.subtract(this.frame_time);
 				this.current_frame++;
-				if (this.current_frame >= max_frames) {
+				if (this.current_frame >= this.frames.length) {
 					this.current_frame = 0;
 				}
 			}
 		}
 
-		public Texture getTexture() {
-			return this.texture;
-		}
-
 		public TextureRegion getCurrentFrame() {
-			return this.frames[this.current_frame];
+			return TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.frames[this.current_frame]);
 		}
 
 		public String getSource() {
@@ -267,41 +212,7 @@ public class TextureManager {
 		}
 
 		public void dispose() {
-			if (this.texture != null) {
-				this.texture.dispose();
-			}
-		}
-
-		public int getCols() {
-			return cols;
-		}
-
-		public void setCols(int cols) {
-			this.cols = cols;
-		}
-
-		public int getRows() {
-			return rows;
-		}
-
-		public void setRows(int rows) {
-			this.rows = rows;
-		}
-
-		public int getSubimage_pixel_width() {
-			return subimage_pixel_width;
-		}
-
-		public void setSubimage_pixel_width(int subimage_pixel_width) {
-			this.subimage_pixel_width = subimage_pixel_width;
-		}
-
-		public int getSubimage_pixel_height() {
-			return subimage_pixel_height;
-		}
-
-		public void setSubimage_pixel_height(int subimage_pixel_height) {
-			this.subimage_pixel_height = subimage_pixel_height;
+			initialized = false;
 		}
 
 		public DeltaTimer getDeltaTimer() {
@@ -312,28 +223,20 @@ public class TextureManager {
 			this.deltaTimer = deltaTimer;
 		}
 
-		public int getWidth() {
-			return width;
-		}
-
-		public void setWidth(int width) {
-			this.width = width;
-		}
-
-		public int getHeight() {
-			return height;
-		}
-
-		public void setHeight(int height) {
-			this.height = height;
-		}
-
 		public void setFrameTime(int delta_time) {
 			this.frame_time = delta_time;
 		}
 
 		public boolean isInitialized() {
 			return this.initialized;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 
 	}

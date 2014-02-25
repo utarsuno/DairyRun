@@ -1,12 +1,13 @@
 package com.uladzislau.dairy_run.manager;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.math.Vector2i;
-import com.uladzislau.dairy_run.math.geometry.Circlef;
+import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class InputManager implements InputProcessor, GestureListener {
 
@@ -16,6 +17,7 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	public static Vector2i pointers[];
 	public static boolean pointersDown[];
+	public static boolean pointersDragging[];
 	
 	private final DairyRun dairy_run;
 
@@ -30,6 +32,10 @@ public class InputManager implements InputProcessor, GestureListener {
 		for (int i = 0; i < 8; i++) {
 			pointersDown[i] = false;
 		}
+		pointersDragging = new boolean[8];
+		for (int i = 0; i < 8; i++) {
+			pointersDragging[i] = false;
+		}
 	}
 	
 	@Override
@@ -39,6 +45,8 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
+		StaticUtil.log("input", "" + x);
+		System.out.println(x);
 		return false;
 	}
 
@@ -74,7 +82,7 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	public static final int A = 29, B = 30, C = 31, D = 32, E = 33, F = 34, G = 35, H = 36, I = 37, J = 38, K = 39, L = 40, M = 41, N = 42,
 			O = 43, P = 44, Q = 45, R = 46, S = 47, T = 48, U = 49, V = 50, W = 51, X = 52, Y = 53, Z = 54, UP = 19, LEFT = 21, DOWN = 20,
-			RIGHT = 22, DELETE = 67, LEFT_CONTROL = 129, RIGHT_CONTROL = 130, ESCAPE = 131;
+			RIGHT = 22, BACKSPACE = 67, LEFT_CONTROL = 129, RIGHT_CONTROL = 130, ESCAPE = 131;
 
 	public static boolean isKeyDown(int keycode) {
 		return keyDown[keycode];
@@ -93,6 +101,12 @@ public class InputManager implements InputProcessor, GestureListener {
 			case ESCAPE:
 				this.dairy_run.changeState(DairyRun.TERMINATE);
 				break;
+			case BACKSPACE:
+				this.dairy_run.changeState(DairyRun.PREVIOUS_STATE);
+				break;
+			case Keys.BACK:
+				this.dairy_run.changeState(DairyRun.PREVIOUS_STATE);
+				break;
 			default:
 				break;
 			}
@@ -104,8 +118,14 @@ public class InputManager implements InputProcessor, GestureListener {
 	public boolean keyUp(int keycode) {
 		// System.out.println(keycode);
 		if (keyDown[LEFT_CONTROL] || keyDown[RIGHT_CONTROL]) {
-			if (keyDown[M] == true) {
+			if (keyDown[M]) {
 				AudioManager.inverseMusic();
+			}
+			if (keyDown[S]) {
+				AudioManager.inverseSound();
+			}
+			if (keyDown[A]) {
+				AudioManager.inverseAudio();
 			}
 		}
 		keyDown[keycode] = false;
@@ -134,6 +154,7 @@ public class InputManager implements InputProcessor, GestureListener {
 		if (!ignore_input) {
 			pointersDown[pointer] = false;
 		}
+		pointersDragging[pointer] = false;
 		return true;
 	}
 
@@ -145,6 +166,7 @@ public class InputManager implements InputProcessor, GestureListener {
 				pointers[pointer].y = ScreenUtil.screen_height - screenY;
 				pointersDown[pointer] = true;
 			}
+			pointersDragging[pointer] = true;
 		}
 		return true;
 	}

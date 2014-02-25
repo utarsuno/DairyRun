@@ -16,13 +16,16 @@ public class Tree {
 	private int y;
 	private int type;
 
-	public Tree(int y) {
+	private int total_number_of_trees;
+
+	public Tree(int y, int total_number_of_trees) {
 		this.y = y;
-		randomize(0);
+		this.total_number_of_trees = total_number_of_trees;
+		randomize();
 	}
 
-	private void randomize(int current_scroll) {
-		this.type = Dice.get_Random_Integer_From_Min_To_Max(1, 3);
+	private void randomize() {
+		this.type = Dice.get_Random_Integer_From_Min_To_Max(1, 2);
 		if (this.type == 1) {
 			if (Dice.nextBoolean()) {
 				this.short_tree_type = TREE_HEIGHT_ONE_DESIGN_ONE;
@@ -31,26 +34,6 @@ public class Tree {
 			}
 		}
 		this.x += ScreenUtil.screen_width + Dice.get_Random_Integer_From_Min_To_Max(5, 20) * Map.size;
-	}
-
-	public void render(SpriteBatch sb, int x, int y, int height) {
-		// // Base
-		// sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 1), x, y, Map.size, Map.size);
-		// // Green block
-		// sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), x, y + Map.size, Map.size, Map.size);
-		// // Left block
-		// sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), x - Map.size, y + Map.size, Map.size, Map.size);
-		// // Right block
-		// sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), x + Map.size, y + Map.size, Map.size, Map.size);
-		// // Right block
-		// sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 21 + 0), x, y + Map.size * 2, Map.size, Map.size);
-
-		if (height == 1) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 1), x, y, Map.size, Map.size);
-		} else if (height == 2) {
-
-		}
-
 	}
 
 	public short getShortTreeType() {
@@ -70,16 +53,38 @@ public class Tree {
 	}
 
 	public void update(int current_scroll) {
-		if (this.x + current_scroll + Map.size < 0) {
-			randomize(current_scroll);
+		if (this.x + current_scroll + Map.size * 2 < 0) {
+			randomize();
 		}
 	}
 
-	public void render(SpriteBatch batch, int current_scroll) {
+	public void render(SpriteBatch sb, int current_scroll) {
 		if (type == 1) {
-			batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.short_tree_type), x + current_scroll, y, Map.size,
-					Map.size);
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.short_tree_type), x + current_scroll, y, Map.size, Map.size);
 		} else if (type == 2) {
+			// Base
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 1), x + current_scroll, y, Map.size, Map.size);
+			// Green block
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), x + current_scroll, y + Map.size, Map.size,
+					Map.size);
+			// Green block
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), x + current_scroll, y + Map.size * 2, Map.size,
+					Map.size);
+			// Left block
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), x - Map.size + current_scroll, y + Map.size,
+					Map.size, Map.size);
+			// Left block
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), x - Map.size + current_scroll, y + Map.size * 2,
+					Map.size, Map.size);
+			// Right block
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), x + Map.size + current_scroll, y + Map.size,
+					Map.size, Map.size);
+			// Right block
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), x + Map.size + current_scroll, y + Map.size * 2,
+					Map.size, Map.size);
+			// Top block
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 21 + 0), x + current_scroll, y + Map.size * 3, Map.size,
+					Map.size);
 
 		}
 	}

@@ -27,9 +27,19 @@ public class AudioManager {
 	public static boolean music_fading_out = false;
 	private static DeltaTimer fade_timer;
 
-	public static enum SOUND {
+	public enum SOUND {
 		COMPLETED("completed", "http://opengameart.org/content/completion-sound"), COIN_ECHO("coin_echo",
-				"http://opengameart.org/content/picked-coin-echo");
+				"http://opengameart.org/content/picked-coin-echo"), PAIN_ONE("pain" + java.io.File.separator + "pain_jack_01",
+				"http://opengameart.org/content/fps-placeholder-sounds"), PAIN_TWO("pain" + java.io.File.separator + "pain_jack_02",
+				"http://opengameart.org/content/fps-placeholder-sounds"), PAIN_THREE("pain" + java.io.File.separator + "pain_jack_03",
+				"http://opengameart.org/content/fps-placeholder-sounds"), DEATH_ONE("death" + java.io.File.separator + "death_jack_01",
+				"http://opengameart.org/content/fps-placeholder-sounds"), DEATH_TWO("death" + java.io.File.separator + "death_jack_02",
+				"http://opengameart.org/content/fps-placeholder-sounds"), JUMP("jumping" + java.io.File.separator + "boing_jack_01",
+				"http://opengameart.org/content/fps-placeholder-sounds"), LAND("jumping" + java.io.File.separator + "land",
+				"http://opengameart.org/content/fps-placeholder-sounds"), POP("pop",
+				"http://opengameart.org/content/fps-placeholder-sounds"), INTERFACE_00("beep" + java.io.File.separator + "interface_00",
+				"Created with BFxr."), INTERFACE_01("beep" + java.io.File.separator + "interface_01",
+				"http://www.freesound.org/people/LloydEvans09/sounds/185828/");
 
 		private final String name;
 		private final String source;
@@ -66,7 +76,9 @@ public class AudioManager {
 
 		public void dispose() {
 			if (this.sound != null) {
+				this.initialized = false;
 				this.sound.dispose();
+				this.sound = null;
 			}
 		}
 
@@ -80,24 +92,28 @@ public class AudioManager {
 
 	}
 
-	public static enum MUSIC {
-		TEMP_MUSIC("HolFix - Pixel Parade", "get it later lol");
+	public enum MUSIC {
+		TEMP_MUSIC("HolFix - Pixel Parade", "get it later lol"), TEMP_MAIN_MENU_MUSIC("HolFix - Happy Moment Remix",
+				"Holflix, get it later though"), ;
 		private final String name;
 		private final String source;
 		private boolean paused;
 		private Music music;
 		private static DeltaTimer fade_timer;
+		private boolean initialized;
 
 		MUSIC(String name, String source) {
 			this.name = name;
 			this.source = source;
 			this.paused = false;
+			this.initialized = false;
 		}
 
 		public void init() {
 			if (this.music == null) {
 				this.music = Gdx.audio.newMusic(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator
 						+ "music" + java.io.File.separator + name + ".mp3"));
+				initialized = true;
 			} else {
 				StaticUtil.error("Audio Error", "You are trying to init + " + this.name + " twice.");
 			}
@@ -134,15 +150,14 @@ public class AudioManager {
 
 		public void dispose() {
 			if (this.music != null) {
+				this.initialized = false;
 				this.music.dispose();
+				this.music = null;
 			}
 		}
 
 		public boolean isInitialized() {
-			if (this.music != null) {
-				return true;
-			}
-			return false;
+			return this.initialized;
 		}
 
 		public void play(float volume) {
@@ -233,9 +248,6 @@ public class AudioManager {
 		return AUDIO_ON;
 	}
 
-	private static boolean main_menu_paused = false;
-	private static boolean competitive_paused = false;
-
 	public static void setAudioOn(boolean b) {
 		AUDIO_ON = b;
 		if (!AUDIO_ON) {
@@ -285,7 +297,6 @@ public class AudioManager {
 			music.dispose();
 		}
 	}
-	
 
 	private static void startAllMusic() {
 		for (MUSIC music : MUSIC.values()) {
@@ -298,12 +309,20 @@ public class AudioManager {
 	public static void pauseAllMusic() {
 		for (MUSIC music : MUSIC.values()) {
 			if (music.isInitialized() && music.isPlaying()) {
-				System.out.println();
 				music.pause();
 			}
 		}
 	}
-	
+
+	public static void resumeAllMusic() {
+		for (MUSIC music : MUSIC.values()) {
+			if (music.isInitialized() && music.isPaused()) {
+				music.setPaused(false);
+				music.play();
+			}
+		}
+	}
+
 	public static void stopAllMusic() {
 		for (MUSIC music : MUSIC.values()) {
 			if (music.isInitialized() && music.isPlaying()) {
@@ -347,6 +366,15 @@ public class AudioManager {
 		} else {
 			pauseAllMusic();
 		}
+	}
+
+	public static void inverseSound() {
+		sound_on ^= true;
+	}
+
+	public static void inverseAudio() {
+		inverseMusic();
+		inverseSound();
 	}
 
 }

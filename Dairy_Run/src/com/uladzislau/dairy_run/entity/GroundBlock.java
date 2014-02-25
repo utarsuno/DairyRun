@@ -11,19 +11,26 @@ public class GroundBlock {
 	private int length;
 
 	private boolean regular_block;
-
+	private boolean water_block;
+	
 	public GroundBlock(int x, int y, int length) {
 		this.x = x;
 		this.y = y;
 		this.length = length;
+		this.water_block = false;
 	}
 
 	private void randomize(int current_scroll) {
 		setX(getX() + this.length * Map.size);
-		if (Dice.get_Random_Integer_From_Min_To_Max(0, 20) == 0) {
+		if (Dice.get_Random_Integer_From_Min_To_Max(0, 100) == 5) {
 			regular_block = true;
 		} else {
 			regular_block = false;
+			if (Dice.nextBoolean()) {
+				this.water_block = true;
+			} else {
+				this.water_block = false;
+			}
 		}
 	}
 
@@ -36,10 +43,16 @@ public class GroundBlock {
 	public void render(SpriteBatch sb, int x) {
 		if (this.regular_block) {
 			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 12 + 29), x, y - Map.size, Map.size, Map.size);
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), x, y - Map.size * 2, Map.size, Map.size);
 		} else {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 3), x, y - Map.size, Map.size, Map.size);
+//			if (this.water_block) {
+//				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 0 + 10), x, y - Map.size / 2, Map.size, Map.size);
+//				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 1 + 10), x, y - (Map.size / 2) * 2, Map.size, Map.size);
+//			} else {
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 3), x, y - Map.size, Map.size, Map.size);
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), x, y - Map.size * 2, Map.size, Map.size);
+//			}
 		}
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), x, y - Map.size * 2, Map.size, Map.size);
 	}
 
 	public int getX() {

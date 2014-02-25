@@ -1,6 +1,11 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.uladzislau.dairy_run.entity.button.MilkButton;
+import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
@@ -31,6 +36,8 @@ public class House {
 	public static final byte WINDOW_ONE = 10;
 	public static final byte WINDOW_TWO = 12;
 
+	public static final short WINODW = 31 * 25 + 11;
+
 	private int x;
 	private int y;
 	private int width;
@@ -38,57 +45,91 @@ public class House {
 	private byte house;
 	private byte roof;
 	private byte door;
+	private short window;
 	private byte[][] brick_layers;
 
+	private short milk_needed;
+	private boolean milk_delievered;
+
 	private int door_location;
+	private int window_location;
 
 	private Rectanglei houseRectanglei;
 	private Rectanglei roofRectanglei;
 
-	public House(int x, int y) {
-		this.x = x;
+	private boolean render_the_house;
+
+	private int total_number_of_houses;
+
+	private Play play;
+
+	public House(int x, int y, int total_number_of_houses, Play play) {
 		this.y = y;
 		this.houseRectanglei = new Rectanglei(x, y, -1, -1);
 		this.roofRectanglei = new Rectanglei(x, -1, -1, -1);
 		this.brick_layers = new byte[2][6];
+		this.total_number_of_houses = total_number_of_houses;
 		randomize();
+		this.milk_delievered = false;
+		this.x = x;
+		this.render_the_house = true;
+		this.play = play;
 	}
 
 	public void randomize() {
-		this.width = Dice.get_Random_Integer_From_Min_To_Max(4, 6);
-		this.height = Dice.get_Random_Integer_From_Min_To_Max(4, 4);
-		int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
-		if (r == 0) {
-			house = TAN_HOUSE;
-			roof = BROWN_ROOF;
-			initBrickLayerWith(TAN_BRICK_ONE);
-		} else if (r == 1) {
-			house = DARK_BLUE_HOUSE;
-			roof = YELLOW_ROOF;
-			initBrickLayerWith(BLUE_BRICK_ONE);
+		if (Dice.get_Random_Integer_From_Min_To_Max(0, 100) > 10) {
+			this.milk_delievered = false;
+			this.width = Dice.get_Random_Integer_From_Min_To_Max(4, 6);
+			this.height = Dice.get_Random_Integer_From_Min_To_Max(4, 4);
+			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+			if (r == 0) {
+				house = TAN_HOUSE;
+				roof = BROWN_ROOF;
+				initBrickLayerWith(TAN_BRICK_ONE);
+			} else if (r == 1) {
+				house = DARK_BLUE_HOUSE;
+				roof = YELLOW_ROOF;
+				initBrickLayerWith(BLUE_BRICK_ONE);
+			} else {
+				house = LIGHT_BLUE_HOUSE;
+				roof = BLUE_ROOF;
+				initBrickLayerWith(LIGHT_BLUE_BRICK_ONE);
+			}
+			r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+			if (r == 0) {
+				door = DOOR_ONE;
+			} else if (r == 1) {
+				door = DOOR_TWO;
+			} else {
+				door = DOOR_THREE;
+			}
+			r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+			if (r == 0) {
+				this.milk_needed = MilkButton.REGULAR;
+			} else if (r == 1) {
+				this.milk_needed = MilkButton.CHOCOLATE;
+			} else if (r == 2) {
+				this.milk_needed = MilkButton.STRAWBERRY;
+			}
+			if (Dice.nextBoolean()) {
+				this.door_location = (Map.size * 1);
+				this.window_location = (this.width * Map.size) - Map.size * 2;
+			} else {
+				this.door_location = (this.width * Map.size) - Map.size * 2;
+				this.window_location = (Map.size * 1);
+			}
+			this.window = House.WINODW;
+			this.houseRectanglei.setWidth(this.width * Map.size);
+			this.houseRectanglei.setHeight((this.height / 2) * Map.size);
+			this.roofRectanglei.setY(this.houseRectanglei.getTop());
+			this.roofRectanglei.setWidth(this.houseRectanglei.getWidth());
+			this.roofRectanglei.setHeight(this.houseRectanglei.getHeight());
+
+			setX(getX() + this.total_number_of_houses * Map.size * 10);
+			this.render_the_house = true;
 		} else {
-			house = LIGHT_BLUE_HOUSE;
-			roof = BLUE_ROOF;
-			initBrickLayerWith(LIGHT_BLUE_BRICK_ONE);
+			this.render_the_house = false;
 		}
-		r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
-		if (r == 0) {
-			door = DOOR_ONE;
-		} else if (r == 1) {
-			door = DOOR_TWO;
-		} else {
-			door = DOOR_THREE;
-		}
-		if (Dice.nextBoolean()) {
-			this.door_location = (Map.size * 1);
-		} else {
-			this.door_location = (this.width * Map.size) - Map.size * 2;
-		}
-		this.houseRectanglei.setWidth(this.width * Map.size);
-		this.houseRectanglei.setHeight((this.height / 2) * Map.size);
-		this.roofRectanglei.setY(this.houseRectanglei.getTop());
-		this.roofRectanglei.setWidth(this.houseRectanglei.getWidth());
-		this.roofRectanglei.setHeight(this.houseRectanglei.getHeight());
 	}
 
 	private void initBrickLayerWith(byte layer) {
@@ -107,25 +148,65 @@ public class House {
 		}
 	}
 
-	public void update(int offset) {
-		this.houseRectanglei.setX(this.x + offset);
-		this.roofRectanglei.setX(this.x + offset);
+	public void update(int current_scroll) {
+		this.houseRectanglei.setX(this.x + current_scroll);
+		this.roofRectanglei.setX(this.x + current_scroll);
+
+		if (getX() + (getWidth() + 1) * Map.size + current_scroll < 0) {
+			if (!this.milk_delievered) {
+				this.play.getPlayer().loseOneLife();
+			}
+			randomize();
+		}
+
+		// boolean mouseClickedOnHouse = false;
+		// if (InputManager.pointersDown[0]) {
+		// if (play_sound) {
+		// for (int i = 0; i < this.houses.length; i++) {
+		// if (this.houses[i].isMouseDownOnMe()) {
+		// mouseClickedOnHouse = true;
+		// }
+		// }
+		// if (!mouseClickedOnHouse) {
+		// AudioManager.SOUND.COIN_ECHO.playSound();
+		// } else {
+		// AudioManager.SOUND.COMPLETED.playSound();
+		// }
+		// this.play_sound = false;
+		// }
+		// } else {
+		// this.play_sound = true;
+		// }
 	}
 
 	public void render(SpriteBatch sb, int x) {
-		renderHouseLayer(sb, 25, x, y, width, house);
-		for (int i = 1; i < height / 2 - 1; i++) {
-			renderHouseLayer(sb, 23, x, y + Map.size * i, width, house);
-		}
-		renderHouseLayer(sb, 24, x, y + Map.size * (height / 2 - 1), width, house);
+		if (this.render_the_house) {
+			renderHouseLayer(sb, 25, x, y, width, house);
+			for (int i = 1; i < height / 2 - 1; i++) {
+				renderHouseLayer(sb, 23, x, y + Map.size * i, width, house);
+			}
+			renderHouseLayer(sb, 24, x, y + Map.size * (height / 2 - 1), width, house);
 
-		renderDoorLayer(sb, 24, x + this.door_location, y, door);
-		renderDoorLayer(sb, 23, x + this.door_location, y + Map.size, door);
+			renderDoorLayer(sb, 24, x + this.door_location, y, door);
+			renderDoorLayer(sb, 23, x + this.door_location, y + Map.size, door);
 
-		for (int i = height / 2; i < height - 1; i++) {
-			renderRoofLayer(sb, 27, x, y + Map.size * i, width, roof);
+			renderWindowLayer(sb, x + this.window_location, y + Map.size - Map.size / 2, window);
+
+			for (int i = height / 2; i < height - 1; i++) {
+				renderRoofLayer(sb, 27, x, y + Map.size * i, width, roof);
+			}
+			renderRoofLayer(sb, 26, x, y + Map.size * (height - 1), width, roof);
+
+			// Render the milk-needed.
+			sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 0.6f);
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_needed), x + Map.size * this.width / 2 - Map.size / 2,
+					Map.size * (height + 2) - Map.size / 2, Map.size, Map.size);
+			sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f);
 		}
-		renderRoofLayer(sb, 26, x, y + Map.size * (height - 1), width, roof);
+	}
+
+	public void renderWindowLayer(SpriteBatch sb, int x, int y, short window) {
+		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.window), x, y, Map.size, Map.size);
 	}
 
 	public void renderDoorLayer(SpriteBatch sb, int layer, int x, int y, byte door) {
@@ -196,6 +277,26 @@ public class House {
 
 	public Rectanglei getRoofRect() {
 		return this.roofRectanglei;
+	}
+
+	public short getMilkNeeded() {
+		return this.milk_needed;
+	}
+
+	public void debugRender(ShapeRenderer sr) {
+		sr.begin(ShapeType.Line);
+		sr.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+		sr.rect(this.getHouseRect().getX(), this.getHouseRect().getY(), this.getHouseRect().getWidth(), this.getHouseRect().getHeight());
+		sr.rect(this.getRoofRect().getX(), this.getRoofRect().getY(), this.getRoofRect().getWidth(), this.getRoofRect().getHeight());
+		sr.end();
+	}
+
+	public void setMilkDelievered(boolean b) {
+		this.milk_delievered = b;
+	}
+
+	public boolean milkDelievered() {
+		return this.milk_delievered;
 	}
 
 }
