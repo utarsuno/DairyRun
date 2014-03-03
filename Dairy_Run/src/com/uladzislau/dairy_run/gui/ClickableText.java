@@ -223,4 +223,9 @@ public class ClickableText {
 		this.collide = true;
 	}
 
+	public void reset() {
+		this.highlightTimer.reset();
+		this.colorXv.setColorToFrom(this.initialColorXv, this.highlightColorXv, this.highlightTimer.percentComplete());
+	}
+
 }

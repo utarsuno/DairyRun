@@ -1,8 +1,8 @@
 package com.uladzislau.dairy_run.game_state;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.entity.Background;
@@ -10,15 +10,14 @@ import com.uladzislau.dairy_run.entity.GroundBlock;
 import com.uladzislau.dairy_run.entity.House;
 import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.entity.Player;
+import com.uladzislau.dairy_run.entity.Score;
 import com.uladzislau.dairy_run.entity.Tree;
 import com.uladzislau.dairy_run.entity.button.CircleButton;
-import com.uladzislau.dairy_run.entity.button.JumpButton;
 import com.uladzislau.dairy_run.entity.button.MilkButton;
 import com.uladzislau.dairy_run.entity.button.RunButton;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
-import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math_utility.MathUtil;
 
@@ -38,13 +37,14 @@ public class Play extends GameState {
 
 	public int ground_level;
 
-	public Play(DairyRun dairy_run) {
-		super(dairy_run);
+	private Score score;
+
+	public Play(DairyRun dairy_run, byte id) {
+		super(dairy_run, id);
 	}
 
 	@Override
 	public void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch) {
-		this.state_id = DairyRun.PLAY;
 		this.shapeRenderer = shapeRenderer;
 		this.batch = batch;
 		// Set the ground level.
@@ -56,12 +56,12 @@ public class Play extends GameState {
 		// Create the houses.
 		this.houses = new House[10];
 		for (int i = 0; i < this.houses.length; i++) {
-			this.houses[i] = new House(i * 10 * Map.size, ground_level, this.houses.length, this);
+			this.houses[i] = new House(i * 10 * Map.size, this.ground_level, this.houses.length, this);
 		}
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[(int) (ScreenUtil.screen_width / Map.size) + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, ground_level, this.ground_blocks.length);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, this.ground_blocks.length);
 		}
 		// Create the trees.
 		this.trees = new Tree[30];
@@ -69,18 +69,28 @@ public class Play extends GameState {
 			this.trees[i] = new Tree(this.ground_level, 30);
 		}
 		// Create the buttons.
-		this.buttons = new CircleButton[5];
+		this.buttons = new CircleButton[4];
 		this.buttons[0] = new RunButton((ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f, this);
-		this.buttons[1] = new JumpButton((ScreenUtil.screen_width / 5) * 4 + (ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8
-				+ Map.size / 2, Map.size * 0.6f, this);
-		this.buttons[2] = new MilkButton((ScreenUtil.screen_width / 5) * 1 + (ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8
-				+ Map.size / 2, Map.size * 0.6f, MilkButton.REGULAR, this);
-		this.buttons[3] = new MilkButton((ScreenUtil.screen_width / 5) * 2 + (ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8
+		this.buttons[1] = new MilkButton((ScreenUtil.screen_width / 20) * 3 + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f,
+				MilkButton.REGULAR, this);
+		this.buttons[2] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) * 3 - Map.size / 2, Map.size / 8
 				+ Map.size / 2, Map.size * 0.6f, MilkButton.CHOCOLATE, this);
-		this.buttons[4] = new MilkButton((ScreenUtil.screen_width / 5) * 3 + (ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8
-				+ Map.size / 2, Map.size * 0.6f, MilkButton.STRAWBERRY, this);
+		this.buttons[3] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) - Map.size / 2, Map.size / 8 + Map.size
+				/ 2, Map.size * 0.6f, MilkButton.STRAWBERRY, this);
 		// Create the player.
 		this.player = new Player((int) (Map.size * 1.5f), this.ground_level, this);
+		this.score = new Score();
+	}
+
+	public void resetPositionsForAllEntities() {
+		for (int i = 0; i < this.houses.length; i++) {
+			this.houses[i].setX(i * 10 * Map.size);
+		}
+		for (int i = 0; i < this.ground_blocks.length; i++) {
+			this.ground_blocks[i].setX(i * Map.size);
+		}
+		for (int i = 0; i < this.trees.length; i++) {
+		}
 	}
 
 	boolean play_sound = true;
@@ -88,21 +98,21 @@ public class Play extends GameState {
 
 	@Override
 	public void update(float delta) {
-		if (!song_started) {
+		if (!this.song_started) {
 			if (this.dairy_run.getResourceManager().music_initialized) {
 				if (AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.isPlaying()) {
 					AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.stop();
 				}
 				AudioManager.MUSIC.TEMP_MUSIC.play(.20f);
-				song_started = true;
+				this.song_started = true;
 			}
 		}
 
-		this.player.update(delta, current_scroll);
+		this.player.update(delta, this.current_scroll);
 
-		acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
+		this.acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
 		this.velocity += this.acceleration;
-		current_scroll -= this.velocity;
+		this.current_scroll -= this.velocity;
 
 		// If the background has moved off the screen, shift it back into view.
 		for (Background background : this.backgrounds) {
@@ -112,7 +122,7 @@ public class Play extends GameState {
 		}
 
 		for (House house : this.houses) {
-			house.update(current_scroll);
+			house.update(this.current_scroll);
 		}
 
 		// If the ground block has moved off the screen, shift it back into view.
@@ -145,7 +155,6 @@ public class Play extends GameState {
 				background.render(this.batch, (int) (background.getX() + this.current_scroll * Background.SCROLL_RATE));
 			}
 		}
-
 		// Render the ground.
 		for (GroundBlock gb : this.ground_blocks) {
 			// Every block is visible majority of the time, thus there is no need to check if it is off-screen.
@@ -177,18 +186,24 @@ public class Play extends GameState {
 		FontManager.FONT.BLOCK_FONT
 				.render(this.batch, "" + this.player.getNumberOfMilksDelivered(), 0, ScreenUtil.screen_height - Map.size);
 
-		// FontManager.FONT.BLOCK_FONT.render(this.batch, "" + MathUtil.round(this.velocity), 0, ScreenUtil.screen_height - Map.size,
-		// Map.size);
-
-		// Render the number of milks delivered.
-		// FontManager.FONT.BLOCK_FONT.render(this.batch, "" + this.player.getNumberOfMilksDelivered(), 0, ScreenUtil.screen_height
-		// - Map.size * 2, Map.size);
-
 		// Render the player.
 		this.player.render(this.batch, this.current_scroll);
 
 		// FontManager.FONT2.BLOCK_FONT.render(this.batch, "Hello World", 500, 500);
 		this.batch.end();
+		
+		for (House house : this.houses) {
+			// Only check the houses that are currently on screen.
+			if (house.getX() + this.current_scroll < ScreenUtil.screen_width) {
+				//System.out.println(house.getWidth());
+				if (house.getWidth() == 0) {
+					System.out.println(house.getHeight());
+					System.out.println(house.getHouseRect().getWidth());
+				}
+			}
+		}
+		
+		this.player.setLife((byte) 6);
 
 	}
 
@@ -197,12 +212,12 @@ public class Play extends GameState {
 		for (House house : this.houses) {
 			// Only check the houses that are currently on screen.
 			if (house.getX() + this.current_scroll < ScreenUtil.screen_width) {
-				if (player.getX() + Map.size > house.getX() + this.current_scroll
-						&& player.getX() < house.getX() + house.getWidth() * Map.size + this.current_scroll) {
-					if (house.getMilkNeeded() == milk_type && !house.milkDelievered()) {
+				if (this.player.getX() + Map.size > house.getX() + this.current_scroll
+						&& this.player.getX() < house.getX() + house.getWidth() * Map.size + this.current_scroll) {
+					if (house.isMilkNeeded(milk_type) && house.needsMoreMilk()) {
 						AudioManager.SOUND.COMPLETED.playSound();
 						this.player.incrementNumberOfMilksDelivered();
-						house.setMilkDelievered(true);
+						house.deliverMilk(milk_type);
 						milk_delivered = true;
 					}
 				}
@@ -236,6 +251,24 @@ public class Play extends GameState {
 
 	public Player getPlayer() {
 		return this.player;
+	}
+
+	public Score getScore() {
+		return this.score;
+	}
+
+	public void reset() {
+		this.current_scroll = 0;
+		resetPositionsForAllEntities();
+		this.player.reset();
+		this.velocity = 8;
+	}
+
+	public void lose() {
+		Score.setCurrentMilkScore(this.player.getNumberOfMilksDelivered());
+		Score.setCurrentVelocityScore(this.velocity);
+		reset();
+		this.dairy_run.changeState(DairyRun.MAIN_MENU);
 	}
 
 }

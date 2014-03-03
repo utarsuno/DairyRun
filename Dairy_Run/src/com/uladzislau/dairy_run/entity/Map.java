@@ -9,7 +9,7 @@ public class Map {
 
 	public static void init() {
 		number_of_vertical_blocks = 8;
-		size = (int) (ScreenUtil.screen_height / number_of_vertical_blocks);
+		size = ScreenUtil.screen_height / number_of_vertical_blocks;
 	}
 
 }

@@ -39,6 +39,7 @@ public class DairyRun implements ApplicationListener {
 	private ResourceManager resourceManager;
 
 	public static boolean paused = false;
+	public static boolean transitioning_states = false;
 
 	@Override
 	public void create() {
@@ -59,8 +60,8 @@ public class DairyRun implements ApplicationListener {
 		this.shapeRenderer = new ShapeRenderer();
 		this.batch = new SpriteBatch();
 
-		this.main_menu = new MainMenu(this);
-		this.play = new Play(this);
+		this.main_menu = new MainMenu(this, DairyRun.MAIN_MENU);
+		this.play = new Play(this, DairyRun.PLAY);
 		this.main_menu.initialize(this.shapeRenderer, this.batch);
 		this.play.initialize(this.shapeRenderer, this.batch);
 		this.current_state = this.main_menu;
@@ -89,6 +90,7 @@ public class DairyRun implements ApplicationListener {
 	}
 
 	public void changeState(byte state_id) {
+		transitioning_states = true;
 		if (state_id != PREVIOUS_STATE) {
 			this.previous_state = this.current_state;
 		}
@@ -120,14 +122,12 @@ public class DairyRun implements ApplicationListener {
 	public void pause() {
 		paused = true;
 		AudioManager.pauseAllMusic();
-		StaticUtil.log("State", "paused");
 	}
 
 	@Override
 	public void resume() {
 		paused = false;
 		AudioManager.resumeAllMusic();
-		StaticUtil.log("State", "resumed");
 	}
 
 	@Override

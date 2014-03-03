@@ -11,34 +11,34 @@ public class ResourceManager {
 	public boolean sound_initialized;
 
 	public void initialize_all_resources() {
-		texture_initialized = false;
-		music_initialized = false;
-		sound_initialized = false;
-		music_initializer.start();
-		sound_initializer.start();
+		this.texture_initialized = false;
+		this.music_initialized = false;
+		this.sound_initialized = false;
+		this.music_initializer.start();
+		this.sound_initializer.start();
 		// Textures are created here because OpenGL context may only exist on the main thread.
 		for (TextureManager.SPRITESHEET spritesheet : TextureManager.SPRITESHEET.values()) {
-			spritesheet.init();
+			spritesheet.initialize();
 		}
-		TextureManager.SPRITESHEET.BACKGROUNDS.setHeight((int) (ScreenUtil.screen_height));
+		TextureManager.SPRITESHEET.BACKGROUNDS.setHeight((ScreenUtil.screen_height));
 		TextureManager.SPRITESHEET.BACKGROUNDS.setWidth((int) (ScreenUtil.screen_height / 63.0f * 231.0f));
 		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setHeight(Map.size);
 		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setWidth(Map.size);
 		for (TextureManager.ANIMATION_SPRITESHEET animation_spritesheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
-			animation_spritesheet.init();
+			animation_spritesheet.initialize();
 		}
-		FontManager.FONT.BLOCK_FONT.init();
-		texture_initialized = true;
+		FontManager.FONT.BLOCK_FONT.initialize();
+		this.texture_initialized = true;
 		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}
 
 	private Thread music_initializer = new Thread() {
 		public void run() {
 			for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
-				music.init();
+				music.initialize();
 			}
 			System.out.println("Music Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
-			music_initialized = true;
+			ResourceManager.this.music_initialized = true;
 			Thread.currentThread().interrupt();
 			return;
 		}
@@ -47,13 +47,59 @@ public class ResourceManager {
 	private Thread sound_initializer = new Thread() {
 		public void run() {
 			for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
-				sound.init();
+				sound.initialize();
 			}
 			System.out.println("Sound Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
-			sound_initialized = true;
+			ResourceManager.this.sound_initialized = true;
 			Thread.currentThread().interrupt();
 			return;
 		}
 	};
+	
+	public String credits_information() {
+		String returnString = null;
+		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
+			returnString += texture.getName() + "\t: " + texture.getSource();
+			returnString += "\n";
+		}
+		for (TextureManager.SPRITESHEET sprite_sheet : TextureManager.SPRITESHEET.values()) {
+			returnString += sprite_sheet.getName() + "\t: " + sprite_sheet.getSource();
+			returnString += "\n";
+		}
+		for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
+			returnString += sound.getName() + "\t: " + sound.getSource();
+			returnString += "\n";
+		}
+		for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
+			returnString += music.getName() + "\t: " + music.getSource();
+			returnString += "\n";
+		}
+		for (FontManager.FONT font : FontManager.FONT.values()) {
+			returnString += font.getName() + "\t: " + font.getSource();
+			returnString += "\n";
+		}
+		return returnString;
+	}
+
+	public void dipose_all_resources() {
+		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
+			texture.dispose();
+		}
+		for (TextureManager.SPRITESHEET sprite_sheet : TextureManager.SPRITESHEET.values()) {
+			sprite_sheet.dispose();
+		}
+		for (TextureManager.ANIMATION_SPRITESHEET animation_sprite_sheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
+			animation_sprite_sheet.dispose();
+		}
+		for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
+			sound.dispose();
+		}
+		for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
+			music.dispose();
+		}
+		for (FontManager.FONT font : FontManager.FONT.values()) {
+			font.dispose();
+		}
+	}
 
 }

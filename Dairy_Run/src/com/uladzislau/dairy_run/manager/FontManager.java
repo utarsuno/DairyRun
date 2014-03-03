@@ -11,7 +11,7 @@ public class FontManager {
 
 	// BMFont from http://www.angelcode.com/products/bmfont/ was used to generate the .fnt file.
 
-	public enum FONT {
+	public enum FONT implements Resource {
 		BLOCK_FONT("block_font", "Kenny Donation Pack", 1.0f, 1.0f);
 
 		private final String name;
@@ -26,13 +26,14 @@ public class FontManager {
 			this.source = source;
 			this.setXScale(x_scale);
 			this.setYScale(y_scale);
-			initialized = false;
+			this.initialized = false;
 		}
 
-		public void init() {
+		@Override
+		public void initialize() {
 			if (this.font == null) {
-				this.font = new BitmapFont(Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + name
-						+ ".fnt"), Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + name + ".png"),
+				this.font = new BitmapFont(Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name
+						+ ".fnt"), Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name + ".png"),
 						false);
 				while (Math.abs(this.getWidth("A") - Map.size) > 0.1f) {
 					if (this.getWidth("Hello World") - Map.size < 0.1f) {
@@ -79,36 +80,36 @@ public class FontManager {
 
 		public void dispose() {
 			if (this.font != null) {
-				initialized = false;
+				this.initialized = false;
 				this.font.dispose();
 				this.font = null;
 			}
 		}
 
 		public float getXScale() {
-			return x_scale;
+			return this.x_scale;
 		}
 
 		public void setXScale(float x_scale) {
 			if (this.font != null) {
-				this.font.setScale(x_scale, y_scale);
+				this.font.setScale(x_scale, this.y_scale);
 			}
 			this.x_scale = x_scale;
 		}
 
 		public float getYScale() {
-			return y_scale;
+			return this.y_scale;
 		}
 
 		public void setYScale(float y_scale) {
 			if (this.font != null) {
-				this.font.setScale(x_scale, y_scale);
+				this.font.setScale(this.x_scale, y_scale);
 			}
 			this.y_scale = y_scale;
 		}
 
 		public boolean isInitialized() {
-			return initialized;
+			return this.initialized;
 		}
 
 		public void setColor(float r, float g, float b, float a) {
@@ -120,7 +121,18 @@ public class FontManager {
 		}
 
 		public String getSource() {
-			return source;
+			return this.source;
+		}
+
+		@Override
+		public String getName() {
+			return this.name;
+		}
+
+		@Override
+		public String currentStatus() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}

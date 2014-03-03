@@ -54,6 +54,13 @@ public class Player {
 		Heart.render(sb, ScreenUtil.screen_width - Map.size * 3, ScreenUtil.screen_height - Map.size, life);
 	}
 
+	public void reset() {
+		this.x = this.original_x;
+		this.player_rectanglei.setX(this.original_x);
+		this.number_of_milks_delivered = 0;
+		this.life = MAX_LIFE;
+	}
+
 	public void debugRender(ShapeRenderer sr) {
 		sr.begin(ShapeType.Line);
 		sr.setColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -62,6 +69,7 @@ public class Player {
 	}
 
 	public void loseOneLife() {
+		this.life--;
 		if (life >= 0) {
 			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
 			if (r == 0) {
@@ -72,13 +80,13 @@ public class Player {
 				AudioManager.SOUND.PAIN_THREE.playSound();
 			}
 		}
-		this.life--;
 		if (this.life < 0) {
 			if (Dice.nextBoolean()) {
 				AudioManager.SOUND.DEATH_ONE.playSound();
 			} else {
 				AudioManager.SOUND.DEATH_TWO.playSound();
 			}
+			this.play.lose();
 		}
 	}
 

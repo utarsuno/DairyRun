@@ -23,9 +23,9 @@ public class GroundBlock {
 	private void randomize(int current_scroll) {
 		setX(getX() + this.length * Map.size);
 		if (Dice.get_Random_Integer_From_Min_To_Max(0, 100) == 5) {
-			regular_block = true;
+			this.regular_block = true;
 		} else {
-			regular_block = false;
+			this.regular_block = false;
 			if (Dice.nextBoolean()) {
 				this.water_block = true;
 			} else {
@@ -42,21 +42,21 @@ public class GroundBlock {
 
 	public void render(SpriteBatch sb, int x) {
 		if (this.regular_block) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 12 + 29), x, y - Map.size, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), x, y - Map.size * 2, Map.size, Map.size);
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 12 + 29), x, this.y - Map.size, Map.size, Map.size);
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), x, this.y - Map.size * 2, Map.size, Map.size);
 		} else {
 //			if (this.water_block) {
 //				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 0 + 10), x, y - Map.size / 2, Map.size, Map.size);
 //				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 1 + 10), x, y - (Map.size / 2) * 2, Map.size, Map.size);
 //			} else {
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 3), x, y - Map.size, Map.size, Map.size);
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), x, y - Map.size * 2, Map.size, Map.size);
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 3), x, this.y - Map.size, Map.size, Map.size);
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), x, this.y - Map.size * 2, Map.size, Map.size);
 //			}
 		}
 	}
 
 	public int getX() {
-		return x;
+		return this.x;
 	}
 
 	public void setX(int x) {

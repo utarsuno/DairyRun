@@ -9,16 +9,17 @@ public abstract class GameState {
 	protected ShapeRenderer shapeRenderer;
 	protected SpriteBatch batch;
 
-	protected DairyRun dairy_run;
-
-	public GameState(DairyRun dairy_run) {
-		this.dairy_run = dairy_run;
-	}
-
-	public byte state_id;
+	protected final byte STATE_ID;
 
 	protected boolean first_update = true;
 	protected boolean first_render = true;
+
+	protected DairyRun dairy_run;
+
+	public GameState(DairyRun dairy_run, byte id) {
+		this.dairy_run = dairy_run;
+		this.STATE_ID = id;
+	}
 
 	public abstract void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch);
 

@@ -10,7 +10,7 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class TextureManager {
 
-	public enum TEXTURE {
+	public enum TEXTURE implements Resource {
 		NONE("none", "none");
 
 		private final String name;
@@ -24,7 +24,8 @@ public class TextureManager {
 			this.source = source;
 		}
 
-		public void init() {
+		@Override
+		public void initialize() {
 			if (this.texture == null) {
 				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator + name
 						+ ".png"));
@@ -63,11 +64,22 @@ public class TextureManager {
 			this.height = height;
 		}
 
+		@Override
+		public String getName() {
+			return this.name;
+		}
+
+		@Override
+		public String currentStatus() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 
-	public static enum SPRITESHEET {
+	public static enum SPRITESHEET implements Resource {
 		PIXEL_SPRITESHEET("pixel_spritesheet", "http://opengameart.org/content/platformer-art-pixel-redux", 31, 31, 2, 2, 21, 21), BACKGROUNDS(
-				"backgrounds_sh", "http://opengameart.org/content/platformer-art-pixel-redux", 3, 1, 0, 0, 231, 63);
+				"N/A", "http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231, 63);
 
 		private final String name;
 		private final String source;
@@ -81,6 +93,9 @@ public class TextureManager {
 		private int subimage_pixel_height;
 		private Texture texture;
 		private TextureRegion[] frames;
+		private int start_pixel_x = -1;
+		private int start_pixel_y;
+		private SPRITESHEET spritesheet;
 		private boolean initialized;
 
 		SPRITESHEET(String name, String source, int cols, int rows, int x_padding, int y_padding, int subimage_pixel_width,
@@ -96,18 +111,56 @@ public class TextureManager {
 			this.frames = new TextureRegion[this.rows * this.cols];
 		}
 
-		public void init() {
-			if (this.texture == null) {
-				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator + name
-						+ ".png"));
-				// this.texture.setFilter(TextureFilter.MipMapNearestNearest,
-				// TextureFilter.MipMapNearestNearest);
+		SPRITESHEET(String name, String source, SPRITESHEET spritesheet, int start_pixel_x, int start_pixel_y, int cols, int rows,
+				int x_padding, int y_padding, int subimage_pixel_width, int subimage_pixel_height) {
+			this.name = name;
+			this.source = source;
+			this.spritesheet = spritesheet;
+			this.start_pixel_x = start_pixel_x;
+			this.start_pixel_y = start_pixel_y;
+			this.cols = cols;
+			this.rows = rows;
+			this.x_padding = x_padding;
+			this.y_padding = y_padding;
+			this.subimage_pixel_width = subimage_pixel_width;
+			this.subimage_pixel_height = subimage_pixel_height;
+			this.frames = new TextureRegion[this.rows * this.cols];
+		}
+
+		@Override
+		public void initialize() {
+			if (this.start_pixel_x == -1) {
+				if (this.texture == null) {
+					this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
+							+ name + ".png"));
+					// this.texture.setFilter(TextureFilter.MipMapNearestNearest,
+					// TextureFilter.MipMapNearestNearest);
+					int x = 0;
+					int y = 0;
+					int r = 0;
+					for (int i = 0; i < this.cols * this.rows; i++) {
+						this.frames[i] = new TextureRegion(this.texture, x + this.x_padding, y + this.y_padding, this.subimage_pixel_width,
+								this.subimage_pixel_height);
+						r++;
+						if (r == this.rows) {
+							x = 0;
+							y += this.subimage_pixel_height + this.y_padding;
+							r = 0;
+						} else {
+							x += this.subimage_pixel_width + this.x_padding;
+						}
+					}
+					initialized = true;
+				} else {
+					StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
+				}
+			} else {
 				int x = 0;
 				int y = 0;
 				int r = 0;
 				for (int i = 0; i < this.cols * this.rows; i++) {
-					this.frames[i] = new TextureRegion(this.texture, x + this.x_padding, y + this.y_padding, this.subimage_pixel_width,
-							this.subimage_pixel_height);
+					this.frames[i] = new TextureRegion(this.spritesheet.getTexture(), this.start_pixel_x + x + this.x_padding,
+							this.start_pixel_y + y + this.y_padding, this.subimage_pixel_width, this.subimage_pixel_height);
 					r++;
 					if (r == this.rows) {
 						x = 0;
@@ -118,13 +171,15 @@ public class TextureManager {
 					}
 				}
 				initialized = true;
-			} else {
-				StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
 			}
 		}
 
 		public TextureRegion getFrame(int frame) {
 			return this.frames[frame];
+		}
+
+		public Texture getTexture() {
+			return this.texture;
 		}
 
 		public String getName() {
@@ -151,8 +206,8 @@ public class TextureManager {
 			this.height = height;
 		}
 
-		public void render(SpriteBatch sb, int i, int j, int k) {
-			sb.draw(getFrame(i), j, k, this.width, this.height);
+		public void render(SpriteBatch sb, int i, int x, int y) {
+			sb.draw(getFrame(i), x, y, this.width, this.height);
 		}
 
 		public void dispose() {
@@ -167,9 +222,15 @@ public class TextureManager {
 			return initialized;
 		}
 
+		@Override
+		public String currentStatus() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 
-	public enum ANIMATION_SPRITESHEET {
+	public enum ANIMATION_SPRITESHEET implements Resource {
 		PIXEL_WALKING("pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 28, 29 });
 
 		private String name;
@@ -188,8 +249,9 @@ public class TextureManager {
 			this.frame_time = frame_time;
 			this.initialized = false;
 		}
-
-		public void init() {
+		
+		@Override
+		public void initialize() {
 		}
 
 		public void update(float delta) {
@@ -237,6 +299,12 @@ public class TextureManager {
 
 		public void setName(String name) {
 			this.name = name;
+		}
+
+		@Override
+		public String currentStatus() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}

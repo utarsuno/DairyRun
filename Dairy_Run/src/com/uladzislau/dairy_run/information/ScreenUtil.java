@@ -11,8 +11,8 @@ public class ScreenUtil {
 	public static int screen_diagonal;
 
 	public static void init() {
-		ScreenUtil.screen_width = (int) Gdx.graphics.getWidth();
-		ScreenUtil.screen_height = (int) Gdx.graphics.getHeight();
+		ScreenUtil.screen_width = Gdx.graphics.getWidth();
+		ScreenUtil.screen_height = Gdx.graphics.getHeight();
 		ScreenUtil.screen_diagonal = (int) (new Vector2f(ScreenUtil.screen_width, ScreenUtil.screen_height).magnitude);
 	}
 

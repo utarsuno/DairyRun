@@ -27,7 +27,7 @@ public class AudioManager {
 	public static boolean music_fading_out = false;
 	private static DeltaTimer fade_timer;
 
-	public enum SOUND {
+	public enum SOUND implements Resource {
 		COMPLETED("completed", "http://opengameart.org/content/completion-sound"), COIN_ECHO("coin_echo",
 				"http://opengameart.org/content/picked-coin-echo"), PAIN_ONE("pain" + java.io.File.separator + "pain_jack_01",
 				"http://opengameart.org/content/fps-placeholder-sounds"), PAIN_TWO("pain" + java.io.File.separator + "pain_jack_02",
@@ -52,7 +52,8 @@ public class AudioManager {
 			this.initialized = false;
 		}
 
-		public void init() {
+		@Override
+		public void initialize() {
 			if (this.sound == null) {
 				this.sound = Gdx.audio.newSound(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator
 						+ "sound" + java.io.File.separator + this.name + ".mp3"));
@@ -64,7 +65,11 @@ public class AudioManager {
 
 		public void playSound() {
 			if (sound_on) {
-				this.sound.play();
+				if (this.initialized) {
+					this.sound.play();
+				} else {
+					StaticUtil.error("Audio", this.name + " was told to be played but has not yet been initialized.");
+				}
 			}
 		}
 
@@ -74,14 +79,18 @@ public class AudioManager {
 			}
 		}
 
+		@Override
 		public void dispose() {
 			if (this.sound != null) {
 				this.initialized = false;
 				this.sound.dispose();
 				this.sound = null;
+			} else {
+				StaticUtil.error("Sound Error: ", this.name + " has already been disposed.");
 			}
 		}
 
+		@Override
 		public String getSource() {
 			return source;
 		}
@@ -90,9 +99,20 @@ public class AudioManager {
 			return initialized;
 		}
 
+		@Override
+		public String getName() {
+			return this.name;
+		}
+
+		@Override
+		public String currentStatus() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 
-	public enum MUSIC {
+	public enum MUSIC implements Resource {
 		TEMP_MUSIC("HolFix - Pixel Parade", "get it later lol"), TEMP_MAIN_MENU_MUSIC("HolFix - Happy Moment Remix",
 				"Holflix, get it later though"), ;
 		private final String name;
@@ -109,7 +129,8 @@ public class AudioManager {
 			this.initialized = false;
 		}
 
-		public void init() {
+		@Override
+		public void initialize() {
 			if (this.music == null) {
 				this.music = Gdx.audio.newMusic(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator
 						+ "music" + java.io.File.separator + name + ".mp3"));
@@ -148,11 +169,14 @@ public class AudioManager {
 			this.music.stop();
 		}
 
+		@Override
 		public void dispose() {
 			if (this.music != null) {
 				this.initialized = false;
 				this.music.dispose();
 				this.music = null;
+			} else {
+				StaticUtil.error("Music Error: ", this.name + " has already been disposed.");
 			}
 		}
 
@@ -163,6 +187,22 @@ public class AudioManager {
 		public void play(float volume) {
 			this.music.play();
 			this.music.setVolume(volume);
+		}
+
+		@Override
+		public String getName() {
+			return this.name;
+		}
+
+		@Override
+		public String getSource() {
+			return this.source;
+		}
+
+		@Override
+		public String currentStatus() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}

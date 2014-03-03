@@ -10,11 +10,22 @@ import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
+import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
+import com.uladzislau.dairy_run.math.geometry.Circlef;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 
 public class RunButton extends CircleButton {
 
+	private Circlef[] pointerCircles = new Circlef[8];
+	{
+		for (int i = 0; i < 8; i++) {
+			this.pointerCircles[i] = new Circlef(0, 0, ScreenUtil.screen_diagonal * 0.01f);
+		}
+	}
+	private boolean[] track = new boolean[8];
+	private boolean[] increments = new boolean[8];
+	
 	private float velocity_increase;
 	private float player_position_increase;
 	private float acceleration_time = 1000;
@@ -32,7 +43,7 @@ public class RunButton extends CircleButton {
 		this.velocity_increase = 0.50f;
 		this.player_position_increase = ScreenUtil.screen_width * 0.02f;
 		for (int i = 0; i < this.track.length; i++) {
-			track[i] = true;
+			this.track[i] = true;
 		}
 		this.deltaTimers = new ArrayList<DeltaTimer>();
 		this.timer_transition = new ArrayList<Boolean>();
@@ -41,7 +52,24 @@ public class RunButton extends CircleButton {
 	
 	@Override
 	public void update(float delta) {
-		super.update(delta);
+		for (int i = 0; i < InputManager.pointers.length; i++) {
+			this.pointerCircles[i].setX(InputManager.pointers[i].x);
+			this.pointerCircles[i].setY(InputManager.pointers[i].y);
+		}
+		for (int j = 0; j < InputManager.pointersDown.length; j++) {
+			if (InputManager.pointersDown[j]) {
+				if (this.isCollidingWithAnotherCirclef(this.pointerCircles[j])) {
+					if (this.track[j]) {
+						this.increments[j] = true;
+						this.track[j] = false;
+					}
+				} else {
+					this.increments[j] = false;
+				}
+			} else {
+				this.track[j] = true;
+			}
+		}
 		for (int i = 0; i < this.increments.length; i++) {
 			if (this.increments[i]) {
 				this.play.setVelocity(this.play.getVelocity() + this.velocity_increase);
@@ -56,15 +84,15 @@ public class RunButton extends CircleButton {
 		for (int i = 0; i < this.deltaTimers.size(); i++) {
 			this.deltaTimers.get(i).update(delta);
 			if (this.timer_transition.get(i)) {
-				this.pixels.set(i, this.player_position_increase * ((float) this.deltaTimers.get(i).getTotalDelta() / acceleration_time));
-				if (this.deltaTimers.get(i).getTotalDelta() > acceleration_time) {
+				this.pixels.set(i, this.player_position_increase * ((float) this.deltaTimers.get(i).getTotalDelta() / this.acceleration_time));
+				if (this.deltaTimers.get(i).getTotalDelta() > this.acceleration_time) {
 					this.deltaTimers.get(i).setTotalDelta(0);
 					this.timer_transition.set(i, false);
 				}
 			} else {
 				this.pixels.set(i, this.player_position_increase
-						* (1.0f - ((float) this.deltaTimers.get(i).getTotalDelta() / deccelartion_time)));
-				if (this.deltaTimers.get(i).getTotalDelta() > deccelartion_time) {
+						* (1.0f - ((float) this.deltaTimers.get(i).getTotalDelta() / this.deccelartion_time)));
+				if (this.deltaTimers.get(i).getTotalDelta() > this.deccelartion_time) {
 					this.deltaTimers.remove(i);
 					this.timer_transition.remove(i);
 					this.pixels.remove(i);
@@ -79,10 +107,8 @@ public class RunButton extends CircleButton {
 
 	@Override
 	public void render(SpriteBatch sb) {
-		sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 0.9f);
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 19), this.getX() - Map.size / 2, this.getY() - Map.size / 2,
 				Map.size, Map.size);
-		sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f);
 	}
 
 	@Override
@@ -94,13 +120,13 @@ public class RunButton extends CircleButton {
 		sr.setColor(0.0f, 0.0f, 1.0f, 1.0f);
 		sr.begin(ShapeType.Filled);
 		for (int i = 0; i < 8; i++) {
-			sr.circle(pointerCircles[i].getX(), pointerCircles[i].getY(), pointerCircles[i].getRadius());
+			sr.circle(this.pointerCircles[i].getX(), this.pointerCircles[i].getY(), this.pointerCircles[i].getRadius());
 		}
 		sr.end();
 	}
 
 	public float getVelocity_increase() {
-		return velocity_increase;
+		return this.velocity_increase;
 	}
 
 	public void setVelocity_increase(float velocity_increase) {
@@ -108,7 +134,7 @@ public class RunButton extends CircleButton {
 	}
 
 	public float getPlayerPositionIncrease() {
-		return player_position_increase;
+		return this.player_position_increase;
 	}
 
 }

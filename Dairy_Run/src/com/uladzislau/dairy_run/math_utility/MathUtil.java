@@ -4,7 +4,7 @@ import com.uladzislau.dairy_run.math.Vector2f;
 
 public class MathUtil {
 
-	public static boolean isNumber(Character c) {
+	public static boolean isNumber(char c) {
 		if (c >= '0' && c <= '9') {
 			return true;
 		}
