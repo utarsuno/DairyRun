@@ -21,7 +21,7 @@ public class Background {
 	}
 
 	public void render(SpriteBatch sb) {
-		switch (type) {
+		switch (this.type) {
 		case BLUE:
 			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 0, this.x, 0);
 			break;
@@ -37,7 +37,7 @@ public class Background {
 	}
 	
 	public void render(SpriteBatch sb, int x) {
-		switch (type) {
+		switch (this.type) {
 		case BLUE:
 			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 0, x, 0);
 			break;

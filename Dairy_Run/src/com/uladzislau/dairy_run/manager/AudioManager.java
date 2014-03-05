@@ -15,10 +15,6 @@ public class AudioManager {
 	protected static boolean music_on = true;
 	protected static boolean sound_on = true;
 
-	private static boolean AUDIO_ON = true;
-	private static boolean MUSIC_ON = true;
-	private static boolean SOUND_ON = true;
-
 	private static float audio_level;
 	private static float music_level;
 	private static float sound_level;
@@ -28,7 +24,9 @@ public class AudioManager {
 	private static DeltaTimer fade_timer;
 
 	public enum SOUND implements Resource {
-		COMPLETED("completed", "http://opengameart.org/content/completion-sound"), COIN_ECHO("coin_echo",
+		INTERFACE_00("beep" + java.io.File.separator + "interface_00", "Created with BFxr."), INTERFACE_01("beep" + java.io.File.separator
+				+ "interface_01", "http://www.freesound.org/people/LloydEvans09/sounds/185828/"), COMPLETED("completed",
+				"http://opengameart.org/content/completion-sound"), COIN_ECHO("coin_echo",
 				"http://opengameart.org/content/picked-coin-echo"), PAIN_ONE("pain" + java.io.File.separator + "pain_jack_01",
 				"http://opengameart.org/content/fps-placeholder-sounds"), PAIN_TWO("pain" + java.io.File.separator + "pain_jack_02",
 				"http://opengameart.org/content/fps-placeholder-sounds"), PAIN_THREE("pain" + java.io.File.separator + "pain_jack_03",
@@ -37,9 +35,7 @@ public class AudioManager {
 				"http://opengameart.org/content/fps-placeholder-sounds"), JUMP("jumping" + java.io.File.separator + "boing_jack_01",
 				"http://opengameart.org/content/fps-placeholder-sounds"), LAND("jumping" + java.io.File.separator + "land",
 				"http://opengameart.org/content/fps-placeholder-sounds"), POP("pop",
-				"http://opengameart.org/content/fps-placeholder-sounds"), INTERFACE_00("beep" + java.io.File.separator + "interface_00",
-				"Created with BFxr."), INTERFACE_01("beep" + java.io.File.separator + "interface_01",
-				"http://www.freesound.org/people/LloydEvans09/sounds/185828/");
+				"http://opengameart.org/content/fps-placeholder-sounds");
 
 		private final String name;
 		private final String source;
@@ -92,11 +88,11 @@ public class AudioManager {
 
 		@Override
 		public String getSource() {
-			return source;
+			return this.source;
 		}
 
 		public boolean isInitialized() {
-			return initialized;
+			return this.initialized;
 		}
 
 		@Override
@@ -133,8 +129,8 @@ public class AudioManager {
 		public void initialize() {
 			if (this.music == null) {
 				this.music = Gdx.audio.newMusic(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator
-						+ "music" + java.io.File.separator + name + ".mp3"));
-				initialized = true;
+						+ "music" + java.io.File.separator + this.name + ".mp3"));
+				this.initialized = true;
 			} else {
 				StaticUtil.error("Audio Error", "You are trying to init + " + this.name + " twice.");
 			}
@@ -285,12 +281,12 @@ public class AudioManager {
 	}
 
 	public static boolean isAudioOn() {
-		return AUDIO_ON;
+		return audio_on;
 	}
 
 	public static void setAudioOn(boolean b) {
-		AUDIO_ON = b;
-		if (!AUDIO_ON) {
+		audio_on = b;
+		if (!audio_on) {
 			for (MUSIC music : MUSIC.values()) {
 				if (music.isInitialized() && music.isPlaying()) {
 					music.setPaused(true);
@@ -308,12 +304,15 @@ public class AudioManager {
 	}
 
 	public static boolean isMusicOn() {
-		return MUSIC_ON;
+		if (!audio_on) {
+			return false;
+		}
+		return music_on;
 	}
 
 	public static void setMusicOn(boolean b) {
-		MUSIC_ON = b;
-		if (!MUSIC_ON) {
+		music_on = b;
+		if (!music_on) {
 			for (MUSIC music : MUSIC.values()) {
 				if (music.isInitialized() && music.isPlaying()) {
 					music.pause();
@@ -372,7 +371,7 @@ public class AudioManager {
 	}
 
 	public static String getInfo() {
-		String info = "Audio On: " + AUDIO_ON + "\t" + "Music On: " + MUSIC_ON + "\t" + "Sound On: " + SOUND_ON + "\t" + "Audio Level: "
+		String info = "Audio On: " + audio_on + "\t" + "Music On: " + music_on + "\t" + "Sound On: " + sound_on + "\t" + "Audio Level: "
 				+ audio_level + "\t" + "Sound Level: " + sound_level + "\t" + "Music Level: " + music_level;
 		for (MUSIC music : MUSIC.values()) {
 			if (music.isPlaying()) {

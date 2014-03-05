@@ -33,8 +33,8 @@ public class FontManager {
 		public void initialize() {
 			if (this.font == null) {
 				this.font = new BitmapFont(Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name
-						+ ".fnt"), Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name + ".png"),
-						false);
+						+ ".fnt"), Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name
+						+ ".png"), false);
 				while (Math.abs(this.getWidth("A") - Map.size) > 0.1f) {
 					if (this.getWidth("Hello World") - Map.size < 0.1f) {
 						this.setXScale(this.getXScale() - 0.01f);
@@ -78,11 +78,14 @@ public class FontManager {
 			return (int) this.font.getBounds(string).height;
 		}
 
+		@Override
 		public void dispose() {
 			if (this.font != null) {
 				this.initialized = false;
 				this.font.dispose();
 				this.font = null;
+			} else {
+				StaticUtil.error("Font error: ", this.name + " has already been disposed.");
 			}
 		}
 
@@ -120,6 +123,7 @@ public class FontManager {
 			return this.font;
 		}
 
+		@Override
 		public String getSource() {
 			return this.source;
 		}

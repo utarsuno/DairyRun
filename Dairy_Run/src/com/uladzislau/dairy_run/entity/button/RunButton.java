@@ -2,7 +2,6 @@ package com.uladzislau.dairy_run.entity.button;
 
 import java.util.ArrayList;
 
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -25,7 +24,7 @@ public class RunButton extends CircleButton {
 	}
 	private boolean[] track = new boolean[8];
 	private boolean[] increments = new boolean[8];
-	
+
 	private float velocity_increase;
 	private float player_position_increase;
 	private float acceleration_time = 1000;
@@ -36,7 +35,7 @@ public class RunButton extends CircleButton {
 	private ArrayList<Float> pixels;
 
 	private Play play;
-	
+
 	public RunButton(float x, float y, float radius, Play play) {
 		super(x, y, radius);
 		this.play = play;
@@ -49,7 +48,7 @@ public class RunButton extends CircleButton {
 		this.timer_transition = new ArrayList<Boolean>();
 		this.pixels = new ArrayList<Float>();
 	}
-	
+
 	@Override
 	public void update(float delta) {
 		for (int i = 0; i < InputManager.pointers.length; i++) {
@@ -84,14 +83,14 @@ public class RunButton extends CircleButton {
 		for (int i = 0; i < this.deltaTimers.size(); i++) {
 			this.deltaTimers.get(i).update(delta);
 			if (this.timer_transition.get(i)) {
-				this.pixels.set(i, this.player_position_increase * ((float) this.deltaTimers.get(i).getTotalDelta() / this.acceleration_time));
+				this.pixels.set(i, this.player_position_increase * (this.deltaTimers.get(i).getTotalDelta() / this.acceleration_time));
 				if (this.deltaTimers.get(i).getTotalDelta() > this.acceleration_time) {
 					this.deltaTimers.get(i).setTotalDelta(0);
 					this.timer_transition.set(i, false);
 				}
 			} else {
 				this.pixels.set(i, this.player_position_increase
-						* (1.0f - ((float) this.deltaTimers.get(i).getTotalDelta() / this.deccelartion_time)));
+						* (1.0f - (this.deltaTimers.get(i).getTotalDelta() / this.deccelartion_time)));
 				if (this.deltaTimers.get(i).getTotalDelta() > this.deccelartion_time) {
 					this.deltaTimers.remove(i);
 					this.timer_transition.remove(i);
@@ -109,6 +108,12 @@ public class RunButton extends CircleButton {
 	public void render(SpriteBatch sb) {
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 19), this.getX() - Map.size / 2, this.getY() - Map.size / 2,
 				Map.size, Map.size);
+	}
+
+	public void reset() {
+		this.deltaTimers.clear();
+		this.timer_transition.clear();
+		this.pixels.clear();
 	}
 
 	@Override

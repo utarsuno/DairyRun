@@ -11,6 +11,7 @@ public class GroundBlock {
 	private int length;
 
 	private boolean regular_block;
+	//TODO: This may or may not be added later.
 	private boolean water_block;
 	
 	public GroundBlock(int x, int y, int length) {

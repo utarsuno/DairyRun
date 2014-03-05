@@ -1,5 +1,7 @@
 package com.uladzislau.dairy_run.manager;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.information.ScreenUtil;
@@ -10,12 +12,19 @@ public class ResourceManager {
 	public boolean music_initialized;
 	public boolean sound_initialized;
 
+	private ShapeRenderer shapeRenderer;
+	private SpriteBatch spriteBatch;
+
 	public void initialize_all_resources() {
 		this.texture_initialized = false;
 		this.music_initialized = false;
 		this.sound_initialized = false;
 		this.music_initializer.start();
 		this.sound_initializer.start();
+
+		this.shapeRenderer = new ShapeRenderer();
+		this.spriteBatch = new SpriteBatch();
+
 		// Textures are created here because OpenGL context may only exist on the main thread.
 		for (TextureManager.SPRITESHEET spritesheet : TextureManager.SPRITESHEET.values()) {
 			spritesheet.initialize();
@@ -33,6 +42,7 @@ public class ResourceManager {
 	}
 
 	private Thread music_initializer = new Thread() {
+		@Override
 		public void run() {
 			for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
 				music.initialize();
@@ -45,6 +55,7 @@ public class ResourceManager {
 	};
 
 	private Thread sound_initializer = new Thread() {
+		@Override
 		public void run() {
 			for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
 				sound.initialize();
@@ -55,8 +66,8 @@ public class ResourceManager {
 			return;
 		}
 	};
-	
-	public String credits_information() {
+
+	public static String credits_information() {
 		String returnString = null;
 		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
 			returnString += texture.getName() + "\t: " + texture.getSource();
@@ -82,6 +93,8 @@ public class ResourceManager {
 	}
 
 	public void dipose_all_resources() {
+		this.spriteBatch.dispose();
+		this.shapeRenderer.dispose();
 		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
 			texture.dispose();
 		}
@@ -100,6 +113,22 @@ public class ResourceManager {
 		for (FontManager.FONT font : FontManager.FONT.values()) {
 			font.dispose();
 		}
+	}
+
+	public ShapeRenderer getShapeRenderer() {
+		return this.shapeRenderer;
+	}
+
+	public void setShapeRenderer(ShapeRenderer shapeRenderer) {
+		this.shapeRenderer = shapeRenderer;
+	}
+
+	public SpriteBatch getSpriteBatch() {
+		return this.spriteBatch;
+	}
+
+	public void setSpriteBatch(SpriteBatch spriteBatch) {
+		this.spriteBatch = spriteBatch;
 	}
 
 }

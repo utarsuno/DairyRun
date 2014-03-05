@@ -18,4 +18,7 @@ public abstract class CircleButton extends Circlef {
 	public void debugRender(ShapeRenderer sr) {
 
 	}
+
+	public void reset() {
+	}
 }

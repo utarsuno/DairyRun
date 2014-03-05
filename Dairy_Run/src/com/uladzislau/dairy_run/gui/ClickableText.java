@@ -1,9 +1,7 @@
 package com.uladzislau.dairy_run.gui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;

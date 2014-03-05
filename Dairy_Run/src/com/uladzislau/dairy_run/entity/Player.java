@@ -24,34 +24,53 @@ public class Player {
 	private int number_of_milks_delivered;
 
 	private boolean render_player;
+	private boolean scared;
 
 	private Play play;
 
 	public Player(int x, int y, Play play) {
 		this.life = MAX_LIFE;
 		this.original_x = x;
+		this.scared = false;
 		this.x = x;
 		this.y = y;
 		this.play = play;
 		this.player_rectanglei = new Rectanglei(x, y, Map.size, Map.size);
-		render_player = true;
+		this.render_player = true;
 	}
 
 	public void update(float delta, int current_scroll) {
 		this.player_rectanglei.setX(this.x);
+		if (this.play.getChasers().size() != 0) {
+			this.scared = true;
+		} else {
+			this.scared = false;
+		}
+		if (this.scared) {
+			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.update(delta);
+			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.setFrameTime((int) (80 / (this.play.getVelocity() / 5)));
+		} else {
+			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
+			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (80 / (this.play.getVelocity() / 5)));
+		}
+		//TEMP!!!
 		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
 		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (80 / (this.play.getVelocity() / 5)));
 	}
 
 	public void render(SpriteBatch sb, int current_scroll) {
 
-		if (render_player) {
+		if (this.render_player) {
 			// Render the player.
-			sb.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
+			if (this.scared) {
+				sb.draw(TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
+			} else {
+				sb.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
+			}
 		}
 
 		// Render the player's health at the top right of the screen.
-		Heart.render(sb, ScreenUtil.screen_width - Map.size * 3, ScreenUtil.screen_height - Map.size, life);
+		Heart.render(sb, ScreenUtil.screen_width - Map.size * 3, ScreenUtil.screen_height - Map.size, this.life);
 	}
 
 	public void reset() {
@@ -70,7 +89,7 @@ public class Player {
 
 	public void loseOneLife() {
 		this.life--;
-		if (life >= 0) {
+		if (this.life >= 0) {
 			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
 			if (r == 0) {
 				AudioManager.SOUND.PAIN_ONE.playSound();
@@ -91,7 +110,7 @@ public class Player {
 	}
 
 	public byte getLife() {
-		return life;
+		return this.life;
 	}
 
 	public void setLife(byte life) {
@@ -99,7 +118,7 @@ public class Player {
 	}
 
 	public int getX() {
-		return x;
+		return this.x;
 	}
 
 	public void setX(int x) {
@@ -107,7 +126,7 @@ public class Player {
 	}
 
 	public int getY() {
-		return y;
+		return this.y;
 	}
 
 	public void setY(int y) {
@@ -123,15 +142,23 @@ public class Player {
 	}
 
 	public void incrementNumberOfMilksDelivered() {
-		number_of_milks_delivered++;
+		this.number_of_milks_delivered++;
 	}
 
 	public int getNumberOfMilksDelivered() {
-		return number_of_milks_delivered;
+		return this.number_of_milks_delivered;
 	}
 
 	public Rectanglei getRectanglei() {
 		return this.player_rectanglei;
+	}
+
+	public boolean isScared() {
+		return this.scared;
+	}
+
+	public void setScared(boolean scared) {
+		this.scared = scared;
 	}
 
 }

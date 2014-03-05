@@ -4,8 +4,6 @@ import com.badlogic.gdx.ApplicationListener;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.game_state.GameState;
 import com.uladzislau.dairy_run.game_state.MainMenu;
@@ -13,11 +11,8 @@ import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
-import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
-import com.uladzislau.dairy_run.manager.TextureManager;
-import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class DairyRun implements ApplicationListener {
 
@@ -31,12 +26,9 @@ public class DairyRun implements ApplicationListener {
 	private GameState main_menu;
 	private GameState play;
 
-	private ShapeRenderer shapeRenderer;
-	private SpriteBatch batch;
+	private ResourceManager resourceManager;
 
 	public static long start_time;
-
-	private ResourceManager resourceManager;
 
 	public static boolean paused = false;
 	public static boolean transitioning_states = false;
@@ -44,7 +36,7 @@ public class DairyRun implements ApplicationListener {
 	@Override
 	public void create() {
 
-		start_time = System.currentTimeMillis();
+		DairyRun.start_time = System.currentTimeMillis();
 
 		ScreenUtil.init();
 		InfoUtil.init();
@@ -56,18 +48,16 @@ public class DairyRun implements ApplicationListener {
 		InputManager inputManager = new InputManager(this);
 		Gdx.input.setInputProcessor(inputManager);
 		Gdx.input.setCatchBackKey(true);
-
-		this.shapeRenderer = new ShapeRenderer();
-		this.batch = new SpriteBatch();
+		Gdx.input.setCatchMenuKey(true);
 
 		this.main_menu = new MainMenu(this, DairyRun.MAIN_MENU);
 		this.play = new Play(this, DairyRun.PLAY);
-		this.main_menu.initialize(this.shapeRenderer, this.batch);
-		this.play.initialize(this.shapeRenderer, this.batch);
+		this.main_menu.initialize(this.resourceManager.getShapeRenderer(), this.resourceManager.getSpriteBatch());
+		this.play.initialize(this.resourceManager.getShapeRenderer(), this.resourceManager.getSpriteBatch());
 		this.current_state = this.main_menu;
 		this.previous_state = this.current_state;
 
-		paused = false;
+		DairyRun.paused = false;
 
 		System.out.println("Create Method Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}
@@ -86,6 +76,7 @@ public class DairyRun implements ApplicationListener {
 			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 			this.current_state.render();
+
 		}
 	}
 
@@ -101,13 +92,16 @@ public class DairyRun implements ApplicationListener {
 			this.previous_state = tempstate;
 			break;
 		case TERMINATE:
-			this.exit();
+			DairyRun.exit();
 			break;
 		case MAIN_MENU:
 			this.current_state = this.main_menu;
 			break;
 		case PLAY:
 			this.current_state = this.play;
+			this.play.stateChangedToThis();
+			break;
+		default:
 			break;
 		}
 	}
@@ -120,41 +114,24 @@ public class DairyRun implements ApplicationListener {
 
 	@Override
 	public void pause() {
-		paused = true;
+		DairyRun.paused = true;
+		this.current_state.pause();
 		AudioManager.pauseAllMusic();
 	}
 
 	@Override
 	public void resume() {
-		paused = false;
+		DairyRun.paused = false;
+		this.current_state.resume();
 		AudioManager.resumeAllMusic();
 	}
 
 	@Override
 	public void dispose() {
-		this.batch.dispose();
-		this.shapeRenderer.dispose();
-		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
-			texture.dispose();
-		}
-		for (TextureManager.SPRITESHEET sprite_sheet : TextureManager.SPRITESHEET.values()) {
-			sprite_sheet.dispose();
-		}
-		for (TextureManager.ANIMATION_SPRITESHEET animation_sprite_sheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
-			animation_sprite_sheet.dispose();
-		}
-		for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
-			sound.dispose();
-		}
-		for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
-			music.dispose();
-		}
-		for (FontManager.FONT font : FontManager.FONT.values()) {
-			font.dispose();
-		}
+		this.resourceManager.dipose_all_resources();
 	}
 
-	public void exit() {
+	public static void exit() {
 		// This function will eventually have the pause and dispose functions called.
 		Gdx.app.exit();
 	}

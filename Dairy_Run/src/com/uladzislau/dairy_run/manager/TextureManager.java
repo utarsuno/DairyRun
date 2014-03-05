@@ -231,7 +231,8 @@ public class TextureManager {
 	}
 
 	public enum ANIMATION_SPRITESHEET implements Resource {
-		PIXEL_WALKING("pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 28, 29 });
+		PIXEL_WALKING("pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 28, 29 }), SAD_PIXEL_WALKING(
+				"pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 31 * 6 + 28, 31 * 6 + 29 });
 
 		private String name;
 		private String source;
@@ -249,7 +250,7 @@ public class TextureManager {
 			this.frame_time = frame_time;
 			this.initialized = false;
 		}
-		
+
 		@Override
 		public void initialize() {
 		}

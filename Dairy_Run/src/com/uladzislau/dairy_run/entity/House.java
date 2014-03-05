@@ -10,6 +10,7 @@ import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
+import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 
 public class House {
 
@@ -50,6 +51,7 @@ public class House {
 
 	private short milk_needed[];
 	private boolean milk_delievered[];
+	private DeltaTimer milkFader[];
 	private int number_of_milks;
 
 	private int door_location;
@@ -72,6 +74,10 @@ public class House {
 		this.total_number_of_houses = total_number_of_houses;
 		this.milk_needed = new short[10];
 		this.milk_delievered = new boolean[10];
+		this.milkFader = new DeltaTimer[10];
+		for (int i = 0; i < this.milkFader.length; i++) {
+			this.milkFader[i] = new DeltaTimer(DeltaTimer.RUN_ONCE, 500);
+		}
 		randomize();
 		this.x = x;
 		this.render_the_house = true;
@@ -79,63 +85,63 @@ public class House {
 	}
 
 	public void randomize() {
-		if (Dice.get_Random_Integer_From_Min_To_Max(0, 100) > 10) {
-			this.width = Dice.get_Random_Integer_From_Min_To_Max(5, 6);
-			this.number_of_milks = Dice.get_Random_Integer_From_Min_To_Max(1, this.width / 2);
-			for (int i = 0; i < this.number_of_milks; i++) {
-				this.milk_delievered[i] = false;
-				int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
-				if (r == 0) {
-					this.milk_needed[i] = MilkButton.REGULAR;
-				} else if (r == 1) {
-					this.milk_needed[i] = MilkButton.CHOCOLATE;
-				} else if (r == 2) {
-					this.milk_needed[i] = MilkButton.STRAWBERRY;
-				}
-			}
-			this.height = Dice.get_Random_Integer_From_Min_To_Max(4, 4);
-			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
-			if (r == 0) {
-				this.house = TAN_HOUSE;
-				this.roof = BROWN_ROOF;
-				initBrickLayerWith(TAN_BRICK_ONE);
-			} else if (r == 1) {
-				this.house = DARK_BLUE_HOUSE;
-				this.roof = YELLOW_ROOF;
-				initBrickLayerWith(BLUE_BRICK_ONE);
-			} else {
-				this.house = LIGHT_BLUE_HOUSE;
-				this.roof = BLUE_ROOF;
-				initBrickLayerWith(LIGHT_BLUE_BRICK_ONE);
-			}
-			r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
-			if (r == 0) {
-				this.door = DOOR_ONE;
-			} else if (r == 1) {
-				this.door = DOOR_TWO;
-			} else {
-				this.door = DOOR_THREE;
-			}
-
-			if (Dice.nextBoolean()) {
-				this.door_location = (Map.size * 1);
-				this.window_location = (this.width * Map.size) - Map.size * 2;
-			} else {
-				this.door_location = (this.width * Map.size) - Map.size * 2;
-				this.window_location = (Map.size * 1);
-			}
-			this.window = House.WINODW;
-			this.houseRectanglei.setWidth(this.width * Map.size);
-			this.houseRectanglei.setHeight((this.height / 2) * Map.size);
-			this.roofRectanglei.setY(this.houseRectanglei.getTop());
-			this.roofRectanglei.setWidth(this.houseRectanglei.getWidth());
-			this.roofRectanglei.setHeight(this.houseRectanglei.getHeight());
-
-			setX(getX() + this.total_number_of_houses * Map.size * 10);
-			this.render_the_house = true;
-		} else {
+		if (Dice.get_Random_Integer_From_Min_To_Max(0, 100) < 10) {
 			this.render_the_house = false;
 		}
+		this.width = Dice.get_Random_Integer_From_Min_To_Max(5, 6);
+		this.number_of_milks = Dice.get_Random_Integer_From_Min_To_Max(1, this.width / 2);
+		for (int i = 0; i < this.number_of_milks; i++) {
+			this.milk_delievered[i] = false;
+			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+			if (r == 0) {
+				this.milk_needed[i] = MilkButton.REGULAR;
+			} else if (r == 1) {
+				this.milk_needed[i] = MilkButton.CHOCOLATE;
+			} else if (r == 2) {
+				this.milk_needed[i] = MilkButton.STRAWBERRY;
+			}
+			this.milkFader[i].reset();
+		}
+		this.height = Dice.get_Random_Integer_From_Min_To_Max(4, 4);
+		int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+		if (r == 0) {
+			this.house = TAN_HOUSE;
+			this.roof = BROWN_ROOF;
+			initBrickLayerWith(TAN_BRICK_ONE);
+		} else if (r == 1) {
+			this.house = DARK_BLUE_HOUSE;
+			this.roof = YELLOW_ROOF;
+			initBrickLayerWith(BLUE_BRICK_ONE);
+		} else {
+			this.house = LIGHT_BLUE_HOUSE;
+			this.roof = BLUE_ROOF;
+			initBrickLayerWith(LIGHT_BLUE_BRICK_ONE);
+		}
+		r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+		if (r == 0) {
+			this.door = DOOR_ONE;
+		} else if (r == 1) {
+			this.door = DOOR_TWO;
+		} else {
+			this.door = DOOR_THREE;
+		}
+
+		if (Dice.nextBoolean()) {
+			this.door_location = (Map.size * 1);
+			this.window_location = (this.width * Map.size) - Map.size * 2;
+		} else {
+			this.door_location = (this.width * Map.size) - Map.size * 2;
+			this.window_location = (Map.size * 1);
+		}
+		this.window = House.WINODW;
+		this.houseRectanglei.setWidth(this.width * Map.size);
+		this.houseRectanglei.setHeight((this.height / 2) * Map.size);
+		this.roofRectanglei.setY(this.houseRectanglei.getTop());
+		this.roofRectanglei.setWidth(this.houseRectanglei.getWidth());
+		this.roofRectanglei.setHeight(this.houseRectanglei.getHeight());
+
+		setX(getX() + this.total_number_of_houses * Map.size * 10);
+		this.render_the_house = true;
 	}
 
 	private void initBrickLayerWith(byte layer) {
@@ -154,14 +160,28 @@ public class House {
 		}
 	}
 
-	public void update(int current_scroll) {
+	public void update(float delta, int current_scroll) {
 		this.houseRectanglei.setX(this.x + current_scroll);
 		this.roofRectanglei.setX(this.x + current_scroll);
 
+		for (int i = 0; i < this.number_of_milks; i++) {
+			if (this.milk_delievered[i]) {
+				this.milkFader[i].update(delta);
+			}
+		}
+
 		if (getX() + (getWidth() + 1) * Map.size + current_scroll < 0) {
-			for (int i = 0; i < this.number_of_milks; i++) {
-				if (!this.milk_delievered[i]) {
-					this.play.getPlayer().loseOneLife();
+			if (this.render_the_house) {
+				short milks_not_delievered[] = new short[number_of_milks];
+				boolean create_chaser = false;
+				for (int i = 0; i < this.number_of_milks; i++) {
+					if (!this.milk_delievered[i]) {
+						milks_not_delievered[i] = this.milk_needed[i];
+						create_chaser = true;
+					}
+				}
+				if (create_chaser) {
+					this.play.createChaser(milks_not_delievered);
 				}
 			}
 			randomize();
@@ -169,39 +189,30 @@ public class House {
 	}
 
 	public void render(SpriteBatch sb, int x) {
-		if (this.render_the_house) {
-			renderHouseLayer(sb, 25, x, this.y, this.width, this.house);
-			for (int i = 1; i < this.height / 2 - 1; i++) {
-				renderHouseLayer(sb, 23, x, this.y + Map.size * i, this.width, this.house);
-			}
-			renderHouseLayer(sb, 24, x, this.y + Map.size * (this.height / 2 - 1), this.width, this.house);
+		// if (this.render_the_house) {
+		renderHouseLayer(sb, 25, x, this.y, this.width, this.house);
+		for (int i = 1; i < this.height / 2 - 1; i++) {
+			renderHouseLayer(sb, 23, x, this.y + Map.size * i, this.width, this.house);
+		}
+		renderHouseLayer(sb, 24, x, this.y + Map.size * (this.height / 2 - 1), this.width, this.house);
 
-			renderDoorLayer(sb, 24, x + this.door_location, this.y, this.door);
-			renderDoorLayer(sb, 23, x + this.door_location, this.y + Map.size, this.door);
+		renderDoorLayer(sb, 24, x + this.door_location, this.y, this.door);
+		renderDoorLayer(sb, 23, x + this.door_location, this.y + Map.size, this.door);
 
-			renderWindowLayer(sb, x + this.window_location, this.y + Map.size - Map.size / 2, this.window);
+		renderWindowLayer(sb, x + this.window_location, this.y + Map.size - Map.size / 2, this.window);
 
-			for (int i = this.height / 2; i < this.height - 1; i++) {
-				renderRoofLayer(sb, 27, x, this.y + Map.size * i, this.width, this.roof);
-			}
-			renderRoofLayer(sb, 26, x, this.y + Map.size * (this.height - 1), this.width, this.roof);
+		for (int i = this.height / 2; i < this.height - 1; i++) {
+			renderRoofLayer(sb, 27, x, this.y + Map.size * i, this.width, this.roof);
+		}
+		renderRoofLayer(sb, 26, x, this.y + Map.size * (this.height - 1), this.width, this.roof);
 
-			int number_of_milks_to_render = 0;
-			for (int i = 0; i < this.number_of_milks; i++) {
-				if (!this.milk_delievered[i]) {
-					number_of_milks_to_render++;
-				}
-			}
-
-			// Render the milk-needed.
-			for (int i = 0; i < this.number_of_milks; i++) {
-				if (!this.milk_delievered[i]) {
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_needed[i]), x + Map.size * this.width / 2
-							- Map.size / 2 + Map.size * i - (Map.size * number_of_milks_to_render) / 2, Map.size * (this.height + 2)
-							- Map.size / 2, Map.size, Map.size);
-				}
-			}
-
+		// Render the milk-needed.
+		for (int i = 0; i < this.number_of_milks; i++) {
+			sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f - this.milkFader[i].percentComplete());
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_needed[i]), x
+					+ ((Map.size * this.width) - ((Map.size * 0.1f) * (this.number_of_milks - 1) + Map.size * this.number_of_milks)) / 2
+					+ Map.size * i + (Map.size * 0.1f) * i, Map.size * (this.height + 2) - Map.size / 2, Map.size, Map.size);
+			sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f);
 		}
 	}
 

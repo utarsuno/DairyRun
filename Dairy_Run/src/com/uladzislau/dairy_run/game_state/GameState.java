@@ -6,8 +6,8 @@ import com.uladzislau.dairy_run.DairyRun;
 
 public abstract class GameState {
 
-	protected ShapeRenderer shapeRenderer;
-	protected SpriteBatch batch;
+	protected ShapeRenderer shape_renderer;
+	protected SpriteBatch sprite_batch;
 
 	protected final byte STATE_ID;
 
@@ -27,10 +27,13 @@ public abstract class GameState {
 
 	public abstract void render();
 
-	public abstract void entered();
+	public abstract void pause();
 
 	public abstract void resume();
 
 	public abstract void dispose();
+
+	public void stateChangedToThis() {
+	}
 
 }
