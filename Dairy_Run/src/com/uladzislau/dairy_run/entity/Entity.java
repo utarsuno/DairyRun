@@ -5,7 +5,7 @@ public class Entity {
 	private int x;
 
 	public int getX() {
-		return x;
+		return this.x;
 	}
 
 	public void setX(int x) {

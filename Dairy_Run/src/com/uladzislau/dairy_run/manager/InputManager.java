@@ -11,14 +11,14 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class InputManager implements InputProcessor, GestureListener {
 
-	public static boolean ignore_input;
+	private static boolean ignore_input;
 
 	public static int scroll;
 
 	public static Vector2i pointers[];
 	public static boolean pointersDown[];
 	public static boolean pointersDragging[];
-	
+
 	private final DairyRun dairy_run;
 
 	public InputManager(DairyRun dairy_run) {
@@ -37,7 +37,7 @@ public class InputManager implements InputProcessor, GestureListener {
 			pointersDragging[i] = false;
 		}
 	}
-	
+
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
 		return false;
@@ -184,6 +184,19 @@ public class InputManager implements InputProcessor, GestureListener {
 	public boolean scrolled(int amount) {
 		scroll = amount;
 		return true;
+	}
+	
+	public static boolean getIgnoreInput() {
+		return ignore_input;
+	}
+
+	public static void setIgnoreInput(boolean b) {
+		ignore_input = b;
+		if (ignore_input) {
+			for (int i = 0; i < InputManager.pointersDown.length; i++) {
+				InputManager.pointersDown[i] = false;
+			}
+		}
 	}
 
 }

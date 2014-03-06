@@ -76,7 +76,7 @@ public class House {
 		this.milk_delievered = new boolean[10];
 		this.milkFader = new DeltaTimer[10];
 		for (int i = 0; i < this.milkFader.length; i++) {
-			this.milkFader[i] = new DeltaTimer(DeltaTimer.RUN_ONCE, 500);
+			this.milkFader[i] = new DeltaTimer(DeltaTimer.RUN_ONCE, 125);
 		}
 		randomize();
 		this.x = x;

@@ -35,7 +35,8 @@ public class AudioManager {
 				"http://opengameart.org/content/fps-placeholder-sounds"), JUMP("jumping" + java.io.File.separator + "boing_jack_01",
 				"http://opengameart.org/content/fps-placeholder-sounds"), LAND("jumping" + java.io.File.separator + "land",
 				"http://opengameart.org/content/fps-placeholder-sounds"), POP("pop",
-				"http://opengameart.org/content/fps-placeholder-sounds");
+				"http://opengameart.org/content/fps-placeholder-sounds"), MILK("milk" + java.io.File.separator + "milk", "darreon"), MILK2(
+				"milk" + java.io.File.separator + "milk2", "darreon"), MILK3("milk" + java.io.File.separator + "milk3", "darreon");
 
 		private final String name;
 		private final String source;

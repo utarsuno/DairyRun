@@ -31,15 +31,15 @@ public class MainMenu extends GameState {
 		this.shape_renderer = sr;
 		this.sprite_batch = sb;
 		this.terminate = new ClickableText("Exit", new Rectanglei(ScreenUtil.screen_width
-				- FontManager.FONT.BLOCK_FONT.getWidth("Exit"), Map.size * 1, Map.size * "Exit".length(), Map.size), new ColorXv(
+				- FontManager.FONT.PIXEL_REGULAR.getWidth("Exit"), Map.size * 1, Map.size * "Exit".length(), Map.size), new ColorXv(
 				ColorXv.TEAL.getR(), ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(), ColorXv.BLUE.getG(),
 				ColorXv.BLUE.getB()), 800);
 		this.initiate_button = new ClickableText("Play", new Rectanglei(ScreenUtil.screen_width
-				- FontManager.FONT.BLOCK_FONT.getWidth("Play"), Map.size * 3, Map.size * 4, Map.size), new ColorXv(ColorXv.TEAL.getR(),
+				- FontManager.FONT.PIXEL_REGULAR.getWidth("Play"), Map.size * 3, Map.size * 4, Map.size), new ColorXv(ColorXv.TEAL.getR(),
 				ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(), ColorXv.BLUE.getG(), ColorXv.BLUE.getB()), 800);
 		this.top_score = new ClickableText("Top Score: " + Score.getMilkHighScore(), new Rectanglei(
-				ScreenUtil.screen_width - FontManager.FONT.BLOCK_FONT.getWidth("Top Score: " + Score.getMilkHighScore()),
-				ScreenUtil.screen_height - Map.size, FontManager.FONT.BLOCK_FONT.getWidth("Top Score: " + Score.getMilkHighScore()),
+				ScreenUtil.screen_width - FontManager.FONT.PIXEL_REGULAR.getWidth("Top Score: " + Score.getMilkHighScore()),
+				ScreenUtil.screen_height - Map.size, FontManager.FONT.PIXEL_REGULAR.getWidth("Top Score: " + Score.getMilkHighScore()),
 				Map.size), new ColorXv(ColorXv.TEAL.getR(), ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(),
 				ColorXv.BLUE.getG(), ColorXv.BLUE.getB()), 800);
 
@@ -75,9 +75,9 @@ public class MainMenu extends GameState {
 	public void render() {
 		this.sprite_batch.begin();
 		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(19), 0, 0, Map.size * 7, Map.size * 7);
-		this.initiate_button.render(this.sprite_batch, FontManager.FONT.BLOCK_FONT.getFont());
-		this.terminate.render(this.sprite_batch, FontManager.FONT.BLOCK_FONT.getFont());
-		this.top_score.render(this.sprite_batch, FontManager.FONT.BLOCK_FONT.getFont());
+		this.initiate_button.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
+		this.terminate.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
+		this.top_score.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width-Map.size*2, 0, Map.size * 2, Map.size * 2);
 		this.sprite_batch.end();
 	}

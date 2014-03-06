@@ -41,7 +41,7 @@ public class Play extends GameState {
 	private CircleButton[] buttons;
 
 	private int current_scroll;
-	private float velocity = 8; // 8
+	private float velocity = 7; // 8
 	private float acceleration;
 
 	public int ground_level;
@@ -71,7 +71,7 @@ public class Play extends GameState {
 		// Create the houses.
 		this.houses = new House[10];
 		for (int i = 0; i < this.houses.length; i++) {
-			this.houses[i] = new House(i * 10 * Map.size, this.ground_level, this.houses.length, this);
+			this.houses[i] = new House((i + 1) * 10 * Map.size, this.ground_level, this.houses.length, this);
 		}
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
@@ -93,7 +93,7 @@ public class Play extends GameState {
 		this.buttons[3] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) - Map.size / 2, Map.size / 8 + Map.size
 				/ 2, Map.size * 0.6f, MilkButton.STRAWBERRY, this);
 		// Create the player.
-		this.player = new Player((int) (Map.size * 1.5f), this.ground_level, this);
+		this.player = new Player((int) (Map.size * 2.5f), this.ground_level, this);
 		this.score = new Score();
 		this.resumeTimer = new DeltaTimer();
 		this.chasers = new ArrayList<Chaser>();
@@ -107,6 +107,8 @@ public class Play extends GameState {
 	private boolean pc_mouse_down_on_first_resume_update = false;
 	private boolean allow_resume = true;
 	private boolean reset = false;
+
+	private boolean tapped_to_start = false;
 
 	@Override
 	public void update(float delta) {
@@ -150,45 +152,55 @@ public class Play extends GameState {
 				this.reset = false;
 			}
 
-			this.player.update(delta, this.current_scroll);
+			if (this.tapped_to_start) {
+				this.player.update(delta, this.current_scroll);
 
-			this.acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
-			this.velocity += this.acceleration;
-			this.current_scroll -= this.velocity;
+				this.acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
+				this.velocity += this.acceleration;
+				this.current_scroll -= this.velocity;
 
-			// If the background has moved off the screen, shift it back into view.
-			for (Background background : this.backgrounds) {
-				if (background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + this.current_scroll * Background.SCROLL_RATE < 0) {
-					background.setX(background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() * 2);
+				// If the background has moved off the screen, shift it back into view.
+				for (Background background : this.backgrounds) {
+					if (background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + this.current_scroll
+							* Background.SCROLL_RATE < 0) {
+						background.setX(background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() * 2);
+					}
+				}
+
+				// If the house has moved off the screen, randomize it and shift it back into view.
+				for (House house : this.houses) {
+					house.update(delta, this.current_scroll);
+				}
+
+				// If the ground block has moved off the screen, shift it back into view.
+				for (GroundBlock gb : this.ground_blocks) {
+					gb.update(this.current_scroll);
+				}
+
+				for (Tree tree : this.trees) {
+					tree.update(this.current_scroll);
+				}
+
+				// Check for button press. If pressed they will do their respective actions.
+				for (CircleButton button : this.buttons) {
+					button.update(delta);
+				}
+
+				for (Chaser chaser : this.chasers) {
+					chaser.update(delta);
+				}
+				for (int i = 0; i < this.chasers.size(); i++) {
+					this.chasers.get(i).update(delta);
+					if (this.chasers.get(i).isRemovable()) {
+						this.chasers.remove(i);
+					}
+				}
+			} else {
+				if (InputManager.pointersDown[0]) {
+					this.tapped_to_start = true;
 				}
 			}
-
-			for (House house : this.houses) {
-				house.update(delta, this.current_scroll);
-			}
-
-			// If the ground block has moved off the screen, shift it back into view.
-			for (GroundBlock gb : this.ground_blocks) {
-				gb.update(this.current_scroll);
-			}
-
-			for (Tree tree : this.trees) {
-				tree.update(this.current_scroll);
-			}
-			// System.out.println(Gdx.graphics.getFramesPerSecond());
-			// System.out.println(this.velocity);
-
-			// Check for button press. If pressed they will do their respective actions.
-			for (CircleButton button : this.buttons) {
-				button.update(delta);
-			}
-
-			for (Chaser chaser : this.chasers) {
-				chaser.update(delta);
-			}
-
 		}
-
 	}
 
 	@Override
@@ -232,22 +244,30 @@ public class Play extends GameState {
 
 		// TODO: move the velocity and milk rendering.
 		// Render the player's velocity.
-		FontManager.FONT.BLOCK_FONT.render(this.sprite_batch, Color.BLACK, "" + MathUtil.round(this.velocity), 0, ScreenUtil.screen_height);
+		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.BLACK, "" + MathUtil.round(this.velocity, 2), 0,
+				ScreenUtil.screen_height);
 
-		FontManager.FONT.BLOCK_FONT.render(this.sprite_batch, "" + this.player.getNumberOfMilksDelivered(), 0, ScreenUtil.screen_height
+		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "" + this.player.getNumberOfMilksDelivered(), 0, ScreenUtil.screen_height
 				- Map.size);
-
-		// Render the player.
-		this.player.render(this.sprite_batch, this.current_scroll);
 
 		for (Chaser chaser : this.chasers) {
 			chaser.render(this.sprite_batch, this.current_scroll);
 		}
 
 		if (this.just_resumed) {
-			FontManager.FONT.BLOCK_FONT.render(this.sprite_batch, Color.RED, "TAP TO RESUME", ScreenUtil.screen_width / 2
-					- FontManager.FONT.BLOCK_FONT.getWidth("TAP TO RESUME") / 2,
-					ScreenUtil.screen_height / 2 - FontManager.FONT.BLOCK_FONT.getHeight("TAP TO RESUME") / 2);
+			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "TAP TO RESUME", ScreenUtil.screen_width / 2
+					- FontManager.FONT.PIXEL_REGULAR.getWidth("TAP TO RESUME") / 2, ScreenUtil.screen_height / 2
+					- FontManager.FONT.PIXEL_REGULAR.getHeight("TAP TO RESUME") / 2);
+		}
+
+		if (!this.tapped_to_start) {
+			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "Tap To Begin", ScreenUtil.screen_width / 2
+					- FontManager.FONT.PIXEL_REGULAR.getWidth("Tap To Begin") / 2, ScreenUtil.screen_height / 2
+					- FontManager.FONT.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
+			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(22), this.player.getX(), this.ground_level, Map.size, Map.size);
+		} else {
+			// Render the player.
+			this.player.render(this.sprite_batch, this.current_scroll);
 		}
 
 		this.sprite_batch.end();
@@ -303,9 +323,9 @@ public class Play extends GameState {
 		reset();
 		this.dairy_run.changeState(DairyRun.MAIN_MENU);
 	}
-
+	
 	public void createChaser(short[] milks_not_delievered) {
-		this.chasers.add(new Chaser(milks_not_delievered, this.current_scroll, (this.velocity + (this.velocity * 0.225f)), 60000, this));
+		this.chasers.add(new Chaser(milks_not_delievered, this.current_scroll, (this.velocity + (this.velocity * 0.1f)), 60000, this));
 	}
 
 	@Override
@@ -344,7 +364,7 @@ public class Play extends GameState {
 	public Score getScore() {
 		return this.score;
 	}
-	
+
 	public ArrayList<Chaser> getChasers() {
 		return this.chasers;
 	}

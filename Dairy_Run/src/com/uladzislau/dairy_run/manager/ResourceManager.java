@@ -36,7 +36,7 @@ public class ResourceManager {
 		for (TextureManager.ANIMATION_SPRITESHEET animation_spritesheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
 			animation_spritesheet.initialize();
 		}
-		FontManager.FONT.BLOCK_FONT.initialize();
+		FontManager.FONT.PIXEL_REGULAR.initialize();
 		this.texture_initialized = true;
 		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}
@@ -98,9 +98,7 @@ public class ResourceManager {
 		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
 			texture.dispose();
 		}
-		for (TextureManager.SPRITESHEET sprite_sheet : TextureManager.SPRITESHEET.values()) {
-			sprite_sheet.dispose();
-		}
+		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.dispose();
 		for (TextureManager.ANIMATION_SPRITESHEET animation_sprite_sheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
 			animation_sprite_sheet.dispose();
 		}

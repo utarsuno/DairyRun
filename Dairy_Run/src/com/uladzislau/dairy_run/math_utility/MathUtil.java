@@ -18,7 +18,17 @@ public class MathUtil {
 		return false;
 	}
 
-	public static final double round(double n) {
+	public static final double round(double n, int number_of_decimals) {
+		switch (number_of_decimals) {
+		case 1:
+			return (long) (n * 10 + 0.5) / 10.0;
+		case 2:
+			return (long) (n * 100 + 0.5) / 100.0;
+		case 3:
+		case 4:
+		default:
+			break;
+		}
 		return (long) (n * 1000 + 0.5) / 1000.0;
 	}
 

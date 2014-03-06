@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.game_state.GameState;
 import com.uladzislau.dairy_run.game_state.MainMenu;
@@ -13,6 +14,8 @@ import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
+import com.uladzislau.dairy_run.math_utility.DeltaTimer;
+import com.uladzislau.dairy_run.utility.P;
 
 public class DairyRun implements ApplicationListener {
 
@@ -31,7 +34,10 @@ public class DairyRun implements ApplicationListener {
 	public static long start_time;
 
 	public static boolean paused = false;
-	public static boolean transitioning_states = false;
+	public static boolean transitioning_states;
+	public static boolean fading_out;
+
+	private DeltaTimer transitioning_states_timer;
 
 	@Override
 	public void create() {
@@ -57,6 +63,10 @@ public class DairyRun implements ApplicationListener {
 		this.current_state = this.main_menu;
 		this.previous_state = this.current_state;
 
+		DairyRun.transitioning_states = false;
+		DairyRun.fading_out = false;
+		this.transitioning_states_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 250);
+
 		DairyRun.paused = false;
 
 		System.out.println("Create Method Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
@@ -64,6 +74,19 @@ public class DairyRun implements ApplicationListener {
 
 	public void update(float delta) {
 		if (!paused) {
+			if (DairyRun.transitioning_states) {
+				this.transitioning_states_timer.update(delta);
+				if (this.transitioning_states_timer.isFinished()) {
+					if (DairyRun.fading_out) {
+						InputManager.setIgnoreInput(false);
+						DairyRun.transitioning_states = false;
+					} else {
+						this.actuallyChangeState();
+						this.transitioning_states_timer.reset();
+						DairyRun.fading_out = true;
+					}
+				}
+			}
 			this.current_state.update(delta);
 		}
 	}
@@ -77,15 +100,36 @@ public class DairyRun implements ApplicationListener {
 
 			this.current_state.render();
 
+			Gdx.gl.glEnable(GL10.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+			this.resourceManager.getShapeRenderer().begin(ShapeType.Filled);
+			if (DairyRun.fading_out) {
+				this.resourceManager.getShapeRenderer()
+						.setColor(0.0f, 0.0f, 0.0f, 1.0f - this.transitioning_states_timer.percentComplete());
+			} else {
+				this.resourceManager.getShapeRenderer().setColor(0.0f, 0.0f, 0.0f, this.transitioning_states_timer.percentComplete());
+			}
+			this.resourceManager.getShapeRenderer().rect(0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height);
+			this.resourceManager.getShapeRenderer().end();
+
 		}
 	}
 
 	public void changeState(byte state_id) {
 		transitioning_states = true;
-		if (state_id != PREVIOUS_STATE) {
+		this.transitioning_states_timer.reset();
+		InputManager.setIgnoreInput(true);
+		this.state_to_change_to = state_id;
+		DairyRun.fading_out = false;
+	}
+
+	private byte state_to_change_to;
+
+	private void actuallyChangeState() {
+		if (this.state_to_change_to != PREVIOUS_STATE) {
 			this.previous_state = this.current_state;
 		}
-		switch (state_id) {
+		switch (this.state_to_change_to) {
 		case PREVIOUS_STATE:
 			GameState tempstate = this.previous_state;
 			this.current_state = this.previous_state;

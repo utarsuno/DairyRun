@@ -27,8 +27,8 @@ public class TextureManager {
 		@Override
 		public void initialize() {
 			if (this.texture == null) {
-				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator + name
-						+ ".png"));
+				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
+						+ this.name + ".png"));
 			} else {
 				StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
 			}
@@ -38,10 +38,12 @@ public class TextureManager {
 			return this.texture;
 		}
 
+		@Override
 		public String getSource() {
-			return source;
+			return this.source;
 		}
 
+		@Override
 		public void dispose() {
 			if (this.texture != null) {
 				this.texture.dispose();
@@ -49,7 +51,7 @@ public class TextureManager {
 		}
 
 		public int getWidth() {
-			return width;
+			return this.width;
 		}
 
 		public void setWidth(int width) {
@@ -57,7 +59,7 @@ public class TextureManager {
 		}
 
 		public int getHeight() {
-			return height;
+			return this.height;
 		}
 
 		public void setHeight(int height) {
@@ -79,7 +81,7 @@ public class TextureManager {
 
 	public static enum SPRITESHEET implements Resource {
 		PIXEL_SPRITESHEET("pixel_spritesheet", "http://opengameart.org/content/platformer-art-pixel-redux", 31, 31, 2, 2, 21, 21), BACKGROUNDS(
-				"N/A", "http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231, 63);
+				"Backgrounds", "http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231, 63);
 
 		private final String name;
 		private final String source;
@@ -132,7 +134,7 @@ public class TextureManager {
 			if (this.start_pixel_x == -1) {
 				if (this.texture == null) {
 					this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
-							+ name + ".png"));
+							+ this.name + ".png"));
 					// this.texture.setFilter(TextureFilter.MipMapNearestNearest,
 					// TextureFilter.MipMapNearestNearest);
 					int x = 0;
@@ -150,7 +152,7 @@ public class TextureManager {
 							x += this.subimage_pixel_width + this.x_padding;
 						}
 					}
-					initialized = true;
+					this.initialized = true;
 				} else {
 					StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
 				}
@@ -170,7 +172,7 @@ public class TextureManager {
 						x += this.subimage_pixel_width + this.x_padding;
 					}
 				}
-				initialized = true;
+				this.initialized = true;
 			}
 		}
 
@@ -182,16 +184,18 @@ public class TextureManager {
 			return this.texture;
 		}
 
+		@Override
 		public String getName() {
-			return name;
+			return this.name;
 		}
 
+		@Override
 		public String getSource() {
-			return source;
+			return this.source;
 		}
 
 		public int getWidth() {
-			return width;
+			return this.width;
 		}
 
 		public void setWidth(int width) {
@@ -199,7 +203,7 @@ public class TextureManager {
 		}
 
 		public int getHeight() {
-			return height;
+			return this.height;
 		}
 
 		public void setHeight(int height) {
@@ -210,16 +214,19 @@ public class TextureManager {
 			sb.draw(getFrame(i), x, y, this.width, this.height);
 		}
 
+		@Override
 		public void dispose() {
 			if (this.texture != null) {
-				initialized = false;
+				this.initialized = false;
 				this.texture.dispose();
 				this.texture = null;
+			} else {
+				StaticUtil.error("Spritesheet Error: ", this.name + " has already been disposed.");
 			}
 		}
 
 		public boolean isInitialized() {
-			return initialized;
+			return this.initialized;
 		}
 
 		@Override
@@ -270,16 +277,18 @@ public class TextureManager {
 			return TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.frames[this.current_frame]);
 		}
 
+		@Override
 		public String getSource() {
-			return source;
+			return this.source;
 		}
 
+		@Override
 		public void dispose() {
-			initialized = false;
+			this.initialized = false;
 		}
 
 		public DeltaTimer getDeltaTimer() {
-			return deltaTimer;
+			return this.deltaTimer;
 		}
 
 		public void setDeltaTimer(DeltaTimer deltaTimer) {
@@ -294,8 +303,9 @@ public class TextureManager {
 			return this.initialized;
 		}
 
+		@Override
 		public String getName() {
-			return name;
+			return this.name;
 		}
 
 		public void setName(String name) {
@@ -306,6 +316,10 @@ public class TextureManager {
 		public String currentStatus() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		public int getCurrentFrameNumber() {
+			return this.current_frame;
 		}
 
 	}
