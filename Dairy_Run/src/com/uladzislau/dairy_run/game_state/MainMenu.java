@@ -63,10 +63,10 @@ public class MainMenu extends GameState {
 		if (this.initiate_button.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 			//TODO: Have the button remove it's color after this function call.
 			this.initiate_button.reset();
-			this.dairy_run.changeState(DairyRun.PLAY);
+			this.dairy_run.getGameStateManager().changeState(GameStateManager.PLAY);
 		}
 		if (this.terminate.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
-			this.dairy_run.changeState(DairyRun.TERMINATE);
+			this.dairy_run.getGameStateManager().changeState(GameStateManager.TERMINATE);
 		}
 
 	}
@@ -78,7 +78,7 @@ public class MainMenu extends GameState {
 		this.initiate_button.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.terminate.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.top_score.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width-Map.size*2, 0, Map.size * 2, Map.size * 2);
+//		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width-Map.size*2, 0, Map.size * 2, Map.size * 2);
 		this.sprite_batch.end();
 	}
 

@@ -16,6 +16,13 @@ public class Rectanglei {
 		this.setHeight(height);
 	}
 
+	public Rectanglei(float x, float y, float w, float h) {
+		this.setX((int) x);
+		this.setY((int) y);
+		this.setWidth((int) w);
+		this.setHeight((int) h);
+	}
+
 	public boolean isCollidingWithRect(Rectanglei rectangle) {
 		if (this.x + this.width < rectangle.getX() || this.x > rectangle.getX() + rectangle.getWidth()
 				|| this.y > rectangle.getY() + rectangle.getHeight() || this.y + this.height < rectangle.getY()) {

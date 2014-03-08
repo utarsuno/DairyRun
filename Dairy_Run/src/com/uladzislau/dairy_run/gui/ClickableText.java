@@ -1,10 +1,12 @@
 package com.uladzislau.dairy_run.gui;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
+import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
@@ -224,6 +226,20 @@ public class ClickableText {
 	public void reset() {
 		this.highlightTimer.reset();
 		this.colorXv.setColorToFrom(this.initialColorXv, this.highlightColorXv, this.highlightTimer.percentComplete());
+	}
+
+	@Override
+	public String toString() {
+		return "x: " + getRectanglei().getX() + "\ty: " + getRectanglei().getY() + "\tw: " + getRectanglei().getWidth() + "\th: "
+				+ getRectanglei().getHeight();
+	}
+
+	public void render(SpriteBatch sprite_batch, boolean b) {
+
+		FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new Color(this.colorXv.getR(), this.colorXv.getG(),
+				this.colorXv.getB(), this.colorXv.getA()), getRectanglei().getX(), getRectanglei().getX() + getRectanglei().getWidth(),
+				getRectanglei().getY(), getRectanglei().getY() + getRectanglei().getHeight());
+
 	}
 
 }

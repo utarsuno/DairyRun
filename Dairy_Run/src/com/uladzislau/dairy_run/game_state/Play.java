@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.entity.Background;
 import com.uladzislau.dairy_run.entity.Chaser;
 import com.uladzislau.dairy_run.entity.GroundBlock;
@@ -18,12 +19,14 @@ import com.uladzislau.dairy_run.entity.Tree;
 import com.uladzislau.dairy_run.entity.button.CircleButton;
 import com.uladzislau.dairy_run.entity.button.MilkButton;
 import com.uladzislau.dairy_run.entity.button.RunButton;
+import com.uladzislau.dairy_run.gui.ClickableText;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
+import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 import com.uladzislau.dairy_run.math_utility.MathUtil;
 
@@ -46,11 +49,17 @@ public class Play extends GameState {
 
 	public int ground_level;
 
+	private boolean lost = false;
+
 	private Score score;
 
 	private DeltaTimer resumeTimer;
 
 	private boolean game_in_session = false;
+
+	private ClickableText game_over;
+	private ClickableText retry;
+	private ClickableText main_menu;
 
 	public Play(DairyRun dairy_run, byte id) {
 		super(dairy_run, id);
@@ -97,6 +106,19 @@ public class Play extends GameState {
 		this.score = new Score();
 		this.resumeTimer = new DeltaTimer();
 		this.chasers = new ArrayList<Chaser>();
+
+		// TODO: Customize the size of these
+		this.game_over = new ClickableText("Game Over", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 2.5f,
+				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
+						- (ScreenUtil.screen_height - Map.size * 2.5f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+
+		this.retry = new ClickableText("Retry", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 4.5f,
+				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
+						- (ScreenUtil.screen_height - Map.size * 2.5f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+
+		this.main_menu = new ClickableText("Main Menu", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 6.5f,
+				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
+						- (ScreenUtil.screen_height - Map.size * 2.5f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
 	}
 
 	boolean play_sound = true;
@@ -186,13 +208,26 @@ public class Play extends GameState {
 					button.update(delta);
 				}
 
-				for (Chaser chaser : this.chasers) {
-					chaser.update(delta);
+				if (this.lost) {
+					this.game_over.update(delta);
+					this.retry.update(delta);
+					this.main_menu.update(delta);
+
+					if (this.main_menu.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
+						this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
+					}
+					if (this.retry.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
+						retry();
+					}
 				}
+
+				// TODO: Make a more elegant system.
 				for (int i = 0; i < this.chasers.size(); i++) {
-					this.chasers.get(i).update(delta);
 					if (this.chasers.get(i).isRemovable()) {
 						this.chasers.remove(i);
+					}
+					if (i != 0 && !(i >= this.chasers.size())) {
+						this.chasers.get(i).update(delta);
 					}
 				}
 			} else {
@@ -224,7 +259,6 @@ public class Play extends GameState {
 
 		this.sprite_batch.enableBlending();
 		this.sprite_batch.begin();
-
 		// Render the trees.
 		for (Tree tree : this.trees) {
 			tree.render(this.sprite_batch, this.current_scroll);
@@ -264,10 +298,20 @@ public class Play extends GameState {
 			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "Tap To Begin", ScreenUtil.screen_width / 2
 					- FontManager.FONT.PIXEL_REGULAR.getWidth("Tap To Begin") / 2, ScreenUtil.screen_height / 2
 					- FontManager.FONT.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(22), this.player.getX(), this.ground_level, Map.size, Map.size);
+			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(22), this.player.getX(), this.ground_level,
+					Map.size, Map.size);
 		} else {
 			// Render the player.
 			this.player.render(this.sprite_batch, this.current_scroll);
+
+			if (this.lost) {
+				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1,
+						ScreenUtil.screen_width - Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
+
+				this.game_over.render(this.sprite_batch, true);
+				this.retry.render(this.sprite_batch, true);
+				this.main_menu.render(this.sprite_batch, true);
+			}
 		}
 
 		this.sprite_batch.end();
@@ -279,7 +323,7 @@ public class Play extends GameState {
 		this.buttons[0].reset();
 		this.player.reset();
 		for (int i = 0; i < this.houses.length; i++) {
-			this.houses[i].setX(i * 10 * Map.size);
+			this.houses[i].setX((i + 1) * 10 * Map.size);
 		}
 		for (int i = 0; i < this.ground_blocks.length; i++) {
 			this.ground_blocks[i].setX(i * Map.size);
@@ -313,17 +357,24 @@ public class Play extends GameState {
 	public void reset() {
 		this.current_scroll = 0;
 		resetPositionsForAllEntities();
+		this.tapped_to_start = false;
+		this.chasers.clear();
 		this.player.reset();
 		this.velocity = 8;
 	}
 
 	public void lose() {
+		this.lost = true;
+	}
+
+	public void retry() {
+		this.lost = false;
+		this.tapped_to_start = false;
 		Score.setCurrentMilkScore(this.player.getNumberOfMilksDelivered());
 		Score.setCurrentVelocityScore(this.velocity);
 		reset();
-		this.dairy_run.changeState(DairyRun.MAIN_MENU);
 	}
-	
+
 	public void createChaser(short[] milks_not_delievered) {
 		this.chasers.add(new Chaser(milks_not_delievered, this.current_scroll, (this.velocity + (this.velocity * 0.1f)), 60000, this));
 	}

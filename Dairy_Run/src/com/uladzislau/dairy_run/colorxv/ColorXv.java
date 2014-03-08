@@ -99,7 +99,7 @@ public class ColorXv {
 	}
 
 	public float getR() {
-		return r;
+		return this.r;
 	}
 
 	public void setR(float r) {
@@ -107,7 +107,7 @@ public class ColorXv {
 	}
 
 	public float getG() {
-		return g;
+		return this.g;
 	}
 
 	public void setG(float g) {
@@ -115,7 +115,7 @@ public class ColorXv {
 	}
 
 	public float getB() {
-		return b;
+		return this.b;
 	}
 
 	public void setB(float b) {
@@ -123,7 +123,7 @@ public class ColorXv {
 	}
 
 	public float getA() {
-		return a;
+		return this.a;
 	}
 
 	public void setA(float a) {

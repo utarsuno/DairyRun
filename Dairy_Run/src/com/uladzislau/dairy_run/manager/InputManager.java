@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.game_state.GameStateManager;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.math.Vector2i;
 import com.uladzislau.dairy_run.utility.StaticUtil;
@@ -99,13 +100,13 @@ public class InputManager implements InputProcessor, GestureListener {
 		if (!ignore_input) {
 			switch (keycode) {
 			case ESCAPE:
-				this.dairy_run.changeState(DairyRun.TERMINATE);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.TERMINATE);
 				break;
 			case BACKSPACE:
-				this.dairy_run.changeState(DairyRun.PREVIOUS_STATE);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.PREVIOUS_STATE);
 				break;
 			case Keys.BACK:
-				this.dairy_run.changeState(DairyRun.PREVIOUS_STATE);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.PREVIOUS_STATE);
 				break;
 			default:
 				break;
@@ -185,7 +186,7 @@ public class InputManager implements InputProcessor, GestureListener {
 		scroll = amount;
 		return true;
 	}
-	
+
 	public static boolean getIgnoreInput() {
 		return ignore_input;
 	}

@@ -30,7 +30,7 @@ public class Chaser {
 	private boolean yelling = false;
 
 	private Play play;
-	
+
 	private boolean removable;
 
 	// TODO: Create a better system for this.
@@ -89,7 +89,7 @@ public class Chaser {
 			this.rectanglei.setX(this.getX());
 			if (this.x + Map.size > this.play.getPlayer().getX() && this.x + Map.size < this.play.getPlayer().getX() + Map.size) {
 				this.play.getPlayer().loseOneLife();
-				//TODO: add action / text / animation here
+				// TODO: add action / text / animation here
 				this.removable = true;
 			}
 		}
@@ -97,8 +97,8 @@ public class Chaser {
 
 	public void render(SpriteBatch sb, int current_scroll) {
 		if (this.yelling) {
-			FontManager.FONT.PIXEL_REGULAR.render(sb, "MILK!", Color.RED, 0.5f, 0.5f, this.x - Map.size, this.play.ground_level + Map.size
-					* 2);
+			FontManager.FONT.PIXEL_REGULAR.render(sb, "MILK!", Color.RED, this.x - Map.size / 4, this.x + Map.size / 4 + Map.size,
+					this.play.ground_level + Map.size * 1.0f, this.play.ground_level + Map.size * 1.5f);
 		}
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.character + 28
 				+ TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrameNumber()), this.x, this.play.ground_level, Map.size,

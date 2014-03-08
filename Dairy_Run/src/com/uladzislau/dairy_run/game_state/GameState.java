@@ -32,6 +32,10 @@ public abstract class GameState {
 	public abstract void resume();
 
 	public abstract void dispose();
+	
+	public byte getID() {
+		return this.STATE_ID;
+	}
 
 	public void stateChangedToThis() {
 	}

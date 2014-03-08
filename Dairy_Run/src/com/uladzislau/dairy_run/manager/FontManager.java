@@ -35,13 +35,13 @@ public class FontManager {
 				this.font = new BitmapFont(Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name
 						+ ".fnt"), Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name
 						+ ".png"), false);
-				
-				float width_scale = ((float)Map.size) / ((float)this.getWidth("A"));
-				float height_scale = ((float)Map.size) / ((float)this.getHeight("A"));
+
+				float width_scale = ((float) Map.size) / ((float) this.getWidth("A"));
+				float height_scale = ((float) Map.size) / ((float) this.getHeight("A"));
 				this.setXScale(width_scale * this.x_scale);
 				this.setYScale(height_scale * this.y_scale);
 				
-				
+				StaticUtil.log("Font X Scale", "" + this.x_scale);
 
 				this.initialized = true;
 			} else {
@@ -63,16 +63,46 @@ public class FontManager {
 			this.setYScale(y_scale_temp);
 		}
 
-		public void render(SpriteBatch sb, String string, Color color, float Xscale, float Yscale, int x, int y) {
+//		public void render(SpriteBatch sb, String string, Color color, float Xscale, float Yscale, int x, int y) {
+//			this.font.setColor(color);
+//			float x_scale_temp = this.x_scale;
+//			float y_scale_temp = this.y_scale;
+//			this.setXScale(this.x_scale * Xscale);
+//			this.setYScale(this.y_scale * Yscale);
+//			this.font.draw(sb, string, x, y);
+//			this.setXScale(x_scale_temp);
+//			this.setYScale(y_scale_temp);
+//			this.font.setColor(Color.WHITE);
+//		}
+
+		public void render(SpriteBatch sprite_batch, String string, Color color, float x1, float x2, float y1, float y2) {
 			this.font.setColor(color);
 			float x_scale_temp = this.x_scale;
 			float y_scale_temp = this.y_scale;
-			this.setXScale(this.x_scale * Xscale);
-			this.setYScale(this.y_scale * Yscale);
-			this.font.draw(sb, string, x, y);
+
+			float width_scale = ((x2 - x1) / (this.getWidth(string)));
+			float height_scale = ((y2 - y1) / (this.getHeight(string)));
+			this.setXScale(width_scale * this.x_scale);
+			this.setYScale(height_scale * this.y_scale);
+
+			this.font.draw(sprite_batch, string, x1, y1 + (y2 - y1));
 			this.setXScale(x_scale_temp);
 			this.setYScale(y_scale_temp);
 			this.font.setColor(Color.WHITE);
+		}
+
+		public void render(SpriteBatch sprite_batch, String string, float x1, float x2, float y1, float y2) {
+			float x_scale_temp = this.x_scale;
+			float y_scale_temp = this.y_scale;
+
+			float width_scale = ((x2 - x1) / (this.getWidth(string)));
+			float height_scale = ((y2 - y1) / (this.getHeight(string)));
+			this.setXScale(width_scale * this.x_scale);
+			this.setYScale(height_scale * this.y_scale);
+
+			this.font.draw(sprite_batch, string, x1, y1);
+			this.setXScale(x_scale_temp);
+			this.setYScale(y_scale_temp);
 		}
 
 		public void render(SpriteBatch sb, Color color, String string, int x, int y) {

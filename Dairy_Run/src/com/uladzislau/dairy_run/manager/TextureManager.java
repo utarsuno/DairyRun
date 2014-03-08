@@ -3,6 +3,7 @@ package com.uladzislau.dairy_run.manager;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
@@ -81,7 +82,8 @@ public class TextureManager {
 
 	public static enum SPRITESHEET implements Resource {
 		PIXEL_SPRITESHEET("pixel_spritesheet", "http://opengameart.org/content/platformer-art-pixel-redux", 31, 31, 2, 2, 21, 21), BACKGROUNDS(
-				"Backgrounds", "http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231, 63);
+				"Backgrounds", "http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231,
+				63);
 
 		private final String name;
 		private final String source;
@@ -135,8 +137,7 @@ public class TextureManager {
 				if (this.texture == null) {
 					this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
 							+ this.name + ".png"));
-					// this.texture.setFilter(TextureFilter.MipMapNearestNearest,
-					// TextureFilter.MipMapNearestNearest);
+					this.texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 					int x = 0;
 					int y = 0;
 					int r = 0;
