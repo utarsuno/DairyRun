@@ -5,8 +5,8 @@ import com.uladzislau.dairy_run.manager.TextureManager;
 
 public class Background {
 
-	public static final float SCROLL_RATE = (1.0f/6.0f);
-	
+	public static final float SCROLL_RATE = (1.0f / 6.0f);
+
 	public static final byte BLUE = 0;
 	public static final byte GREEN = 1;
 	public static final byte BROWN = 2;
@@ -35,17 +35,17 @@ public class Background {
 			break;
 		}
 	}
-	
-	public void render(SpriteBatch sb, int x) {
+
+	public void render(SpriteBatch sb, int xp) {
 		switch (this.type) {
 		case BLUE:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 0, x, 0);
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 0, xp, 0);
 			break;
 		case GREEN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 1, x, 0);
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 1, xp, 0);
 			break;
 		case BROWN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 2, x, 0);
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 2, xp, 0);
 			break;
 		default:
 			break;

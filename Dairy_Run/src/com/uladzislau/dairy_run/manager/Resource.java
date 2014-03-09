@@ -6,7 +6,7 @@ public interface Resource {
 	 * Creates the desired resource. If the resource has already been created the program will log an error.
 	 */
 	public abstract void initialize();
-	
+
 	/**
 	 * @return the name of this resource.
 	 */

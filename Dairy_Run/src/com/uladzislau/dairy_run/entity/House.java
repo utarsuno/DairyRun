@@ -210,9 +210,11 @@ public class House {
 		// Render the milk-needed.
 		for (int i = 0; i < this.number_of_milks; i++) {
 			sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f - this.milkFader[i].percentComplete());
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_needed[i]), x
-					+ ((Map.size * this.width) - MathUtils.round(((Map.size * 0.1f)) * (this.number_of_milks - 1) + Map.size * this.number_of_milks)) / 2
-					+ Map.size * i + (Map.size * 0.1f) * i, Map.size * (this.height + 2) - Map.size / 2, Map.size, Map.size);
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_needed[i]),
+					x
+							+ ((Map.size * this.width) - MathUtils.round(((Map.size * 0.1f)) * (this.number_of_milks - 1) + Map.size
+									* this.number_of_milks)) / 2 + Map.size * i + (Map.size * 0.1f) * i, Map.size * (this.height + 2)
+							- Map.size / 2, Map.size, Map.size);
 			sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f);
 		}
 	}

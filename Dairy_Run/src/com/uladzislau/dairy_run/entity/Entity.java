@@ -11,5 +11,5 @@ public class Entity {
 	public void setX(int x) {
 		this.x = x;
 	}
-	
+
 }

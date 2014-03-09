@@ -56,7 +56,7 @@ public class Circlef {
 	public void setArea(float area) {
 		this.area = area;
 	}
-	
+
 	public void setArea() {
 		this.area = (float) Math.PI * (this.radius * this.radius);
 	}

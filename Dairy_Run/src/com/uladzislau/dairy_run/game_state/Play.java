@@ -140,7 +140,9 @@ public class Play extends GameState {
 					AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.stop();
 				}
 				AudioManager.MUSIC.TEMP_MUSIC.play(.20f);
-				this.song_started = true;
+				if (AudioManager.MUSIC.TEMP_MUSIC.isPlaying()) {
+					this.song_started = true;
+				}
 			}
 		}
 		if (this.just_resumed) {
@@ -177,8 +179,10 @@ public class Play extends GameState {
 			if (this.tapped_to_start) {
 				this.player.update(delta, this.current_scroll);
 
-				this.acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
-				this.velocity += this.acceleration;
+				if (!this.lost) {
+					this.acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
+					this.velocity += this.acceleration;
+				}
 				this.current_scroll -= this.velocity;
 
 				// If the background has moved off the screen, shift it back into view.
@@ -215,6 +219,8 @@ public class Play extends GameState {
 
 					if (this.main_menu.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 						this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
+						setLost(false);
+						reset();
 					}
 					if (this.retry.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 						retry();
@@ -281,8 +287,8 @@ public class Play extends GameState {
 		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.BLACK, "" + MathUtil.round(this.velocity, 2), 0,
 				ScreenUtil.screen_height);
 
-		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "" + this.player.getNumberOfMilksDelivered(), 0, ScreenUtil.screen_height
-				- Map.size);
+		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.BLACK, "" + this.player.getNumberOfMilksDelivered(), 0,
+				ScreenUtil.screen_height - Map.size);
 
 		for (Chaser chaser : this.chasers) {
 			chaser.render(this.sprite_batch, this.current_scroll);
@@ -315,6 +321,12 @@ public class Play extends GameState {
 		}
 
 		this.sprite_batch.end();
+	}
+
+	private void setLost(boolean b) {
+		this.lost = false;
+		AudioManager.SOUND.DEATH_ONE.setMuted(false);
+		AudioManager.SOUND.DEATH_TWO.setMuted(false);
 	}
 
 	public void resetPositionsForAllEntities() {
@@ -359,16 +371,19 @@ public class Play extends GameState {
 		resetPositionsForAllEntities();
 		this.tapped_to_start = false;
 		this.chasers.clear();
+		Chaser.number_of_chasers_created = 0;
 		this.player.reset();
 		this.velocity = 8;
 	}
 
 	public void lose() {
 		this.lost = true;
+		AudioManager.SOUND.DEATH_ONE.setMuted(true);
+		AudioManager.SOUND.DEATH_TWO.setMuted(true);
 	}
 
 	public void retry() {
-		this.lost = false;
+		setLost(false);
 		this.tapped_to_start = false;
 		Score.setCurrentMilkScore(this.player.getNumberOfMilksDelivered());
 		Score.setCurrentVelocityScore(this.velocity);

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.information.ScreenUtil;
+import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
@@ -75,6 +76,7 @@ public class GameStateManager {
 	}
 
 	public void changeState(byte state_id) {
+		AudioManager.SOUND.TRANSITION_00.playSound();
 		transitioning_states = true;
 		this.transitioning_states_timer.reset();
 		InputManager.setIgnoreInput(true);

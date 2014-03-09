@@ -36,12 +36,14 @@ public class AudioManager {
 				"http://opengameart.org/content/fps-placeholder-sounds"), LAND("jumping" + java.io.File.separator + "land",
 				"http://opengameart.org/content/fps-placeholder-sounds"), POP("pop",
 				"http://opengameart.org/content/fps-placeholder-sounds"), MILK("milk" + java.io.File.separator + "milk", "darreon"), MILK2(
-				"milk" + java.io.File.separator + "milk2", "darreon"), MILK3("milk" + java.io.File.separator + "milk3", "darreon");
+				"milk" + java.io.File.separator + "milk2", "darreon"), MILK3("milk" + java.io.File.separator + "milk3", "darreon"), TRANSITION_00(
+				"transition" + java.io.File.separator + "transition_00", "https://www.freesound.org/people/Halgrimm/sounds/195463/");
 
 		private final String name;
 		private final String source;
 		private Sound sound;
 		private boolean initialized;
+		private boolean muted;
 
 		SOUND(String name, String source) {
 			this.name = name;
@@ -61,7 +63,7 @@ public class AudioManager {
 		}
 
 		public void playSound() {
-			if (sound_on) {
+			if (sound_on && !this.muted) {
 				if (this.initialized) {
 					this.sound.play();
 				} else {
@@ -71,7 +73,7 @@ public class AudioManager {
 		}
 
 		public void playSound(float volume) {
-			if (sound_on) {
+			if (sound_on && !this.muted) {
 				this.sound.play(volume);
 			}
 		}
@@ -107,6 +109,14 @@ public class AudioManager {
 			return null;
 		}
 
+		public boolean isMuted() {
+			return this.muted;
+		}
+
+		public void setMuted(boolean muted) {
+			this.muted = muted;
+		}
+
 	}
 
 	public enum MUSIC implements Resource {
@@ -118,6 +128,7 @@ public class AudioManager {
 		private Music music;
 		private static DeltaTimer fade_timer;
 		private boolean initialized;
+		private boolean muted;
 
 		MUSIC(String name, String source) {
 			this.name = name;
@@ -182,8 +193,10 @@ public class AudioManager {
 		}
 
 		public void play(float volume) {
-			this.music.play();
-			this.music.setVolume(volume);
+			if (music_on) {
+				this.music.play();
+				this.music.setVolume(volume);
+			}
 		}
 
 		@Override
@@ -198,8 +211,16 @@ public class AudioManager {
 
 		@Override
 		public String currentStatus() {
-			// TODO Auto-generated method stub
-			return null;
+			return "Initialized: " + this.initialized + "\tMuted: " + this.muted + "\tisPlaying: " + this.isPlaying() + "\tisPaused: "
+					+ this.isPaused();
+		}
+
+		public boolean isMuted() {
+			return this.muted;
+		}
+
+		public void setMuted(boolean muted) {
+			this.muted = muted;
 		}
 
 	}
@@ -340,7 +361,7 @@ public class AudioManager {
 
 	private static void startAllMusic() {
 		for (MUSIC music : MUSIC.values()) {
-			if (music.isInitialized() && music.isPaused()) {
+			if (music_on && music.isInitialized() && music.isPaused()) {
 				music.play();
 			}
 		}
@@ -356,7 +377,7 @@ public class AudioManager {
 
 	public static void resumeAllMusic() {
 		for (MUSIC music : MUSIC.values()) {
-			if (music.isInitialized() && music.isPaused()) {
+			if (music_on && music.isInitialized() && music.isPaused()) {
 				music.setPaused(false);
 				music.play();
 			}

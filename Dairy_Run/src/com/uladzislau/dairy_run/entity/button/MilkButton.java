@@ -24,7 +24,7 @@ public class MilkButton extends CircleButton {
 	}
 	private boolean[] track = new boolean[8];
 	private boolean[] increments = new boolean[8];
-	
+
 	private Play play;
 
 	public MilkButton(float x, float y, float radius, short type, Play play) {
@@ -64,8 +64,8 @@ public class MilkButton extends CircleButton {
 	@Override
 	public void render(SpriteBatch sb) {
 		// Render the button.
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_type), this.getX() - Map.size / 2, this.getY() - Map.size / 2,
-				Map.size, Map.size);
+		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_type), this.getX() - Map.size / 2, this.getY() - Map.size
+				/ 2, Map.size, Map.size);
 	}
 
 	private void deliverMilk() {

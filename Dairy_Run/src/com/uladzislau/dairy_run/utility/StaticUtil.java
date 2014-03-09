@@ -9,10 +9,12 @@ public class StaticUtil {
 	}
 
 	public static void log(String title, String message) {
+		System.out.println(title + "\t" + message);
 		Gdx.app.log(title, message);
 	}
 
 	public static void error(String title, String message) {
+		System.out.println(title + "\t" + message);
 		Gdx.app.error(title, message);
 	}
 

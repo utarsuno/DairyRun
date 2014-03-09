@@ -34,7 +34,7 @@ public class Chaser {
 	private boolean removable;
 
 	// TODO: Create a better system for this.
-	private static int number_of_chasers_created = 0;
+	public static int number_of_chasers_created = 0;
 
 	// TODO: Possible have a static rectangle method (in geometry class) which takes dimensions and determines if they are colliding
 	private Rectanglei rectanglei;

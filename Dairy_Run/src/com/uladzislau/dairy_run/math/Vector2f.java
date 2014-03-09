@@ -2,8 +2,8 @@ package com.uladzislau.dairy_run.math;
 
 public class Vector2f {
 
-	public static final Vector2f ZERO_VECTOR2F = new Vector2f(0.0f,0.0f);
-	
+	public static final Vector2f ZERO_VECTOR2F = new Vector2f(0.0f, 0.0f);
+
 	public float x;
 	public float y;
 	public float magnitude;

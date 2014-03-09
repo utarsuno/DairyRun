@@ -21,7 +21,7 @@ public class Rectanglef {
 		}
 		return true;
 	}
-	
+
 	public boolean isCollidingWithRect(Rectanglef rectangle) {
 		if (x + width < rectangle.getX() || x > rectangle.getX() + rectangle.getWidth() || y > rectangle.getY() + rectangle.getHeight()
 				|| y + height < rectangle.getY()) {

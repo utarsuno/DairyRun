@@ -53,7 +53,7 @@ public class Player {
 			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
 			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (80 / (this.play.getVelocity() / 5)));
 		}
-		//TEMP!!!
+		// TEMP!!!
 		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
 		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (80 / (this.play.getVelocity() / 5)));
 	}
