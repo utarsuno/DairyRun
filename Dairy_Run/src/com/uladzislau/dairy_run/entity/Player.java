@@ -1,14 +1,17 @@
 package com.uladzislau.dairy_run.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
+import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
+import com.uladzislau.dairy_run.math_utility.MathUtil;
 
 public class Player {
 
@@ -67,6 +70,18 @@ public class Player {
 			} else {
 				sb.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
 			}
+		}
+
+		// TODO: Rendering these in a pretty fashion will need serious work.
+		FontManager.FONT.PIXEL_REGULAR.render(sb, "" + MathUtil.round(this.play.getVelocity(), 2), Color.BLACK, Map.size * 0.1f,
+				Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 0.9f, ScreenUtil.screen_height - Map.size * 0.1f);
+
+		if (getNumberOfMilksDelivered() < 10) {
+			FontManager.FONT.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 0.9f,
+					ScreenUtil.screen_height - Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
+		} else {
+			FontManager.FONT.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 1.9f,
+					ScreenUtil.screen_height - Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
 		}
 
 		// Render the player's health at the top right of the screen.

@@ -2,6 +2,7 @@ package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.Color;
 
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.manager.FontManager;
@@ -9,7 +10,6 @@ import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
-import com.uladzislau.dairy_run.utility.P;
 
 public class Chaser {
 
@@ -71,14 +71,15 @@ public class Chaser {
 			if (this.yellTimer.isFinished()) {
 				this.yelling ^= true;
 
-				// int random = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
-				// if (random == 0) {
-				// AudioManager.SOUND.MILK.playSound();
-				// } else if (random == 1) {
-				// AudioManager.SOUND.MILK2.playSound();
-				// } else if (random == 2) {
-				// AudioManager.SOUND.MILK3.playSound();
-				// }
+//				 int random = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+//				 if (random == 0) {
+//				 AudioManager.SOUND.MILK.playSound(0.10f);
+//				 } else if (random == 1) {
+//				 AudioManager.SOUND.MILK2.playSound(0.10f);
+//				 } else if (random == 2) {
+//				 AudioManager.SOUND.MILK3.playSound(0.10f);
+//				 }
+				
 				this.yellTimer.reset();
 			}
 			if (this.killable) {

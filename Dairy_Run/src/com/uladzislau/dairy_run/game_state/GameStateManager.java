@@ -15,7 +15,8 @@ public class GameStateManager {
 	public static final byte PREVIOUS_STATE = -2;
 	public static final byte TERMINATE = -1;
 	public static final byte MAIN_MENU = 0;
-	public static final byte PLAY = 1;
+	public static final byte LEVEL_SELECTOR = 1;
+	public static final byte PLAY = 2;
 
 	public static boolean transitioning_states;
 	public static boolean fading_out;
@@ -23,6 +24,7 @@ public class GameStateManager {
 	public GameState current_state;
 	public byte previous_state = -9;
 	private GameState main_menu;
+	private GameState level_selector;
 	private GameState play;
 
 	private DeltaTimer transitioning_states_timer;
@@ -33,8 +35,10 @@ public class GameStateManager {
 		this.resourceManager = rm;
 		this.transitioning_states_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 250);
 		this.main_menu = new MainMenu(dr, GameStateManager.MAIN_MENU);
+		this.level_selector = new LevelSelector(dr, GameStateManager.LEVEL_SELECTOR);
 		this.play = new Play(dr, GameStateManager.PLAY);
 		this.main_menu.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
+		this.level_selector.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.play.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.current_state = this.main_menu;
 		this.previous_state = this.current_state.getID();
@@ -49,10 +53,17 @@ public class GameStateManager {
 				if (GameStateManager.fading_out) {
 					InputManager.setIgnoreInput(false);
 					GameStateManager.transitioning_states = false;
+					AudioManager.setMusicLevel(1.0f);
 				} else {
 					this.actuallyChangeState();
 					this.transitioning_states_timer.reset();
 					GameStateManager.fading_out = true;
+				}
+			} else {
+				if (GameStateManager.fading_out) {
+					AudioManager.setMusicLevel(this.transitioning_states_timer.percentComplete());
+				} else {
+					AudioManager.setMusicLevel(1.0f - this.transitioning_states_timer.percentComplete());
 				}
 			}
 		}
@@ -97,6 +108,9 @@ public class GameStateManager {
 			case MAIN_MENU:
 				this.current_state = this.main_menu;
 				break;
+			case LEVEL_SELECTOR:
+				this.current_state = this.level_selector;
+				break;
 			case PLAY:
 				this.current_state = this.play;
 				this.play.stateChangedToThis();
@@ -111,6 +125,9 @@ public class GameStateManager {
 			break;
 		case MAIN_MENU:
 			this.current_state = this.main_menu;
+			break;
+		case LEVEL_SELECTOR:
+			this.current_state = this.level_selector;
 			break;
 		case PLAY:
 			this.current_state = this.play;

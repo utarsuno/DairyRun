@@ -173,7 +173,7 @@ public class House {
 
 		if (getX() + (getWidth() + 1) * Map.size + current_scroll < 0) {
 			if (this.render_the_house) {
-				short milks_not_delievered[] = new short[number_of_milks];
+				short milks_not_delievered[] = new short[this.number_of_milks];
 				boolean create_chaser = false;
 				for (int i = 0; i < this.number_of_milks; i++) {
 					if (!this.milk_delievered[i]) {

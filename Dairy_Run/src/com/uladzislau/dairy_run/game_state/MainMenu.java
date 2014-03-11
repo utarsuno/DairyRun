@@ -51,7 +51,7 @@ public class MainMenu extends GameState {
 	public void update(float delta) {
 		if (!this.song_started && AudioManager.isMusicOn()) {
 			if (this.dairy_run.getResourceManager().music_initialized) {
-				AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.play(.15f);
+				AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.play(1.0f);
 				this.song_started = true;
 			}
 		}
@@ -63,7 +63,7 @@ public class MainMenu extends GameState {
 		if (this.initiate_button.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 			// TODO: Have the button remove it's color after this function call.
 			this.initiate_button.reset();
-			this.dairy_run.getGameStateManager().changeState(GameStateManager.PLAY);
+			this.dairy_run.getGameStateManager().changeState(GameStateManager.LEVEL_SELECTOR);
 		}
 		if (this.terminate.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 			this.dairy_run.getGameStateManager().changeState(GameStateManager.TERMINATE);
@@ -80,6 +80,7 @@ public class MainMenu extends GameState {
 		this.top_score.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		// this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width-Map.size*2, 0,
 		// Map.size * 2, Map.size * 2);
+		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 24), 0, 0, Map.size, Map.size);
 		this.sprite_batch.end();
 	}
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
+import com.uladzislau.dairy_run.utility.P;
 import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class AudioManager {
@@ -233,44 +234,6 @@ public class AudioManager {
 	}
 
 	public static void update(int delta) {
-		// float fade;
-		// if ((music_fading_in || music_fading_out) &&
-		// !fade_timer.isFinished()) {
-		// fade_timer.update(delta);
-		// if (music_fading_in) {
-		// fade = fade_timer.percentComplete();
-		// } else {
-		// fade = 1.0f - fade_timer.percentComplete();
-		// }
-		// if (main_menu_music.isPlaying()) {
-		// main_menu_music.setVolume(fade);
-		// }
-		// if (competitive_music != null && competitive_music.isPlaying()) {
-		// competitive_music.setVolume(fade);
-		// }
-		// }
-		// if (fade_timer.isFinished()) {
-		// if (music_fading_in) {
-		// fade = 1.0f;
-		// music_fading_in = false;
-		// } else {
-		// fade = 0.0f;
-		// music_fading_out = false;
-		// }
-		// if (main_menu_music.isPlaying()) {
-		// main_menu_music.setVolume(fade);
-		// if (fade == 0.0f) {
-		// main_menu_music.stop();
-		// }
-		// }
-		// if (competitive_music != null && competitive_music.isPlaying()) {
-		// competitive_music.setVolume(fade);
-		// if (fade == 0.0f) {
-		// competitive_music.stop();
-		// }
-		// }
-		// fade_timer.reset();
-		// }
 	}
 
 	public static float getAudioLevel() {

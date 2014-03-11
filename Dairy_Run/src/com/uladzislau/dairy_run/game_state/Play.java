@@ -61,6 +61,8 @@ public class Play extends GameState {
 	private ClickableText retry;
 	private ClickableText main_menu;
 
+	private ClickableText run;
+
 	public Play(DairyRun dairy_run, byte id) {
 		super(dairy_run, id);
 	}
@@ -90,7 +92,8 @@ public class Play extends GameState {
 		// Create the trees.
 		this.trees = new Tree[30];
 		for (int i = 0; i < this.trees.length; i++) {
-			this.trees[i] = new Tree(this.ground_level, 30);
+			this.trees[i] = new Tree(this.ground_level, i, this.trees.length);
+			this.trees[i].resetPosition(this.current_scroll);
 		}
 		// Create the buttons.
 		this.buttons = new CircleButton[4];
@@ -119,6 +122,7 @@ public class Play extends GameState {
 		this.main_menu = new ClickableText("Main Menu", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 6.5f,
 				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
 						- (ScreenUtil.screen_height - Map.size * 2.5f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+
 	}
 
 	boolean play_sound = true;
@@ -139,7 +143,7 @@ public class Play extends GameState {
 				if (AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.isPlaying()) {
 					AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.stop();
 				}
-				AudioManager.MUSIC.TEMP_MUSIC.play(.20f);
+				AudioManager.MUSIC.TEMP_MUSIC.play(1.0f);
 				if (AudioManager.MUSIC.TEMP_MUSIC.isPlaying()) {
 					this.song_started = true;
 				}
@@ -282,14 +286,6 @@ public class Play extends GameState {
 			button.render(this.sprite_batch);
 		}
 
-		// TODO: move the velocity and milk rendering.
-		// Render the player's velocity.
-		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.BLACK, "" + MathUtil.round(this.velocity, 2), 0,
-				ScreenUtil.screen_height);
-
-		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.BLACK, "" + this.player.getNumberOfMilksDelivered(), 0,
-				ScreenUtil.screen_height - Map.size);
-
 		for (Chaser chaser : this.chasers) {
 			chaser.render(this.sprite_batch, this.current_scroll);
 		}
@@ -309,6 +305,12 @@ public class Play extends GameState {
 		} else {
 			// Render the player.
 			this.player.render(this.sprite_batch, this.current_scroll);
+
+			if (this.player.isScared()) {
+				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "RUN!", Color.RED, ScreenUtil.screen_width / 2
+						- ScreenUtil.screen_width / 4, ScreenUtil.screen_width / 2 + ScreenUtil.screen_width / 4, ScreenUtil.screen_height
+						/ 2 - ScreenUtil.screen_height / 8, ScreenUtil.screen_height / 2 + ScreenUtil.screen_height / 8);
+			}
 
 			if (this.lost) {
 				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1,
@@ -341,6 +343,7 @@ public class Play extends GameState {
 			this.ground_blocks[i].setX(i * Map.size);
 		}
 		for (int i = 0; i < this.trees.length; i++) {
+			this.trees[i].resetPosition(this.current_scroll);
 		}
 	}
 
