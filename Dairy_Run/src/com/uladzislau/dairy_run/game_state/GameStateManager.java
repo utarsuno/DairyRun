@@ -1,5 +1,7 @@
 package com.uladzislau.dairy_run.game_state;
 
+import java.util.Stack;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -22,10 +24,11 @@ public class GameStateManager {
 	public static boolean fading_out;
 
 	public GameState current_state;
-	public byte previous_state = -9;
 	private GameState main_menu;
 	private GameState level_selector;
 	private GameState play;
+
+	private Stack<Byte> state_history;
 
 	private DeltaTimer transitioning_states_timer;
 
@@ -35,13 +38,13 @@ public class GameStateManager {
 		this.resourceManager = rm;
 		this.transitioning_states_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 250);
 		this.main_menu = new MainMenu(dr, GameStateManager.MAIN_MENU);
-		this.level_selector = new LevelSelector(dr, GameStateManager.LEVEL_SELECTOR);
 		this.play = new Play(dr, GameStateManager.PLAY);
+		this.level_selector = new LevelSelector(dr, GameStateManager.LEVEL_SELECTOR, (Play) this.play);
 		this.main_menu.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.level_selector.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.play.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.current_state = this.main_menu;
-		this.previous_state = this.current_state.getID();
+		this.state_history = new Stack<Byte>();
 		GameStateManager.transitioning_states = false;
 		GameStateManager.fading_out = false;
 	}
@@ -86,6 +89,7 @@ public class GameStateManager {
 		this.resourceManager.getShapeRenderer().end();
 	}
 
+	@SuppressWarnings("boxing")
 	public void changeState(byte state_id) {
 		AudioManager.SOUND.TRANSITION_00.playSound();
 		transitioning_states = true;
@@ -93,18 +97,22 @@ public class GameStateManager {
 		InputManager.setIgnoreInput(true);
 		this.state_to_change_to = state_id;
 		if (this.state_to_change_to != GameStateManager.PREVIOUS_STATE) {
-			this.previous_state = this.current_state.getID();
+			this.state_history.push(this.current_state.getID());
 		}
 		GameStateManager.fading_out = false;
 	}
 
 	private byte state_to_change_to;
 
+	@SuppressWarnings("boxing")
 	private void actuallyChangeState() {
 		switch (this.state_to_change_to) {
 		case PREVIOUS_STATE:
-			byte temp_current_state = this.current_state.getID();
-			switch (this.previous_state) {
+			if (this.state_history.isEmpty()) {
+				DairyRun.exit();
+				break;
+			}
+			switch (this.state_history.pop()) {
 			case MAIN_MENU:
 				this.current_state = this.main_menu;
 				break;
@@ -118,7 +126,6 @@ public class GameStateManager {
 			default:
 				break;
 			}
-			this.previous_state = temp_current_state;
 			break;
 		case TERMINATE:
 			DairyRun.exit();
@@ -144,6 +151,10 @@ public class GameStateManager {
 
 	public void resumeCurrentState() {
 		this.current_state.resume();
+	}
+
+	public void clearHistoryStates() {
+		this.state_history.clear();
 	}
 
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
+import com.uladzislau.dairy_run.world.Map;
 
 public class Tree {
 
@@ -16,6 +17,8 @@ public class Tree {
 	private int y;
 	private int type;
 
+	private boolean render;
+
 	int position_in_array;
 	int array_size;
 
@@ -23,6 +26,7 @@ public class Tree {
 		this.position_in_array = i;
 		this.array_size = array_size;
 		this.y = y;
+		this.render = true;
 		randomize();
 	}
 
@@ -34,6 +38,11 @@ public class Tree {
 			} else {
 				this.short_tree_type = TREE_HEIGHT_ONE_DESIGN_TWO;
 			}
+		}
+		if (Dice.get_Random_Integer_From_Min_To_Max(0, 100) > 25) {
+			this.render = true;
+		} else {
+			this.render = false;
 		}
 	}
 
@@ -72,34 +81,37 @@ public class Tree {
 	}
 
 	public void render(SpriteBatch sb, int current_scroll) {
-		if (this.type == 1) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.short_tree_type), this.x + current_scroll, this.y, Map.size,
-					Map.size);
-		} else if (this.type == 2) {
-			// Base
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 1), this.x + current_scroll, this.y, Map.size, Map.size);
-			// Green block
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), this.x + current_scroll, this.y + Map.size,
-					Map.size, Map.size);
-			// Green block
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), this.x + current_scroll, this.y + Map.size * 2,
-					Map.size, Map.size);
-			// Left block
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), this.x - Map.size + current_scroll, this.y
-					+ Map.size, Map.size, Map.size);
-			// Left block
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), this.x - Map.size + current_scroll, this.y
-					+ Map.size * 2, Map.size, Map.size);
-			// Right block
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), this.x + Map.size + current_scroll, this.y
-					+ Map.size, Map.size, Map.size);
-			// Right block
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), this.x + Map.size + current_scroll, this.y
-					+ Map.size * 2, Map.size, Map.size);
-			// Top block
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 21 + 0), this.x + current_scroll, this.y + Map.size * 3,
-					Map.size, Map.size);
+		if (this.render) {
+			if (this.type == 1) {
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.short_tree_type), this.x + current_scroll, this.y,
+						Map.size, Map.size);
+			} else if (this.type == 2) {
+				// Base
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 1), this.x + current_scroll, this.y, Map.size,
+						Map.size);
+				// Green block
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), this.x + current_scroll, this.y + Map.size,
+						Map.size, Map.size);
+				// Green block
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), this.x + current_scroll, this.y + Map.size * 2,
+						Map.size, Map.size);
+				// Left block
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), this.x - Map.size + current_scroll, this.y
+						+ Map.size, Map.size, Map.size);
+				// Left block
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), this.x - Map.size + current_scroll, this.y
+						+ Map.size * 2, Map.size, Map.size);
+				// Right block
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), this.x + Map.size + current_scroll, this.y
+						+ Map.size, Map.size, Map.size);
+				// Right block
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), this.x + Map.size + current_scroll, this.y
+						+ Map.size * 2, Map.size, Map.size);
+				// Top block
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 21 + 0), this.x + current_scroll, this.y + Map.size * 3,
+						Map.size, Map.size);
 
+			}
 		}
 	}
 

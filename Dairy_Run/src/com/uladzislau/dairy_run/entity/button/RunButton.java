@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
@@ -13,6 +12,7 @@ import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.geometry.Circlef;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
+import com.uladzislau.dairy_run.world.Map;
 
 public class RunButton extends CircleButton {
 

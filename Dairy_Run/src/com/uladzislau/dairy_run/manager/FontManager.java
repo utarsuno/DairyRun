@@ -1,15 +1,16 @@
 package com.uladzislau.dairy_run.manager;
 
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.utility.StaticUtil;
+import com.uladzislau.dairy_run.world.Map;
 
 public class FontManager {
 
-	// BMFont from http://www.angelcode.com/products/bmfont/ was used to generate the .fnt file.
+	// BMFont from http://www.angelcode.com/products/bmfont/ was used to generate the text .png and .fnt file.
 
 	public enum FONT implements Resource { // 1.0f, 1.0f);
 		PIXEL_REGULAR("pixel_regular", "Kenny Donation Pack");
@@ -53,28 +54,6 @@ public class FontManager {
 		public void render(SpriteBatch sb, String string, int x, int y) {
 			this.font.draw(sb, string, x, y);
 		}
-
-		public void render(SpriteBatch sb, String string, float Xscale, float Yscale, int x, int y) {
-			float x_scale_temp = this.x_scale;
-			float y_scale_temp = this.y_scale;
-			this.setXScale(Xscale);
-			this.setYScale(Yscale);
-			this.font.draw(sb, string, x, y);
-			this.setXScale(x_scale_temp);
-			this.setYScale(y_scale_temp);
-		}
-
-		// public void render(SpriteBatch sb, String string, Color color, float Xscale, float Yscale, int x, int y) {
-		// this.font.setColor(color);
-		// float x_scale_temp = this.x_scale;
-		// float y_scale_temp = this.y_scale;
-		// this.setXScale(this.x_scale * Xscale);
-		// this.setYScale(this.y_scale * Yscale);
-		// this.font.draw(sb, string, x, y);
-		// this.setXScale(x_scale_temp);
-		// this.setYScale(y_scale_temp);
-		// this.font.setColor(Color.WHITE);
-		// }
 
 		public void render(SpriteBatch sprite_batch, String string, Color color, float x1, float x2, float y1, float y2) {
 			this.font.setColor(color);

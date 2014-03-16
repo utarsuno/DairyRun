@@ -1,15 +1,18 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.manager.TextureManager;
+import com.uladzislau.dairy_run.world.Map;
 
-public class Bird {
+public class Bird extends Entity {
 
-	private int x;
-	private int y;
+	public Bird(Play play) {
+		super(play);
+	}
 
 	public void render(SpriteBatch sb, int current_scroll) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 10 + 15), x + current_scroll, y, Map.size, Map.size);
+		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 10 + 15), getX() + current_scroll, getY(), Map.size, Map.size);
 	}
 
 }

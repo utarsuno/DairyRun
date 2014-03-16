@@ -1,14 +1,15 @@
 package com.uladzislau.dairy_run.game_state;
 
 import com.badlogic.gdx.graphics.Color;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
-import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
+import com.uladzislau.dairy_run.world.Map;
 
 public class LevelSelector extends GameState {
 
@@ -16,8 +17,11 @@ public class LevelSelector extends GameState {
 
 	private int x_scroll;
 
-	public LevelSelector(DairyRun dairy_run, byte id) {
+	private Play play;
+		
+	public LevelSelector(DairyRun dairy_run, byte id, Play play) {
 		super(dairy_run, id);
+		this.play = play;
 	}
 
 	@Override
@@ -35,8 +39,14 @@ public class LevelSelector extends GameState {
 	private void createLevels() {
 		// Level One.
 		this.levels[0].setVelocityMatters(true);
-		this.levels[0].setVelocityNeeded(10.0f);
+		this.levels[0].setVelocityNeededToWin(10.0f);
 		this.levels[0].setUnlocked(true);
+		this.levels[0].setRunButtonEnabled(false);
+		this.levels[0].setCreateChasers(false);
+		this.levels[0].setRegularMilkButtonEnabled(true);
+		this.levels[0].setChocolateMilkButtonEnabled(false);
+		this.levels[0].setStrawberryMilkButtonEnabled(false);
+		// Level Two.
 	}
 
 	private int previous_x;
@@ -51,17 +61,35 @@ public class LevelSelector extends GameState {
 							&& InputManager.pointers[0].y > Map.size && InputManager.pointers[0].y < Map.size * 4) {
 						// TODO: Have error sound playing if the level is locked.
 						if (this.levels[i].isUnlocked()) {
+							this.play.setLevel(this.levels[i]);
 							this.dairy_run.getGameStateManager().changeState(GameStateManager.PLAY);
 						}
 					}
 				}
 			}
+
+			// if (InfoUtil.CURRENT_PLATEFORM == InfoUtil.ANDRIOD) {
+			// if (InputManager.pointersSwipingHorizontally[0]) {
+			// P.p("XV: " + InputManager.pointersVelocity[0].x);
+			// InputManager.pointersVelocity[0].x *= 0.45f;
+			// }
+			// }
+			//
+			// InputManager.pointersVelocity[0].x *= 0.5f;
+			// this.x_scroll += InputManager.pointersVelocity[0].x;
+
+		}
+
+		// if (InfoUtil.CURRENT_PLATEFORM == InfoUtil.DESKTOP) {
+		if (InputManager.pointersDragging[0]) {
 			this.x_scroll += InputManager.pointers[0].x - this.previous_x;
-			if (this.x_scroll > 0) {
-				this.x_scroll = 0;
-			}
 		}
 		this.previous_x = InputManager.pointers[0].x;
+		// }
+
+		if (this.x_scroll > 0) {
+			this.x_scroll = 0;
+		}
 	}
 
 	private int spacing = (int) ((Map.size * 3) * 0.2f);
@@ -79,13 +107,17 @@ public class LevelSelector extends GameState {
 					this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 11), Map.size + this.x_scroll
 							+ Map.size * 3 * i + this.spacing * i, Map.size, Map.size * 3, Map.size * 3);
 				}
-				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "" + i, Color.WHITE, Map.size + this.x_scroll + Map.size * 3 * i
-						+ this.spacing * i, Map.size + this.x_scroll + Map.size * 3 * i + this.spacing * i + Map.size * 3, Map.size * 4,
-						Map.size * 6);
+				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "" + (i + 1), Color.WHITE, Map.size + this.x_scroll + Map.size * 3
+						* i + this.spacing * i, Map.size + this.x_scroll + Map.size * 3 * i + this.spacing * i + Map.size * 3,
+						Map.size * 4, Map.size * 6);
 			}
 		}
 
 		this.sprite_batch.end();
+	}
+
+	@Override
+	public void stateChangedToThis() {
 	}
 
 	@Override

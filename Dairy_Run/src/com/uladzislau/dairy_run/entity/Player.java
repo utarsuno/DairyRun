@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.uladzislau.dairy_run.game_state.Play;
+import com.uladzislau.dairy_run.gui.Heart;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
@@ -12,6 +13,7 @@ import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.math_utility.MathUtil;
+import com.uladzislau.dairy_run.world.Map;
 
 public class Player {
 

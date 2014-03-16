@@ -1,14 +1,18 @@
 package com.uladzislau.dairy_run.manager;
 
+import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.game_state.GameStateManager;
 import com.uladzislau.dairy_run.information.ScreenUtil;
+import com.uladzislau.dairy_run.math.Vector2f;
 import com.uladzislau.dairy_run.math.Vector2i;
-import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class InputManager implements InputProcessor, GestureListener {
 
@@ -16,27 +20,44 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	public static int scroll;
 
+	public static final int NUMBER_OF_POINTERS = 8;
 	public static Vector2i pointers[];
 	public static boolean pointersDown[];
 	public static boolean pointersDragging[];
+	public static boolean pointersSwipingHorizontally[];
+	public static Vector2f pointersVelocity[];
 
 	private final DairyRun dairy_run;
 
 	public InputManager(DairyRun dairy_run) {
 		this.dairy_run = dairy_run;
 		ignore_input = false;
-		pointers = new Vector2i[8];
-		for (int i = 0; i < 8; i++) {
+		pointers = new Vector2i[NUMBER_OF_POINTERS];
+		for (int i = 0; i < NUMBER_OF_POINTERS; i++) {
 			pointers[i] = new Vector2i();
 		}
-		pointersDown = new boolean[8];
-		for (int i = 0; i < 8; i++) {
+		pointersDown = new boolean[NUMBER_OF_POINTERS];
+		for (int i = 0; i < NUMBER_OF_POINTERS; i++) {
 			pointersDown[i] = false;
 		}
-		pointersDragging = new boolean[8];
-		for (int i = 0; i < 8; i++) {
+		pointersDragging = new boolean[NUMBER_OF_POINTERS];
+		for (int i = 0; i < NUMBER_OF_POINTERS; i++) {
 			pointersDragging[i] = false;
 		}
+		pointersSwipingHorizontally = new boolean[NUMBER_OF_POINTERS];
+		for (int i = 0; i < NUMBER_OF_POINTERS; i++) {
+			pointersSwipingHorizontally[i] = false;
+		}
+		pointersVelocity = new Vector2f[NUMBER_OF_POINTERS];
+		for (int i = 0; i < NUMBER_OF_POINTERS; i++) {
+			pointersVelocity[i] = new Vector2f();
+		}
+		InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(new GestureDetector(this));
+		multiplexer.addProcessor(this);
+		Gdx.input.setInputProcessor(multiplexer);
+		Gdx.input.setCatchBackKey(true);
+		Gdx.input.setCatchMenuKey(true);
 	}
 
 	@Override
@@ -46,8 +67,6 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
-		StaticUtil.log("input", "" + x);
-		System.out.println(x);
 		return false;
 	}
 
@@ -58,6 +77,13 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	@Override
 	public boolean fling(float velocityX, float velocityY, int button) {
+		pointersVelocity[button].x = velocityX;
+		pointersVelocity[button].y = velocityY;
+		if (Math.abs(velocityX) > Math.abs(velocityY)) {
+			pointersSwipingHorizontally[button] = true;
+		} else {
+			pointersSwipingHorizontally[button] = false;
+		}
 		return false;
 	}
 
@@ -147,7 +173,7 @@ public class InputManager implements InputProcessor, GestureListener {
 			pointers[pointer].y = ScreenUtil.screen_height - screenY;
 			pointersDown[pointer] = true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -155,8 +181,9 @@ public class InputManager implements InputProcessor, GestureListener {
 		if (!ignore_input) {
 			pointersDown[pointer] = false;
 		}
+		pointersDown[pointer] = false;
 		pointersDragging[pointer] = false;
-		return true;
+		return false;
 	}
 
 	@Override
@@ -169,7 +196,7 @@ public class InputManager implements InputProcessor, GestureListener {
 			}
 			pointersDragging[pointer] = true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -178,13 +205,13 @@ public class InputManager implements InputProcessor, GestureListener {
 			pointers[0].x = screenX;
 			pointers[0].y = ScreenUtil.screen_height - screenY;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean scrolled(int amount) {
 		scroll = amount;
-		return true;
+		return false;
 	}
 
 	public static boolean getIgnoreInput() {

@@ -27,6 +27,8 @@ public abstract class GameState {
 
 	public abstract void render();
 
+	public abstract void stateChangedToThis();
+
 	public abstract void pause();
 
 	public abstract void resume();
@@ -35,9 +37,6 @@ public abstract class GameState {
 
 	public byte getID() {
 		return this.STATE_ID;
-	}
-
-	public void stateChangedToThis() {
 	}
 
 }

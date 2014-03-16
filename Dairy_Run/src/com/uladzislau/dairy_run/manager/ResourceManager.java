@@ -1,10 +1,11 @@
 package com.uladzislau.dairy_run.manager;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
-import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.information.ScreenUtil;
+import com.uladzislau.dairy_run.world.Map;
 
 public class ResourceManager {
 

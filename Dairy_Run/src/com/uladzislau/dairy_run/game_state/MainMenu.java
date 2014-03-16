@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
-import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.entity.Score;
+import com.uladzislau.dairy_run.entity.button.CircleButton;
+import com.uladzislau.dairy_run.entity.button.MusicButton;
 import com.uladzislau.dairy_run.gui.ClickableText;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
@@ -14,6 +15,7 @@ import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
+import com.uladzislau.dairy_run.world.Map;
 
 public class MainMenu extends GameState {
 
@@ -21,6 +23,8 @@ public class MainMenu extends GameState {
 	private ClickableText terminate;
 	private ClickableText top_score;
 	private ClickableText top_speed;
+
+	private CircleButton music_button;
 
 	public MainMenu(DairyRun dairy_run, byte id) {
 		super(dairy_run, id);
@@ -42,7 +46,7 @@ public class MainMenu extends GameState {
 				FontManager.FONT.PIXEL_REGULAR.getWidth("Top Score: " + Score.getMilkHighScore()), Map.size), new ColorXv(
 				ColorXv.TEAL.getR(), ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(), ColorXv.BLUE.getG(),
 				ColorXv.BLUE.getB()), 800);
-
+		this.music_button = new MusicButton(Map.size / 2, Map.size / 2, Map.size / 2);
 	}
 
 	private boolean song_started = false;
@@ -55,11 +59,9 @@ public class MainMenu extends GameState {
 				this.song_started = true;
 			}
 		}
-
 		this.initiate_button.update(delta);
 		this.terminate.update(delta);
 		this.top_score.update(delta);
-
 		if (this.initiate_button.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 			// TODO: Have the button remove it's color after this function call.
 			this.initiate_button.reset();
@@ -68,7 +70,7 @@ public class MainMenu extends GameState {
 		if (this.terminate.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 			this.dairy_run.getGameStateManager().changeState(GameStateManager.TERMINATE);
 		}
-
+		this.music_button.update(delta);
 	}
 
 	@Override
@@ -78,10 +80,12 @@ public class MainMenu extends GameState {
 		this.initiate_button.render(this.sprite_batch, true);
 		this.terminate.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.top_score.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		// this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width-Map.size*2, 0,
-		// Map.size * 2, Map.size * 2);
-		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 24), 0, 0, Map.size, Map.size);
+		this.music_button.render(this.sprite_batch);
 		this.sprite_batch.end();
+	}
+
+	@Override
+	public void stateChangedToThis() {
 	}
 
 	@Override

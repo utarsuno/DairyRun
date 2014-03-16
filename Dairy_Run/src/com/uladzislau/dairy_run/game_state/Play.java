@@ -12,7 +12,6 @@ import com.uladzislau.dairy_run.entity.Background;
 import com.uladzislau.dairy_run.entity.Chaser;
 import com.uladzislau.dairy_run.entity.GroundBlock;
 import com.uladzislau.dairy_run.entity.House;
-import com.uladzislau.dairy_run.entity.Map;
 import com.uladzislau.dairy_run.entity.Player;
 import com.uladzislau.dairy_run.entity.Score;
 import com.uladzislau.dairy_run.entity.Tree;
@@ -28,7 +27,7 @@ import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
-import com.uladzislau.dairy_run.math_utility.MathUtil;
+import com.uladzislau.dairy_run.world.Map;
 
 public class Play extends GameState {
 
@@ -63,6 +62,8 @@ public class Play extends GameState {
 
 	private ClickableText run;
 
+	private Level level;
+
 	public Play(DairyRun dairy_run, byte id) {
 		super(dairy_run, id);
 	}
@@ -87,7 +88,7 @@ public class Play extends GameState {
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, this.ground_blocks.length);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, Map.size, Map.size, this.ground_blocks.length);
 		}
 		// Create the trees.
 		this.trees = new Tree[30];
@@ -212,8 +213,17 @@ public class Play extends GameState {
 				}
 
 				// Check for button press. If pressed they will do their respective actions.
-				for (CircleButton button : this.buttons) {
-					button.update(delta);
+				if (this.level.isRunButtonEnabled()) {
+					this.buttons[0].update(delta);
+				}
+				if (this.level.isRegularMilkButtonEnabled()) {
+					this.buttons[1].update(delta);
+				}
+				if (this.level.isChocolateMilkButtonEnabled()) {
+					this.buttons[2].update(delta);
+				}
+				if (this.level.isStrawberryMilkButtonEnabled()) {
+					this.buttons[3].update(delta);
 				}
 
 				if (this.lost) {
@@ -223,6 +233,7 @@ public class Play extends GameState {
 
 					if (this.main_menu.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 						this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
+						this.dairy_run.getGameStateManager().clearHistoryStates();
 						setLost(false);
 						reset();
 					}
@@ -263,7 +274,7 @@ public class Play extends GameState {
 		// Render the ground.
 		for (GroundBlock gb : this.ground_blocks) {
 			// Every block is visible majority of the time, thus there is no need to check if it is off-screen.
-			gb.render(this.sprite_batch, gb.getX() + this.current_scroll);
+			gb.render(this.sprite_batch, this.current_scroll);
 		}
 		this.sprite_batch.end();
 
@@ -282,8 +293,17 @@ public class Play extends GameState {
 		}
 
 		// Render the buttons.
-		for (CircleButton button : this.buttons) {
-			button.render(this.sprite_batch);
+		if (this.level.isRunButtonEnabled()) {
+			this.buttons[0].render(this.sprite_batch);
+		}
+		if (this.level.isRegularMilkButtonEnabled()) {
+			this.buttons[1].render(this.sprite_batch);
+		}
+		if (this.level.isChocolateMilkButtonEnabled()) {
+			this.buttons[2].render(this.sprite_batch);
+		}
+		if (this.level.isStrawberryMilkButtonEnabled()) {
+			this.buttons[3].render(this.sprite_batch);
 		}
 
 		for (Chaser chaser : this.chasers) {
@@ -436,6 +456,14 @@ public class Play extends GameState {
 
 	public ArrayList<Chaser> getChasers() {
 		return this.chasers;
+	}
+
+	public Level getLevel() {
+		return this.level;
+	}
+
+	public void setLevel(Level level) {
+		this.level = level;
 	}
 
 }

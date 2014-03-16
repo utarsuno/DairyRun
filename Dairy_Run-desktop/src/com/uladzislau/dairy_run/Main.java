@@ -7,7 +7,7 @@ public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Dairy Run";
-		cfg.useGL20 = false;
+		cfg.useGL20 = true;
 		cfg.width = 1400;
 		cfg.height = 800;
 		cfg.samples = 2;

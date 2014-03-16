@@ -26,17 +26,17 @@ public class Rectanglei {
 	public boolean isCollidingWithRect(Rectanglei rectangle) {
 		if (this.x + this.width < rectangle.getX() || this.x > rectangle.getX() + rectangle.getWidth()
 				|| this.y > rectangle.getY() + rectangle.getHeight() || this.y + this.height < rectangle.getY()) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public boolean isCollidingWithRect(Rectanglef rectangle) {
 		if (this.x + this.width < rectangle.getX() || this.x > rectangle.getX() + rectangle.getWidth()
 				|| this.y > rectangle.getY() + rectangle.getHeight() || this.y + this.height < rectangle.getY()) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public boolean isPointInside(int x, int y) {

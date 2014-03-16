@@ -12,6 +12,7 @@ import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
+import com.uladzislau.dairy_run.world.Map;
 
 public class House {
 

@@ -1,12 +1,13 @@
 package com.uladzislau.dairy_run.entity.button;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.uladzislau.dairy_run.entity.Map;
+
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.geometry.Circlef;
+import com.uladzislau.dairy_run.world.Map;
 
 public class MilkButton extends CircleButton {
 

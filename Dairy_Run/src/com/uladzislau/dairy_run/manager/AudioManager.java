@@ -366,19 +366,6 @@ public class AudioManager {
 		return info;
 	}
 
-	//
-	// public static void playMusicFadeIn(byte music, int duration) {
-	// music_fading_in = true;
-	// fade_timer.setDuration(duration);
-	// playMusic(music, 0.0f);
-	// }
-	//
-	// public static void playMusicFadeOut(byte music, int duration) {
-	// music_fading_out = true;
-	// fade_timer.setDuration(duration);
-	// playMusic(music, 0.0f);
-	// }
-
 	public static void setSoundOn(boolean b) {
 		sound_on = b;
 	}
