@@ -101,4 +101,16 @@ public class MainMenu extends GameState {
 
 	}
 
+	@Override
+	public void stateFinishedFadingInToExit() {
+	}
+
+	@Override
+	public void stateFinishedFadingInToEntrance() {
+	}
+
+	@Override
+	public void stateFinishedFadingOut() {
+	}
+
 }

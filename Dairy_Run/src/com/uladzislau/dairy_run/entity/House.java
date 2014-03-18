@@ -64,26 +64,30 @@ public class House {
 
 	private boolean render_the_house;
 
-	private int total_number_of_houses;
-
 	private Play play;
 
-	public House(int x, int y, int total_number_of_houses, Play play) {
-		this.y = y;
-		this.houseRectanglei = new Rectanglei(x, y, -1, -1);
-		this.roofRectanglei = new Rectanglei(x, -1, -1, -1);
+	public House(Play play) {
+		this.houseRectanglei = new Rectanglei(-1, -1, -1, -1);
+		this.roofRectanglei = new Rectanglei(-1, -1, -1, -1);
 		this.brick_layers = new byte[2][6];
-		this.total_number_of_houses = total_number_of_houses;
 		this.milk_needed = new short[10];
 		this.milk_delievered = new boolean[10];
 		this.milkFader = new DeltaTimer[10];
 		for (int i = 0; i < this.milkFader.length; i++) {
 			this.milkFader[i] = new DeltaTimer(DeltaTimer.RUN_ONCE, 125);
 		}
-		randomize();
-		this.x = x;
 		this.render_the_house = true;
+
 		this.play = play;
+	}
+
+	public void createHouse(int xp, int yp) {
+		this.houseRectanglei.setX(xp);
+		this.houseRectanglei.setY(yp);
+		this.roofRectanglei.setX(xp);
+		this.x = xp;
+		this.y = yp;
+		randomize();
 	}
 
 	public void randomize() {
@@ -96,11 +100,53 @@ public class House {
 			this.milk_delievered[i] = false;
 			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
 			if (r == 0) {
-				this.milk_needed[i] = MilkButton.REGULAR;
+				if (this.play.getLevel().isRegularMilkButtonEnabled()) {
+					this.milk_needed[i] = MilkButton.REGULAR;
+				} else {
+					if (this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+						if (Dice.nextBoolean()) {
+							this.milk_needed[i] = MilkButton.CHOCOLATE;
+						} else {
+							this.milk_needed[i] = MilkButton.STRAWBERRY;
+						}
+					} else if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
+						this.milk_needed[i] = MilkButton.CHOCOLATE;
+					} else if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+						this.milk_needed[i] = MilkButton.STRAWBERRY;
+					}
+				}
 			} else if (r == 1) {
-				this.milk_needed[i] = MilkButton.CHOCOLATE;
+				if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
+					this.milk_needed[i] = MilkButton.CHOCOLATE;
+				} else {
+					if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+						if (Dice.nextBoolean()) {
+							this.milk_needed[i] = MilkButton.REGULAR;
+						} else {
+							this.milk_needed[i] = MilkButton.STRAWBERRY;
+						}
+					} else if (this.play.getLevel().isRegularMilkButtonEnabled()) {
+						this.milk_needed[i] = MilkButton.REGULAR;
+					} else if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+						this.milk_needed[i] = MilkButton.STRAWBERRY;
+					}
+				}
 			} else if (r == 2) {
-				this.milk_needed[i] = MilkButton.STRAWBERRY;
+				if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+					this.milk_needed[i] = MilkButton.STRAWBERRY;
+				} else {
+					if (this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isRegularMilkButtonEnabled()) {
+						if (Dice.nextBoolean()) {
+							this.milk_needed[i] = MilkButton.REGULAR;
+						} else {
+							this.milk_needed[i] = MilkButton.STRAWBERRY;
+						}
+					} else if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
+						this.milk_needed[i] = MilkButton.CHOCOLATE;
+					} else if (this.play.getLevel().isRegularMilkButtonEnabled()) {
+						this.milk_needed[i] = MilkButton.REGULAR;
+					}
+				}
 			}
 			this.milkFader[i].reset();
 		}
@@ -142,8 +188,11 @@ public class House {
 		this.roofRectanglei.setWidth(this.houseRectanglei.getWidth());
 		this.roofRectanglei.setHeight(this.houseRectanglei.getHeight());
 
-		setX(getX() + this.total_number_of_houses * Map.size * 10);
 		this.render_the_house = true;
+	}
+
+	private void updatePosition() {
+		setX(getX() + this.play.getHouses().length * Map.size * 10);
 	}
 
 	private void initBrickLayerWith(byte layer) {
@@ -183,10 +232,13 @@ public class House {
 					}
 				}
 				if (create_chaser) {
-					this.play.createChaser(milks_not_delievered);
+					if (this.play.getLevel().isCreateChasers()) {
+						this.play.createChaser(milks_not_delievered);
+					}
 				}
 			}
 			randomize();
+			updatePosition();
 		}
 	}
 
@@ -225,7 +277,13 @@ public class House {
 	}
 
 	public void renderDoorLayer(SpriteBatch sb, int layer, int x, int y, byte door) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + door), x, y, Map.size, Map.size);
+		if (this.house == TAN_HOUSE) {
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + door), x, y, Map.size, Map.size);
+		} else if (this.house == House.DARK_BLUE_HOUSE) {
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + door + 8), x, y, Map.size, Map.size);
+		} else {
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + door + 4), x, y, Map.size, Map.size);
+		}
 	}
 
 	private void renderHouseLayer(SpriteBatch sb, int layer, int x, int y, int w, byte house) {

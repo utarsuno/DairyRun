@@ -28,6 +28,12 @@ public abstract class GameState {
 	public abstract void render();
 
 	public abstract void stateChangedToThis();
+	
+	public abstract void stateFinishedFadingInToExit();
+	
+	public abstract void stateFinishedFadingInToEntrance();
+	
+	public abstract void stateFinishedFadingOut();
 
 	public abstract void pause();
 

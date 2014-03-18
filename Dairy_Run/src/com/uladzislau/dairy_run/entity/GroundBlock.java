@@ -14,9 +14,12 @@ public class GroundBlock extends Entity {
 	// TODO: This may or may not be added later.
 	private boolean water_block;
 
+	private boolean grass;
+
 	public GroundBlock(int x, int y, int width, int height, int length) {
 		super(x, y, width, height);
 		this.length = length;
+		this.grass = false;
 		this.water_block = false;
 	}
 
@@ -36,6 +39,11 @@ public class GroundBlock extends Entity {
 			this.regular_ground_block = true;
 		} else {
 			this.regular_ground_block = false;
+		}
+		if (Dice.get_Random_Integer_From_Min_To_Max(0, 20) == 5) {
+			this.grass = true;
+		} else {
+			this.grass = false;
 		}
 	}
 
@@ -60,6 +68,11 @@ public class GroundBlock extends Entity {
 		} else {
 			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 4), this.getX() + current_scroll,
 					this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+		}
+
+		if (this.grass) {
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(17), this.getX() + current_scroll, this.getY(), this.getWidth(),
+					this.getHeight());
 		}
 	}
 

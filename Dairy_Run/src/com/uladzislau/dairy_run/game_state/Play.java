@@ -49,6 +49,7 @@ public class Play extends GameState {
 	public int ground_level;
 
 	private boolean lost = false;
+	private boolean allow_tap_to_start = true;
 
 	private Score score;
 
@@ -83,7 +84,7 @@ public class Play extends GameState {
 		// Create the houses.
 		this.houses = new House[10];
 		for (int i = 0; i < this.houses.length; i++) {
-			this.houses[i] = new House((i + 1) * 10 * Map.size, this.ground_level, this.houses.length, this);
+			this.houses[i] = new House(this);
 		}
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
@@ -235,7 +236,6 @@ public class Play extends GameState {
 						this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
 						this.dairy_run.getGameStateManager().clearHistoryStates();
 						setLost(false);
-						reset();
 					}
 					if (this.retry.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 						retry();
@@ -253,7 +253,13 @@ public class Play extends GameState {
 				}
 			} else {
 				if (InputManager.pointersDown[0]) {
-					this.tapped_to_start = true;
+					if (this.allow_tap_to_start) {
+						this.tapped_to_start = true;
+					}
+				} else {
+					if (!this.allow_tap_to_start) {
+						this.allow_tap_to_start = true;
+					}
 				}
 			}
 		}
@@ -271,11 +277,6 @@ public class Play extends GameState {
 				background.render(this.sprite_batch, (int) (background.getX() + this.current_scroll * Background.SCROLL_RATE));
 			}
 		}
-		// Render the ground.
-		for (GroundBlock gb : this.ground_blocks) {
-			// Every block is visible majority of the time, thus there is no need to check if it is off-screen.
-			gb.render(this.sprite_batch, this.current_scroll);
-		}
 		this.sprite_batch.end();
 
 		this.sprite_batch.enableBlending();
@@ -290,6 +291,11 @@ public class Play extends GameState {
 			if (house.getX() + this.current_scroll < ScreenUtil.screen_width) {
 				house.render(this.sprite_batch, house.getX() + this.current_scroll);
 			}
+		}
+		// Render the ground.
+		for (GroundBlock gb : this.ground_blocks) {
+			// Every block is visible majority of the time, thus there is no need to check if it is off-screen.
+			gb.render(this.sprite_batch, this.current_scroll);
 		}
 
 		// Render the buttons.
@@ -408,6 +414,9 @@ public class Play extends GameState {
 	public void retry() {
 		setLost(false);
 		this.tapped_to_start = false;
+		if (InputManager.pointersDown[0]) {
+			this.allow_tap_to_start = false;
+		}
 		Score.setCurrentMilkScore(this.player.getNumberOfMilksDelivered());
 		Score.setCurrentVelocityScore(this.velocity);
 		reset();
@@ -464,6 +473,26 @@ public class Play extends GameState {
 
 	public void setLevel(Level level) {
 		this.level = level;
+		for (int i = 0; i < this.houses.length; i++) {
+			this.houses[i].createHouse((i + 1) * 10 * Map.size, this.ground_level);
+		}
+	}
+
+	public House[] getHouses() {
+		return this.houses;
+	}
+
+	@Override
+	public void stateFinishedFadingInToExit() {
+		reset();
+	}
+
+	@Override
+	public void stateFinishedFadingInToEntrance() {
+	}
+
+	@Override
+	public void stateFinishedFadingOut() {
 	}
 
 }

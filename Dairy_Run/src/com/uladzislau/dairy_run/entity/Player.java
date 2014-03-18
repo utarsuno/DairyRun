@@ -53,14 +53,11 @@ public class Player {
 		}
 		if (this.scared) {
 			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.update(delta);
-			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.setFrameTime((int) (80 / (this.play.getVelocity() / 5)));
+			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
 		} else {
 			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
-			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (80 / (this.play.getVelocity() / 5)));
+			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
 		}
-		// TEMP!!!
-		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
-		TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (80 / (this.play.getVelocity() / 5)));
 	}
 
 	public void render(SpriteBatch sb, int current_scroll) {

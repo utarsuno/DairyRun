@@ -18,7 +18,7 @@ public class LevelSelector extends GameState {
 	private int x_scroll;
 
 	private Play play;
-		
+
 	public LevelSelector(DairyRun dairy_run, byte id, Play play) {
 		super(dairy_run, id);
 		this.play = play;
@@ -122,7 +122,6 @@ public class LevelSelector extends GameState {
 
 	@Override
 	public void pause() {
-
 	}
 
 	@Override
@@ -133,6 +132,18 @@ public class LevelSelector extends GameState {
 	@Override
 	public void dispose() {
 
+	}
+
+	@Override
+	public void stateFinishedFadingInToExit() {
+	}
+
+	@Override
+	public void stateFinishedFadingInToEntrance() {
+	}
+
+	@Override
+	public void stateFinishedFadingOut() {
 	}
 
 }

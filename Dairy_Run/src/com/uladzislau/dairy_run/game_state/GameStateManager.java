@@ -56,8 +56,10 @@ public class GameStateManager {
 				if (GameStateManager.fading_out) {
 					InputManager.setIgnoreInput(false);
 					GameStateManager.transitioning_states = false;
+					this.current_state.stateFinishedFadingOut();
 					AudioManager.setMusicLevel(1.0f);
 				} else {
+					this.current_state.stateFinishedFadingInToExit();
 					this.actuallyChangeState();
 					this.transitioning_states_timer.reset();
 					GameStateManager.fading_out = true;
