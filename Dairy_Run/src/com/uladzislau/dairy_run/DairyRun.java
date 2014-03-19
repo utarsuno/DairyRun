@@ -5,11 +5,11 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.uladzislau.dairy_run.game_state.GameStateManager;
-import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
+import com.uladzislau.dairy_run.utility.StaticUtil;
 import com.uladzislau.dairy_run.world.Map;
 
 public class DairyRun implements ApplicationListener {
@@ -28,20 +28,16 @@ public class DairyRun implements ApplicationListener {
 
 		DairyRun.start_time = System.currentTimeMillis();
 
-		ScreenUtil.init();
-		InfoUtil.init();
-		Map.init();
 		this.resourceManager = new ResourceManager();
-		this.resourceManager.initialize_all_resources();
+		this.resourceManager.initialize_all_resources_and_information();
 
-		// Receive the user's input.
 		new InputManager(this);
 
 		this.gameStateManager = new GameStateManager(this, this.resourceManager);
 
 		DairyRun.paused = false;
 
-		System.out.println("Create Method Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
+		StaticUtil.log("Create Method Init Time ", (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}
 
 	public void update(float delta) {

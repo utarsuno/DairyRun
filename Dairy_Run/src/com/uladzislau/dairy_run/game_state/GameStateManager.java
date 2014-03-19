@@ -159,4 +159,14 @@ public class GameStateManager {
 		this.state_history.clear();
 	}
 
+	public GameState getState(byte state_id) {
+		switch (state_id) {
+		case PLAY:
+			return this.play;
+		default:
+			break;
+		}
+		return this.current_state;
+	}
+
 }

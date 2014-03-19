@@ -79,8 +79,8 @@ public class Play extends GameState {
 		this.ground_level = (int) (Map.size * 1.5);
 		// Create the background.
 		this.backgrounds = new Background[2];
-		this.backgrounds[0] = new Background(0, Background.BLUE);
-		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), Background.BLUE);
+		this.backgrounds[0] = new Background(0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height, Background.BLUE);
+		this.backgrounds[1] = new Background(ScreenUtil.screen_width, 0, ScreenUtil.screen_width, ScreenUtil.screen_height, Background.BLUE);
 		// Create the houses.
 		this.houses = new House[10];
 		for (int i = 0; i < this.houses.length; i++) {
@@ -265,18 +265,29 @@ public class Play extends GameState {
 		}
 	}
 
-	@Override
-	public void render() {
+	public void renderGround() {
+		for (GroundBlock gb : this.ground_blocks) {
+			// Every block is visible majority of the time, thus there is no need to check if it is off-screen.
+			gb.render(this.sprite_batch, this.current_scroll);
+		}
+	}
 
-		this.sprite_batch.disableBlending();
-		this.sprite_batch.begin();
-		// Render the background.
+	public void renderBackground() {
 		for (Background background : this.backgrounds) {
 			// Make sure background is on-screen before rendering.
 			if (background.getX() + this.current_scroll * Background.SCROLL_RATE < ScreenUtil.screen_width) {
 				background.render(this.sprite_batch, (int) (background.getX() + this.current_scroll * Background.SCROLL_RATE));
 			}
 		}
+	}
+
+	@Override
+	public void render() {
+
+		// Background does not need to be transparent so blending is disabled for performance.
+		this.sprite_batch.disableBlending();
+		this.sprite_batch.begin();
+		renderBackground();
 		this.sprite_batch.end();
 
 		this.sprite_batch.enableBlending();
@@ -292,11 +303,8 @@ public class Play extends GameState {
 				house.render(this.sprite_batch, house.getX() + this.current_scroll);
 			}
 		}
-		// Render the ground.
-		for (GroundBlock gb : this.ground_blocks) {
-			// Every block is visible majority of the time, thus there is no need to check if it is off-screen.
-			gb.render(this.sprite_batch, this.current_scroll);
-		}
+
+		renderGround();
 
 		// Render the buttons.
 		if (this.level.isRunButtonEnabled()) {
@@ -328,9 +336,11 @@ public class Play extends GameState {
 					- FontManager.FONT.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
 			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(22), this.player.getX(), this.ground_level,
 					Map.size, Map.size);
+			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
 		} else {
 			// Render the player.
 			this.player.render(this.sprite_batch, this.current_scroll);
+			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
 
 			if (this.player.isScared()) {
 				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "RUN!", Color.RED, ScreenUtil.screen_width / 2

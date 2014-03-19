@@ -101,4 +101,11 @@ public class Rectanglei {
 		return this.y + this.height;
 	}
 
+	public static boolean isPointerInsideARectanglei(int px, int py, int rx, int ry, int rw, int rh) {
+		if (px >= rx && px <= rx + rw && py >= ry && py <= ry + rh) {
+			return true;
+		}
+		return false;
+	}
+
 }

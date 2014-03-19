@@ -9,6 +9,7 @@ import com.uladzislau.dairy_run.entity.Score;
 import com.uladzislau.dairy_run.entity.button.CircleButton;
 import com.uladzislau.dairy_run.entity.button.MusicButton;
 import com.uladzislau.dairy_run.gui.ClickableText;
+import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
@@ -23,8 +24,6 @@ public class MainMenu extends GameState {
 	private ClickableText terminate;
 	private ClickableText top_score;
 	private ClickableText top_speed;
-
-	private CircleButton music_button;
 
 	public MainMenu(DairyRun dairy_run, byte id) {
 		super(dairy_run, id);
@@ -46,7 +45,6 @@ public class MainMenu extends GameState {
 				FontManager.FONT.PIXEL_REGULAR.getWidth("Top Score: " + Score.getMilkHighScore()), Map.size), new ColorXv(
 				ColorXv.TEAL.getR(), ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(), ColorXv.BLUE.getG(),
 				ColorXv.BLUE.getB()), 800);
-		this.music_button = new MusicButton(Map.size / 2, Map.size / 2, Map.size / 2);
 	}
 
 	private boolean song_started = false;
@@ -70,7 +68,8 @@ public class MainMenu extends GameState {
 		if (this.terminate.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 			this.dairy_run.getGameStateManager().changeState(GameStateManager.TERMINATE);
 		}
-		this.music_button.update(delta);
+		// Detect if the music toggle button is pressed.
+		StaticGUI.music_button.update(delta);
 	}
 
 	@Override
@@ -80,7 +79,10 @@ public class MainMenu extends GameState {
 		this.initiate_button.render(this.sprite_batch, true);
 		this.terminate.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.top_score.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		this.music_button.render(this.sprite_batch);
+
+		// Render the music toggle button.
+		StaticGUI.music_button.render(this.sprite_batch);
+
 		this.sprite_batch.end();
 	}
 
@@ -98,7 +100,6 @@ public class MainMenu extends GameState {
 
 	@Override
 	public void dispose() {
-
 	}
 
 	@Override

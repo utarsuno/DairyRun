@@ -261,6 +261,7 @@ public class TextureManager {
 
 		@Override
 		public void initialize() {
+			this.initialized = true;
 		}
 
 		public void update(float delta) {

@@ -1,9 +1,10 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.TextureManager;
 
-public class Background {
+public class Background extends Entity {
 
 	public static final float SCROLL_RATE = (1.0f / 6.0f);
 
@@ -13,51 +14,25 @@ public class Background {
 
 	private byte type;
 
-	private int x;
-
-	public Background(int x, byte type) {
-		this.x = x;
-		this.type = type;
+	public Background(int x, int y, int width, int height, byte type) {
+		super(x, y, width, height);
+		setType(type);
 	}
 
-	public void render(SpriteBatch sb) {
+	public void render(SpriteBatch sb, int current_scroll) {
 		switch (this.type) {
 		case BLUE:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 0, this.x, 0);
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BLUE, this.getX() + current_scroll, this.getY());
 			break;
 		case GREEN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 1, this.x, 0);
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, GREEN, this.getX() + current_scroll, this.getY());
 			break;
 		case BROWN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 2, this.x, 0);
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BROWN, this.getX() + current_scroll, this.getY());
 			break;
 		default:
 			break;
 		}
-	}
-
-	public void render(SpriteBatch sb, int xp) {
-		switch (this.type) {
-		case BLUE:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 0, xp, 0);
-			break;
-		case GREEN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 1, xp, 0);
-			break;
-		case BROWN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, 2, xp, 0);
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getX() {
-		return this.x;
 	}
 
 	public void setType(byte type) {

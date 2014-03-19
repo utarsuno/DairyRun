@@ -2,7 +2,9 @@ package com.uladzislau.dairy_run.game_state;
 
 public class Level {
 
-	private int number_of_milks_needed;
+	private String description;
+
+	private int number_of_milks_needed_to_win;
 	private int number_of_lives_needed;
 	private boolean run_button_enabled;
 	private boolean regular_milk_button_enabled;
@@ -10,6 +12,10 @@ public class Level {
 	private boolean strawberry_milk_button_enabled;
 	private boolean createChasers;
 	private float velocity_needed;
+
+	private boolean bronze_recieved = false;
+	private boolean silver_recieved = false;
+	private boolean gold_recieved = false;
 
 	private boolean unlocked = false;
 
@@ -19,12 +25,12 @@ public class Level {
 		this.unlocked = locked_or_not;
 	}
 
-	public int getNumberOfMilksNeeded() {
-		return this.number_of_milks_needed;
+	public int getNumberOfMilksNeededToWin() {
+		return this.number_of_milks_needed_to_win;
 	}
 
-	public void setNumberOfMilksNeeded(int number_of_milks_needed) {
-		this.number_of_milks_needed = number_of_milks_needed;
+	public void setNumberOfMilksNeededToWin(int number_of_milks_needed) {
+		this.number_of_milks_needed_to_win = number_of_milks_needed;
 	}
 
 	public int getNumberOfLivesNeeded() {
@@ -97,6 +103,38 @@ public class Level {
 
 	public void setCreateChasers(boolean createChasers) {
 		this.createChasers = createChasers;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public boolean isBronzeRecieved() {
+		return this.bronze_recieved;
+	}
+
+	public void setBronzeRecieved(boolean bronze_recieved) {
+		this.bronze_recieved = bronze_recieved;
+	}
+
+	public boolean isSilverRecieved() {
+		return this.silver_recieved;
+	}
+
+	public void setSilverRecieved(boolean silver_recieved) {
+		this.silver_recieved = silver_recieved;
+	}
+
+	public boolean isGoldRecieved() {
+		return this.gold_recieved;
+	}
+
+	public void setGoldRecieved(boolean gold_recieved) {
+		this.gold_recieved = gold_recieved;
 	}
 
 }

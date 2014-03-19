@@ -71,6 +71,9 @@ public class Player {
 			}
 		}
 
+	}
+
+	public void renderPlayerStats(SpriteBatch sb, int current_scroll) {
 		// TODO: Rendering these in a pretty fashion will need serious work.
 		FontManager.FONT.PIXEL_REGULAR.render(sb, "" + MathUtil.round(this.play.getVelocity(), 2), Color.BLACK, Map.size * 0.1f,
 				Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 0.9f, ScreenUtil.screen_height - Map.size * 0.1f);

@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.gui.StaticGUI;
+import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.world.Map;
 
@@ -16,12 +18,16 @@ public class ResourceManager {
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
 
-	public void initialize_all_resources() {
+	public void initialize_all_resources_and_information() {
 		this.texture_initialized = false;
 		this.music_initialized = false;
 		this.sound_initialized = false;
 		this.music_initializer.start();
 		this.sound_initializer.start();
+
+		ScreenUtil.init();
+		InfoUtil.init();
+		Map.init();
 
 		this.shapeRenderer = new ShapeRenderer();
 		this.spriteBatch = new SpriteBatch();
@@ -39,6 +45,9 @@ public class ResourceManager {
 		}
 		FontManager.FONT.PIXEL_REGULAR.initialize();
 		this.texture_initialized = true;
+
+		StaticGUI.inititialize();
+
 		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}
 

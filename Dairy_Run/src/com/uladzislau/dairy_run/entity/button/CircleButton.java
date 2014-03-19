@@ -16,7 +16,6 @@ public abstract class CircleButton extends Circlef {
 	public abstract void render(SpriteBatch sb);
 
 	public void debugRender(ShapeRenderer sr) {
-
 	}
 
 	public void reset() {
