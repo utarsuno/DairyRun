@@ -19,6 +19,7 @@ public class GameStateManager {
 	public static final byte MAIN_MENU = 0;
 	public static final byte LEVEL_SELECTOR = 1;
 	public static final byte PLAY = 2;
+	public static final byte OPTIONS = 3;
 
 	public static boolean transitioning_states;
 	public static boolean fading_out;
@@ -27,6 +28,7 @@ public class GameStateManager {
 	private GameState main_menu;
 	private GameState level_selector;
 	private GameState play;
+	private GameState options;
 
 	private Stack<Byte> state_history;
 
@@ -40,9 +42,12 @@ public class GameStateManager {
 		this.main_menu = new MainMenu(dr, GameStateManager.MAIN_MENU);
 		this.play = new Play(dr, GameStateManager.PLAY);
 		this.level_selector = new LevelSelector(dr, GameStateManager.LEVEL_SELECTOR, (Play) this.play);
+		this.options = new Options(dr, GameStateManager.OPTIONS);
+		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.main_menu.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.level_selector.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.play.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
+		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.current_state = this.main_menu;
 		this.state_history = new Stack<Byte>();
 		GameStateManager.transitioning_states = false;
@@ -125,6 +130,10 @@ public class GameStateManager {
 				this.current_state = this.play;
 				this.play.stateChangedToThis();
 				break;
+			case OPTIONS:
+				this.current_state = this.options;
+				this.options.stateChangedToThis();
+				break;
 			default:
 				break;
 			}
@@ -141,6 +150,10 @@ public class GameStateManager {
 		case PLAY:
 			this.current_state = this.play;
 			this.play.stateChangedToThis();
+			break;
+		case OPTIONS:
+			this.current_state = this.options;
+			this.options.stateChangedToThis();
 			break;
 		default:
 			break;

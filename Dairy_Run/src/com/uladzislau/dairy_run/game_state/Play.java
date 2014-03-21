@@ -43,7 +43,7 @@ public class Play extends GameState {
 	private CircleButton[] buttons;
 
 	private int current_scroll;
-	private float velocity = 70; // 8
+	private float velocity = 7; // 8
 	private float acceleration;
 
 	public int ground_level;
@@ -59,6 +59,7 @@ public class Play extends GameState {
 
 	private ClickableText game_over;
 	private ClickableText retry;
+	private ClickableText options;
 	private ClickableText main_menu;
 
 	private ClickableText run;
@@ -115,23 +116,25 @@ public class Play extends GameState {
 		this.chasers = new ArrayList<Chaser>();
 
 		// TODO: Customize the size of these
-		this.game_over = new ClickableText("Game Over", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 2.5f,
+		this.game_over = new ClickableText("Game Over", new Rectanglei(Map.size * 2.25f, ScreenUtil.screen_height - Map.size * 3.0f,
 				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
-						- (ScreenUtil.screen_height - Map.size * 2.5f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+						- (ScreenUtil.screen_height - Map.size * 2.0f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
 
 		this.retry = new ClickableText("Retry", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 4.5f,
-				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
-						- (ScreenUtil.screen_height - Map.size * 2.5f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.5f), (ScreenUtil.screen_height - Map.size * 1f)
+						- (ScreenUtil.screen_height - Map.size * 2.0f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+
+		this.options = new ClickableText("Options", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 4.5f,
+				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.5f), (ScreenUtil.screen_height - Map.size * 1f)
+						- (ScreenUtil.screen_height - Map.size * 2.0f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
 
 		this.main_menu = new ClickableText("Main Menu", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 6.5f,
 				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
-						- (ScreenUtil.screen_height - Map.size * 2.5f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+						- (ScreenUtil.screen_height - Map.size * 2.0f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
 
 	}
 
-	boolean play_sound = true;
 	private boolean song_started = false;
-
 	private boolean just_resumed = false;
 
 	private boolean pc_mouse_down_on_first_resume_update = false;
@@ -174,6 +177,7 @@ public class Play extends GameState {
 						}
 					}
 				}
+				this.allow_tap_to_start = false;
 				this.reset = true;
 			}
 		} else {
@@ -333,7 +337,7 @@ public class Play extends GameState {
 					Map.size, Map.size);
 			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
 		} else {
-			// Render the player. 
+			// Render the player.
 			this.player.render(this.sprite_batch, this.current_scroll);
 			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
 

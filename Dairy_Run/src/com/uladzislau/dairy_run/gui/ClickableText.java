@@ -81,7 +81,7 @@ public class ClickableText {
 		}
 
 		this.highlightTimer.update(delta);
-
+		
 		switch (InfoUtil.CURRENT_PLATEFORM) {
 		case InfoUtil.DESKTOP:
 			if (this.isMouseOverMe()) {
@@ -240,6 +240,21 @@ public class ClickableText {
 				this.colorXv.getB(), this.colorXv.getA()), getRectanglei().getX(), getRectanglei().getX() + getRectanglei().getWidth(),
 				getRectanglei().getY(), getRectanglei().getY() + getRectanglei().getHeight());
 
+	}
+
+	public void finish() {
+		this.highlightTimer.reset();
+		this.collide = false;
+		this.sound_played = false;
+		if (!this.first) {
+			this.highlightTimer.reset();
+			this.first = false;
+		}
+		if (this.activated) {
+			this.highlightTimer.reset();
+			this.activated = false;
+		}
+		this.colorXv.setColorToFrom(this.initialColorXv, this.highlightColorXv, 0.0f);
 	}
 
 }

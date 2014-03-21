@@ -124,4 +124,8 @@ public class DeltaTimer {
 		this.update((int) (delta * 1000.0f));
 	}
 
+	public void finish() {
+		this.setTotalDelta(this.duration);
+	}
+
 }

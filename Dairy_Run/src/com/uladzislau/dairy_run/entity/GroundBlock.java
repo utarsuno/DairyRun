@@ -1,11 +1,15 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 import com.uladzislau.dairy_run.world.Map;
 
 public class GroundBlock extends Entity {
+
+	public final static short GRASS = 31 * 5 + 12; // temp
+	public final static short SNOW = 31 * 2 + 3;
 
 	private int length;
 
@@ -73,6 +77,20 @@ public class GroundBlock extends Entity {
 		if (this.grass) {
 			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(17), this.getX() + current_scroll, this.getY(), this.getWidth(),
 					this.getHeight());
+		}
+	}
+
+	public static void render(SpriteBatch sb, int y, short type) {
+		switch (type) {
+		case SNOW:
+			int tx = 0;
+			while (tx < ScreenUtil.screen_width + Map.size) {
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(SNOW), tx, y, Map.size, Map.size);
+				tx += Map.size;
+			}
+			break;
+		default:
+			break;
 		}
 	}
 

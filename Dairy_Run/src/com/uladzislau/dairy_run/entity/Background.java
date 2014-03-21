@@ -1,13 +1,14 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.TextureManager;
 
 public class Background extends Entity {
 
 	public static final float SCROLL_RATE = (1.0f / 6.0f);
-	
+
 	public static final byte BLUE = 0;
 	public static final byte GREEN = 1;
 	public static final byte BROWN = 2;
@@ -55,4 +56,19 @@ public class Background extends Entity {
 		return this.type;
 	}
 
+	public static void render(SpriteBatch sb, byte t) {
+		switch (t) {
+		case BLUE:
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BLUE, 0, 0);
+			break;
+		case GREEN:
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, GREEN, 0, 0);
+			break;
+		case BROWN:
+			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BROWN, 0, 0);
+			break;
+		default:
+			break;
+		}
+	}
 }
