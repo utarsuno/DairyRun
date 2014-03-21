@@ -43,7 +43,7 @@ public class Play extends GameState {
 	private CircleButton[] buttons;
 
 	private int current_scroll;
-	private float velocity = 7; // 8
+	private float velocity = 70; // 8
 	private float acceleration;
 
 	public int ground_level;
@@ -79,8 +79,10 @@ public class Play extends GameState {
 		this.ground_level = (int) (Map.size * 1.5);
 		// Create the background.
 		this.backgrounds = new Background[2];
-		this.backgrounds[0] = new Background(0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height, Background.BLUE);
-		this.backgrounds[1] = new Background(ScreenUtil.screen_width, 0, ScreenUtil.screen_width, ScreenUtil.screen_height, Background.BLUE);
+		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height,
+				Background.BLUE);
+		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), 0,
+				TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE);
 		// Create the houses.
 		this.houses = new House[10];
 		for (int i = 0; i < this.houses.length; i++) {
@@ -193,10 +195,7 @@ public class Play extends GameState {
 
 				// If the background has moved off the screen, shift it back into view.
 				for (Background background : this.backgrounds) {
-					if (background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + this.current_scroll
-							* Background.SCROLL_RATE < 0) {
-						background.setX(background.getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() * 2);
-					}
+					background.update(this.current_scroll);
 				}
 
 				// If the house has moved off the screen, randomize it and shift it back into view.
@@ -267,17 +266,13 @@ public class Play extends GameState {
 
 	public void renderGround() {
 		for (GroundBlock gb : this.ground_blocks) {
-			// Every block is visible majority of the time, thus there is no need to check if it is off-screen.
 			gb.render(this.sprite_batch, this.current_scroll);
 		}
 	}
 
 	public void renderBackground() {
 		for (Background background : this.backgrounds) {
-			// Make sure background is on-screen before rendering.
-			if (background.getX() + this.current_scroll * Background.SCROLL_RATE < ScreenUtil.screen_width) {
-				background.render(this.sprite_batch, (int) (background.getX() + this.current_scroll * Background.SCROLL_RATE));
-			}
+			background.render(this.sprite_batch, this.current_scroll);
 		}
 	}
 
@@ -338,7 +333,7 @@ public class Play extends GameState {
 					Map.size, Map.size);
 			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
 		} else {
-			// Render the player.
+			// Render the player. 
 			this.player.render(this.sprite_batch, this.current_scroll);
 			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
 

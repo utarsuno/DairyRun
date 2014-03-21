@@ -7,7 +7,7 @@ import com.uladzislau.dairy_run.manager.TextureManager;
 public class Background extends Entity {
 
 	public static final float SCROLL_RATE = (1.0f / 6.0f);
-
+	
 	public static final byte BLUE = 0;
 	public static final byte GREEN = 1;
 	public static final byte BROWN = 2;
@@ -19,19 +19,31 @@ public class Background extends Entity {
 		setType(type);
 	}
 
+	public void update(int current_scroll) {
+		if (getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + current_scroll * Background.SCROLL_RATE < 0) {
+			setX(getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() * 2);
+		}
+	}
+
 	public void render(SpriteBatch sb, int current_scroll) {
-		switch (this.type) {
-		case BLUE:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BLUE, this.getX() + current_scroll, this.getY());
-			break;
-		case GREEN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, GREEN, this.getX() + current_scroll, this.getY());
-			break;
-		case BROWN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BROWN, this.getX() + current_scroll, this.getY());
-			break;
-		default:
-			break;
+		// Make sure background is on-screen before rendering.
+		if (getX() + current_scroll * Background.SCROLL_RATE < ScreenUtil.screen_width) {
+			switch (this.type) {
+			case BLUE:
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BLUE, (int) (this.getX() + current_scroll * Background.SCROLL_RATE),
+						this.getY());
+				break;
+			case GREEN:
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, GREEN, (int) (this.getX() + current_scroll * Background.SCROLL_RATE),
+						this.getY());
+				break;
+			case BROWN:
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BROWN, (int) (this.getX() + current_scroll * Background.SCROLL_RATE),
+						this.getY());
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
