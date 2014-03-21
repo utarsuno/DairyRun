@@ -147,7 +147,8 @@ public class LevelSelector extends GameState {
 
 		// Detect if the music toggle button has been pressed.
 		StaticGUI.music_button.update(delta);
-
+		// Detect if the back button has been pressed.
+		StaticGUI.back_button.update(delta);
 	}
 
 	@Override
@@ -216,6 +217,8 @@ public class LevelSelector extends GameState {
 
 		// Render the toggle music button.
 		StaticGUI.music_button.render(this.sprite_batch);
+		// Render the back button.
+		StaticGUI.back_button.render(this.sprite_batch);
 
 		this.sprite_batch.end();
 	}

@@ -28,6 +28,7 @@ public class Options extends GameState {
 	public void update(float delta) {
 		this.audioSlider.update((int) (delta * 1000.0f));
 		StaticGUI.music_button.update(delta);
+		StaticGUI.back_button.update(delta);
 	}
 
 	@Override
@@ -36,6 +37,7 @@ public class Options extends GameState {
 		Background.render(this.sprite_batch, Background.BLUE);
 		GroundBlock.render(this.sprite_batch, 0, GroundBlock.SNOW);
 		StaticGUI.music_button.render(this.sprite_batch);
+		StaticGUI.back_button.render(this.sprite_batch);
 		this.sprite_batch.end();
 		this.audioSlider.render();
 	}

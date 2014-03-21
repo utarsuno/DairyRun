@@ -18,7 +18,7 @@ public class ResourceManager {
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
 
-	public void initialize_all_resources_and_information() {
+	public void initialize_all_resources_and_information(DairyRun dr) {
 		this.texture_initialized = false;
 		this.music_initialized = false;
 		this.sound_initialized = false;
@@ -46,7 +46,7 @@ public class ResourceManager {
 		FontManager.FONT.PIXEL_REGULAR.initialize();
 		this.texture_initialized = true;
 
-		StaticGUI.inititialize();
+		StaticGUI.inititialize(dr);
 
 		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}

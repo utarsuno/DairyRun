@@ -29,7 +29,7 @@ public class DairyRun implements ApplicationListener {
 		DairyRun.start_time = System.currentTimeMillis();
 
 		this.resourceManager = new ResourceManager();
-		this.resourceManager.initialize_all_resources_and_information();
+		this.resourceManager.initialize_all_resources_and_information(this);
 
 		new InputManager(this);
 
