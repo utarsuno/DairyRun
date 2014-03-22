@@ -333,8 +333,8 @@ public class Play extends GameState {
 			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "Tap To Begin", ScreenUtil.screen_width / 2
 					- FontManager.FONT.PIXEL_REGULAR.getWidth("Tap To Begin") / 2, ScreenUtil.screen_height / 2
 					- FontManager.FONT.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(22), this.player.getX(), this.ground_level,
-					Map.size, Map.size);
+			// Render the player ready to sprint.
+			Player.render(this.sprite_batch, this.player.getX(), this.ground_level, Map.size, Map.size, Player.READY_TO_SPRINT);
 			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
 		} else {
 			// Render the player.

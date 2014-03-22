@@ -19,6 +19,8 @@ public class Player {
 
 	public static final byte MAX_LIFE = 6;
 
+	public static final short READY_TO_SPRINT = 22;
+
 	private int original_x;
 	private int x;
 	private int y;
@@ -176,6 +178,16 @@ public class Player {
 
 	public void setScared(boolean scared) {
 		this.scared = scared;
+	}
+
+	public static void render(SpriteBatch sprite_batch, int x, int y, int w, int h, short type) {
+		sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(type), x, y, w, h);
+		switch (type) {
+		case Player.READY_TO_SPRINT:
+			break;
+		default:
+			break;
+		}
 	}
 
 }

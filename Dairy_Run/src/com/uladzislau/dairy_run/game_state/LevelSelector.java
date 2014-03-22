@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.entity.Player;
 import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.FontManager;
@@ -159,7 +160,12 @@ public class LevelSelector extends GameState {
 		((Play) this.dairy_run.getGameStateManager().getState(GameStateManager.PLAY)).renderBackground();
 		((Play) this.dairy_run.getGameStateManager().getState(GameStateManager.PLAY)).renderGround();
 
-		// TODO: Render the animated character.
+		if (this.transition_left || this.transition_right) {
+
+		} else {
+			// Render the player ready to sprint.
+			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.READY_TO_SPRINT);
+		}
 
 		// Render the right button.
 		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 15 + 12), ScreenUtil.screen_width - Map.size * 2,
@@ -190,23 +196,35 @@ public class LevelSelector extends GameState {
 
 		if (this.transition_left || this.transition_right) {
 			if (this.transition_left) {
-				// Render the level description.
-				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level - 1].getDescription(), Color.BLACK,
-						Map.size, ScreenUtil.screen_width - Map.size, ScreenUtil.screen_height - Map.size * 3, ScreenUtil.screen_height
-								- Map.size * 2);
+				
+//				// Render the level description.
+//				if (this.current_level - 1 < 0) {
+//					FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.levels.length - 1].getDescription(),
+//							Color.BLACK, Map.size, ScreenUtil.screen_width - Map.size, ScreenUtil.screen_height - Map.size * 3,
+//							ScreenUtil.screen_height - Map.size * 2);
+//				} else {
+//					FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level - 1].getDescription(),
+//							Color.BLACK, Map.size, ScreenUtil.screen_width - Map.size, ScreenUtil.screen_height - Map.size * 3,
+//							ScreenUtil.screen_height - Map.size * 2);
+//				}
+				
 				// Render the level description.
 				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK,
-						this.right_text_x, this.right_text_x + ScreenUtil.screen_width - Map.size * 2, ScreenUtil.screen_height - Map.size
+						this.left_text_x, this.left_text_x + ScreenUtil.screen_width - Map.size * 2, ScreenUtil.screen_height - Map.size
 								* 3, ScreenUtil.screen_height - Map.size * 2);
 			} else {
+
 				// Render the level description.
 				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level - 1].getDescription(), Color.BLACK,
-						Map.size, ScreenUtil.screen_width - Map.size, ScreenUtil.screen_height - Map.size * 3, ScreenUtil.screen_height
-								- Map.size * 2);
+						Map.size + this.right_text_x, ScreenUtil.screen_width - Map.size + this.right_text_x, ScreenUtil.screen_height
+								- Map.size * 3, ScreenUtil.screen_height - Map.size * 2);
+
 				// Render the level description.
-				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK,
-						this.right_text_x, this.right_text_x + ScreenUtil.screen_width - Map.size * 2, ScreenUtil.screen_height - Map.size
-								* 3, ScreenUtil.screen_height - Map.size * 2);
+				FontManager.FONT.PIXEL_REGULAR
+						.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK, this.right_text_x
+								+ ScreenUtil.screen_width, this.right_text_x + ScreenUtil.screen_width - Map.size * 2
+								+ ScreenUtil.screen_width, ScreenUtil.screen_height - Map.size * 3, ScreenUtil.screen_height - Map.size * 2);
+
 			}
 		} else {
 			// Render the level description.
