@@ -3,7 +3,8 @@ package com.uladzislau.dairy_run.manager;
 public interface Resource {
 
 	/**
-	 * Creates the desired resource. If the resource has already been created the program will log an error.
+	 * Creates the desired resource. If the resource has already been created
+	 * the program will log an error.
 	 */
 	public abstract void initialize();
 

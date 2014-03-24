@@ -4,6 +4,8 @@ public class Level {
 
 	private String description;
 
+	private boolean beaten = false;
+
 	private int number_of_milks_needed_to_win;
 	private int number_of_lives_needed;
 	private boolean run_button_enabled;
@@ -12,6 +14,7 @@ public class Level {
 	private boolean strawberry_milk_button_enabled;
 	private boolean createChasers;
 	private float velocity_needed;
+	private float initial_velocity;
 
 	private boolean bronze_recieved = false;
 	private boolean silver_recieved = false;
@@ -135,6 +138,22 @@ public class Level {
 
 	public void setGoldRecieved(boolean gold_recieved) {
 		this.gold_recieved = gold_recieved;
+	}
+
+	public float getInitialVelocity() {
+		return this.initial_velocity;
+	}
+
+	public void setInitialVelocity(float initial_velocity) {
+		this.initial_velocity = initial_velocity;
+	}
+
+	public boolean isBeaten() {
+		return this.beaten;
+	}
+
+	public void setBeaten(boolean beaten) {
+		this.beaten = beaten;
 	}
 
 }

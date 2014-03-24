@@ -128,11 +128,9 @@ public class GameStateManager {
 				break;
 			case PLAY:
 				this.current_state = this.play;
-				this.play.stateChangedToThis();
 				break;
 			case OPTIONS:
 				this.current_state = this.options;
-				this.options.stateChangedToThis();
 				break;
 			default:
 				break;
@@ -149,15 +147,14 @@ public class GameStateManager {
 			break;
 		case PLAY:
 			this.current_state = this.play;
-			this.play.stateChangedToThis();
 			break;
 		case OPTIONS:
 			this.current_state = this.options;
-			this.options.stateChangedToThis();
 			break;
 		default:
 			break;
 		}
+		this.current_state.stateChangedToThis();
 	}
 
 	public void pauseCurrentState() {

@@ -10,9 +10,10 @@ import com.uladzislau.dairy_run.world.Map;
 
 public class FontManager {
 
-	// BMFont from http://www.angelcode.com/products/bmfont/ was used to generate the text .png and .fnt file.
+	// BMFont from http://www.angelcode.com/products/bmfont/ was used to
+	// generate the text .png and .fnt file.
 
-	public enum FONT implements Resource { // 1.0f, 1.0f);
+	public enum FONT implements FontResource { // 1.0f, 1.0f);
 		PIXEL_REGULAR("pixel_regular", "Kenny Donation Pack");
 
 		private final String name;
@@ -60,12 +61,51 @@ public class FontManager {
 			float x_scale_temp = this.x_scale;
 			float y_scale_temp = this.y_scale;
 
+			// String test = null;
+			// for (int i = 0; i < string.length(); i++) {
+			// test += '0';
+			// }
+
 			float width_scale = ((x2 - x1) / (this.getWidth(string)));
 			float height_scale = ((y2 - y1) / (this.getHeight(string)));
-			this.setXScale(width_scale * this.x_scale);
+			this.setXScale(height_scale * this.x_scale);
 			this.setYScale(height_scale * this.y_scale);
 
 			this.font.draw(sprite_batch, string, x1, y1 + (y2 - y1));
+			this.setXScale(x_scale_temp);
+			this.setYScale(y_scale_temp);
+			this.font.setColor(Color.WHITE);
+		}
+
+		public void render(SpriteBatch sprite_batch, String string, Color color, float x1, float x2, float y1, float y2, int centerAtX) {
+			this.font.setColor(color);
+			float x_scale_temp = this.x_scale;
+			float y_scale_temp = this.y_scale;
+
+			// String test = null;
+			// for (int i = 0; i < string.length(); i++) {
+			// test += '0';
+			// }
+
+			float width_scale = ((x2 - x1) / (this.getWidth(string)));
+			float height_scale = ((y2 - y1) / (this.getHeight(string)));
+			this.setXScale(height_scale * this.x_scale);
+			this.setYScale(height_scale * this.y_scale);
+
+			this.font.draw(sprite_batch, string, centerAtX - this.getWidth(string) / 2, y1 + (y2 - y1));
+			this.setXScale(x_scale_temp);
+			this.setYScale(y_scale_temp);
+			this.font.setColor(Color.WHITE);
+		}
+
+		public void render(SpriteBatch sprite_batch, String string, Color color, int x, int y1, int h) {
+			this.font.setColor(color);
+			float x_scale_temp = this.x_scale;
+			float y_scale_temp = this.y_scale;
+			float height_scale = ((float)h / (this.getHeight(string)));
+			this.setXScale(height_scale * this.x_scale);
+			this.setYScale(height_scale * this.y_scale);
+			this.font.draw(sprite_batch, string, x - this.getWidth(string) / 2, y1 + h);
 			this.setXScale(x_scale_temp);
 			this.setYScale(y_scale_temp);
 			this.font.setColor(Color.WHITE);
@@ -75,9 +115,15 @@ public class FontManager {
 			float x_scale_temp = this.x_scale;
 			float y_scale_temp = this.y_scale;
 
-			float width_scale = ((x2 - x1) / (this.getWidth(string)));
+			// String test = null;
+			// for (int i = 0; i < string.length(); i++) {
+			// test += '0';
+			// }
+
+			// float width_scale = ((x2 - x1) / (this.getWidth(string)));
 			float height_scale = ((y2 - y1) / (this.getHeight(string)));
-			this.setXScale(width_scale * this.x_scale);
+			// this.setXScale(width_scale * this.x_scale);
+			this.setXScale(height_scale);
 			this.setYScale(height_scale * this.y_scale);
 
 			this.font.draw(sprite_batch, string, x1, y1);
@@ -162,6 +208,17 @@ public class FontManager {
 		public String currentStatus() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public void resize() {
+			this.setXScale(1.0f);
+			this.setYScale(1.0f);
+
+			float width_scale = ((float) Map.size) / ((float) this.getWidth("A"));
+			float height_scale = ((float) Map.size) / ((float) this.getHeight("A"));
+			this.setXScale(width_scale * this.x_scale);
+			this.setYScale(height_scale * this.y_scale);
 		}
 
 	}

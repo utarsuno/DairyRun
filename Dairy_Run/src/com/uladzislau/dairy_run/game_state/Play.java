@@ -43,7 +43,7 @@ public class Play extends GameState {
 	private CircleButton[] buttons;
 
 	private int current_scroll;
-	private float velocity = 7; // 8
+	private float velocity;
 	private float acceleration;
 
 	public int ground_level;
@@ -142,6 +142,8 @@ public class Play extends GameState {
 	private boolean reset = false;
 
 	private boolean tapped_to_start = false;
+
+	private boolean state_is_transitioning = false;
 
 	@Override
 	public void update(float delta) {
@@ -254,6 +256,17 @@ public class Play extends GameState {
 						this.chasers.get(i).update(delta);
 					}
 				}
+
+				if (!this.state_is_transitioning) {
+					if (this.level.getNumberOfMilksNeededToWin() != -1) {
+						if (this.player.getNumberOfMilksDelivered() >= this.level.getNumberOfMilksNeededToWin()) {
+							this.level.setBeaten(true);
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.PREVIOUS_STATE);
+							this.state_is_transitioning = true;
+						}
+					}
+				}
+
 			} else {
 				if (InputManager.pointersDown[0]) {
 					if (this.allow_tap_to_start) {
@@ -411,7 +424,7 @@ public class Play extends GameState {
 		this.chasers.clear();
 		Chaser.number_of_chasers_created = 0;
 		this.player.reset();
-		this.velocity = 8;
+		this.velocity = this.level.getInitialVelocity();
 	}
 
 	public void lose() {
@@ -437,6 +450,7 @@ public class Play extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
+		this.state_is_transitioning = false; // TODO: Rename this lol
 		if (this.game_in_session) {
 			resume();
 		}
@@ -485,6 +499,7 @@ public class Play extends GameState {
 		for (int i = 0; i < this.houses.length; i++) {
 			this.houses[i].createHouse((i + 1) * 10 * Map.size, this.ground_level);
 		}
+		this.velocity = this.level.getInitialVelocity();
 	}
 
 	public House[] getHouses() {

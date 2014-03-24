@@ -5,12 +5,10 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.uladzislau.dairy_run.game_state.GameStateManager;
-import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.utility.StaticUtil;
-import com.uladzislau.dairy_run.world.Map;
 
 public class DairyRun implements ApplicationListener {
 
@@ -25,7 +23,7 @@ public class DairyRun implements ApplicationListener {
 	@SuppressWarnings("unused")
 	@Override
 	public void create() {
-		
+
 		DairyRun.start_time = System.currentTimeMillis();
 
 		this.resourceManager = new ResourceManager();
@@ -57,8 +55,6 @@ public class DairyRun implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
-		ScreenUtil.init();
-		Map.init();
 	}
 
 	@Override

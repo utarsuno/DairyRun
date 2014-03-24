@@ -80,7 +80,7 @@ public class TextureManager {
 
 	}
 
-	public static enum SPRITESHEET implements Resource {
+	public static enum SPRITESHEET implements TextureResource {
 		PIXEL_SPRITESHEET("pixel_spritesheet", "http://opengameart.org/content/platformer-art-pixel-redux", 31, 31, 2, 2, 21, 21), BACKGROUNDS(
 				"Backgrounds", "http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231,
 				63);
@@ -234,6 +234,11 @@ public class TextureManager {
 		public String currentStatus() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public void resize() {
+			
 		}
 
 	}
