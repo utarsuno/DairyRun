@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.uladzislau.dairy_run.game_state.GameStateManager;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.gui.Heart;
 import com.uladzislau.dairy_run.information.ScreenUtil;
@@ -20,6 +21,8 @@ public class Player {
 	public static final byte MAX_LIFE = 6;
 
 	public static final short READY_TO_SPRINT = 22;
+
+	public static final short SPRINTING = 23;
 
 	private int original_x;
 	private int x;
@@ -181,13 +184,45 @@ public class Player {
 	}
 
 	public static void render(SpriteBatch sprite_batch, int x, int y, int w, int h, short type) {
-		sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(type), x, y, w, h);
 		switch (type) {
 		case Player.READY_TO_SPRINT:
+			sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(type), x, y, w, h);
+			break;
+		case SPRINTING:
+			sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), x, y, w, h);
 			break;
 		default:
 			break;
 		}
 	}
 
+	public static void render(SpriteBatch sprite_batch, int x, int y, int w, int h, short type, int xr, int yr, int rotation) {
+		switch (type) {
+		case Player.READY_TO_SPRINT:
+			// sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(type), (float) x, (float) y, (float) w, (float) h,
+			// 1.0f, 1.0f, (float) rotation);
+			break;
+		case SPRINTING:
+			// sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), (float) x, (float) y, (float) w,
+			// (float) h, 1.0f, 1.0f, (float) rotation);
+			sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), x, y, xr, yr, w, h, 1.0f, 1.0f,
+					rotation);
+			break;
+		default:
+			break;
+		}
+	}
+
+	public static void render(SpriteBatch sprite_batch, int x, int y, int w, int h, short type, boolean xFlip) {
+		switch (type) {
+		case Player.READY_TO_SPRINT:
+			break;
+		case SPRINTING:
+			sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame((TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING
+					.getCurrentFrameNumber() + (31 * 6) + 26)), x, y, w, h);
+			break;
+		default:
+			break;
+		}
+	}
 }

@@ -38,13 +38,16 @@ public class AudioManager {
 				"http://opengameart.org/content/fps-placeholder-sounds"), POP("pop",
 				"http://opengameart.org/content/fps-placeholder-sounds"), MILK("milk" + java.io.File.separator + "milk", "darreon"), MILK2(
 				"milk" + java.io.File.separator + "milk2", "darreon"), MILK3("milk" + java.io.File.separator + "milk3", "darreon"), TRANSITION_00(
-				"transition" + java.io.File.separator + "transition_00", "https://www.freesound.org/people/Halgrimm/sounds/195463/");
+				"transition" + java.io.File.separator + "transition_00", "https://www.freesound.org/people/Halgrimm/sounds/195463/"), VICTORY(
+				"victory" + java.io.File.separator + "Lively Meadow Victory Fanfare",
+				"http://www.matthewpablo.com/archives/many-new-tracks-1-29-14");
 
 		private final String name;
 		private final String source;
 		private Sound sound;
 		private boolean initialized;
 		private boolean muted;
+		private boolean playOverAllOtherAudio;
 
 		SOUND(String name, String source) {
 			this.name = name;
@@ -67,6 +70,17 @@ public class AudioManager {
 			if (sound_on && !this.muted) {
 				if (this.initialized) {
 					this.sound.play();
+				} else {
+					StaticUtil.error("Audio", this.name + " was told to be played but has not yet been initialized.");
+				}
+			}
+		}
+
+		public void playOverAllOtherAudio() {
+			if (sound_on && !this.muted) {
+				if (this.initialized) {
+					this.sound.play();
+					this.playOverAllOtherAudio = true;
 				} else {
 					StaticUtil.error("Audio", this.name + " was told to be played but has not yet been initialized.");
 				}
@@ -122,7 +136,10 @@ public class AudioManager {
 
 	public enum MUSIC implements Resource {
 		TEMP_MUSIC("HolFix - Pixel Parade", "get it later lol"), TEMP_MAIN_MENU_MUSIC("HolFix - Happy Moment Remix",
-				"Holflix, get it later though"), ;
+				"Holflix, get it later though"), LEVEL_SELECTOR_MUSIC("Lively Meadow",
+				"http://www.matthewpablo.com/archives/many-new-tracks-1-29-14"), TEMP_OPTIONS(
+				"HolFix - Jeremy the Different Giraffe Theme",
+				"http://www.youtube.com/watch?v=5Alrqovf9E8&index=9&list=PLyBvLDmLwbZsHRnniCV5cJ9FM2WLR7a7I");
 		private final String name;
 		private final String source;
 		private boolean paused;
@@ -222,6 +239,11 @@ public class AudioManager {
 
 		public void setMuted(boolean muted) {
 			this.muted = muted;
+		}
+
+		public void loop(float v) {
+			this.music.setLooping(true);
+			this.play(v);
 		}
 
 	}

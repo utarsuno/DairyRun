@@ -28,6 +28,7 @@ public class DairyRun implements ApplicationListener {
 
 		this.resourceManager = new ResourceManager();
 		this.resourceManager.initialize_all_resources_and_information(this);
+		System.out.println(this.resourceManager.credits_information());
 
 		new InputManager(this);
 

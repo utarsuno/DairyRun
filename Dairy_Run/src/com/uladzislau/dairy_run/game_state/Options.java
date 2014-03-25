@@ -19,7 +19,7 @@ public class Options extends GameState {
 
 	private Slider musicSlider;
 	private ClickableText musicPercentage;
-	
+
 	private Slider soundSlider;
 	private ClickableText soundPercentage;
 
@@ -32,10 +32,10 @@ public class Options extends GameState {
 		this.sprite_batch = batch;
 		this.shape_renderer = shapeRenderer;
 		this.soundSlider = new Slider(Map.size, Map.size * 2, ScreenUtil.screen_width - Map.size * 4, Map.size, ColorXv.GREEN, ColorXv.RED);
-		
-		this.soundPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 3, Map.size * 2,
-				Map.size * 2, Map.size), new ColorXv(ColorXv.TEAL.getR(), ColorXv.TEAL.getG(),
-				ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(), ColorXv.BLUE.getG(), ColorXv.BLUE.getB()), 800);
+
+		this.soundPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 3, Map.size * 2, Map.size * 2,
+				Map.size), new ColorXv(ColorXv.TEAL.getR(), ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(),
+				ColorXv.BLUE.getG(), ColorXv.BLUE.getB()), 800);
 	}
 
 	@Override
@@ -61,6 +61,8 @@ public class Options extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
+		AudioManager.stopAllMusic();
+		AudioManager.MUSIC.TEMP_OPTIONS.loop(1.0f);
 	}
 
 	@Override

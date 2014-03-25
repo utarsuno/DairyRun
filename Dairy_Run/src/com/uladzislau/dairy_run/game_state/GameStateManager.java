@@ -49,6 +49,7 @@ public class GameStateManager {
 		this.play.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.current_state = this.main_menu;
+		this.current_state.stateChangedToThis();
 		this.state_history = new Stack<Byte>();
 		GameStateManager.transitioning_states = false;
 		GameStateManager.fading_out = false;

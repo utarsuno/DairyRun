@@ -5,9 +5,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.entity.Background;
+import com.uladzislau.dairy_run.entity.GroundBlock;
 import com.uladzislau.dairy_run.entity.Player;
 import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.ScreenUtil;
+import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
@@ -19,6 +22,9 @@ public class LevelSelector extends GameState {
 
 	private Level levels[];
 
+	private Background[] backgrounds;
+	private GroundBlock[] ground_blocks;
+
 	private int current_level;
 
 	private boolean transition_left;
@@ -26,9 +32,6 @@ public class LevelSelector extends GameState {
 	private boolean button_pressed;
 
 	private int offset;
-
-	private int left_text_x;
-	private int right_text_x;
 
 	private DeltaTimer transitionTimer;
 
@@ -53,9 +56,11 @@ public class LevelSelector extends GameState {
 	}
 
 	private void createLevels() {
+		for (int i = 0; i < this.levels.length; i++) {
+			this.levels[i].setBeaten(false);
+		}
 		// Level One.
 		this.levels[0].setDescription("Deliver 10 milks.");
-		this.levels[0].setBeaten(false);
 		this.levels[0].setInitialVelocity(5f);
 		this.levels[0].setVelocityMatters(false);
 		this.levels[0].setVelocityNeededToWin(0);
@@ -68,7 +73,6 @@ public class LevelSelector extends GameState {
 		this.levels[0].setStrawberryMilkButtonEnabled(false);
 		// Level Two.
 		this.levels[1].setDescription("Deliver 20 milks.");
-		this.levels[1].setBeaten(false);
 		this.levels[1].setInitialVelocity(10f);
 		this.levels[1].setVelocityMatters(false);
 		this.levels[1].setVelocityNeededToWin(0);
@@ -81,7 +85,6 @@ public class LevelSelector extends GameState {
 		this.levels[1].setStrawberryMilkButtonEnabled(false);
 		// Level Three.
 		this.levels[2].setDescription("Deliver 30 milks.");
-		this.levels[2].setBeaten(false);
 		this.levels[2].setInitialVelocity(15f);
 		this.levels[2].setVelocityMatters(false);
 		this.levels[2].setVelocityNeededToWin(0);
@@ -106,7 +109,7 @@ public class LevelSelector extends GameState {
 			this.levels[i].setStrawberryMilkButtonEnabled(false);
 		}
 	}
-
+	
 	@Override
 	public void update(float delta) {
 
@@ -116,8 +119,6 @@ public class LevelSelector extends GameState {
 					/ 2 - Map.size, Map.size * 2, Map.size * 2)) {
 				if (this.current_level != 0) {
 					this.current_level--;
-					this.left_text_x = Map.size;
-					this.right_text_x = Map.size + ScreenUtil.screen_width;
 					this.button_pressed = true;
 					this.transition_left = true;
 				}
@@ -127,8 +128,6 @@ public class LevelSelector extends GameState {
 					- Map.size * 2, ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2)) {
 				if (this.current_level != this.levels.length - 1) {
 					this.current_level++;
-					this.left_text_x = Map.size;
-					this.right_text_x = Map.size + ScreenUtil.screen_width;
 					this.button_pressed = true;
 					this.transition_right = true;
 				}
@@ -162,6 +161,10 @@ public class LevelSelector extends GameState {
 			}
 		}
 
+		if (this.transition_right || this.transition_left) {
+			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
+		}
+
 		// Detect if the music toggle button has been pressed.
 		StaticGUI.music_button.update(delta);
 		// Detect if the back button has been pressed.
@@ -176,13 +179,6 @@ public class LevelSelector extends GameState {
 		((Play) this.dairy_run.getGameStateManager().getState(GameStateManager.PLAY)).renderBackground();
 		((Play) this.dairy_run.getGameStateManager().getState(GameStateManager.PLAY)).renderGround();
 
-		if (this.transition_left || this.transition_right) {
-
-		} else {
-			// Render the player ready to sprint.
-			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.READY_TO_SPRINT);
-		}
-
 		// Render the left button.
 		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 15 + 11), 0, ScreenUtil.screen_height / 2
 				- Map.size, Map.size * 2, Map.size * 2);
@@ -192,39 +188,28 @@ public class LevelSelector extends GameState {
 				ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2);
 
 		if (this.transition_left) {
-			// Render the previous level title.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (this.current_level + 2), Color.BLACK,
-					ScreenUtil.screen_width / 2 + this.offset, (int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
-			// Render the previous level description.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level + 1].getDescription(), Color.BLACK,
-					ScreenUtil.screen_width / 2 + this.offset, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
-			// Render the new level title.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (this.current_level + 1), Color.BLACK,
-					ScreenUtil.screen_width / 2 + this.offset - ScreenUtil.screen_width,
-					(int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
-			// Render the new level description.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK,
-					ScreenUtil.screen_width / 2 + this.offset - ScreenUtil.screen_width,
-					(int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
+			renderLevelTitle(0, this.current_level + 1);
+			renderLevelDescription(0, this.current_level + 1);
+
+			renderLevelTitle(-ScreenUtil.screen_width, this.current_level);
+			renderLevelDescription(-ScreenUtil.screen_width, this.current_level);
+
 			renderLevelSign(0, this.current_level + 1);
 			renderLevelSign(-ScreenUtil.screen_width, this.current_level);
+
+			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.SPRINTING, true);
 		} else if (this.transition_right) {
-			// Render the previous level title.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + this.current_level, Color.BLACK, ScreenUtil.screen_width
-					/ 2 + this.offset, (int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
-			// Render the previous level description.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level - 1].getDescription(), Color.BLACK,
-					ScreenUtil.screen_width / 2 + this.offset, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
-			// Render the new level title.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (this.current_level + 1), Color.BLACK,
-					ScreenUtil.screen_width / 2 + this.offset + ScreenUtil.screen_width,
-					(int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
-			// Render the new level description.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK,
-					ScreenUtil.screen_width / 2 + this.offset + ScreenUtil.screen_width,
-					(int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
+
+			renderLevelTitle(0, this.current_level - 1);
+			renderLevelDescription(0, this.current_level - 1);
+
+			renderLevelTitle(ScreenUtil.screen_width, this.current_level);
+			renderLevelDescription(ScreenUtil.screen_width, this.current_level);
+
 			renderLevelSign(0, this.current_level - 1);
 			renderLevelSign(ScreenUtil.screen_width, this.current_level);
+
+			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.SPRINTING);
 		} else {
 			// Render the current level title.
 			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (this.current_level + 1), Color.BLACK,
@@ -233,6 +218,8 @@ public class LevelSelector extends GameState {
 			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK,
 					ScreenUtil.screen_width / 2, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
 			renderLevelSign(0, this.current_level);
+			// Render the player ready to sprint.
+			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.READY_TO_SPRINT);
 		}
 
 		// Render the toggle music button.
@@ -242,13 +229,15 @@ public class LevelSelector extends GameState {
 
 		this.sprite_batch.end();
 	}
-	
+
 	private void renderLevelTitle(int x_offset, int level) {
-		
+		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (level + 1), Color.BLACK, ScreenUtil.screen_width / 2
+				+ this.offset + x_offset, (int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
 	}
-	
+
 	private void renderLevelDescription(int x_offset, int level) {
-		
+		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[level].getDescription(), Color.BLACK, ScreenUtil.screen_width
+				/ 2 + this.offset + x_offset, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
 	}
 
 	private void renderLevelSign(int x_offset, int level) {
@@ -284,9 +273,12 @@ public class LevelSelector extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
-		for (int i = 3; i < this.levels.length; i++) {
+		AudioManager.stopAllMusic();
+		AudioManager.MUSIC.LEVEL_SELECTOR_MUSIC.loop(1.0f);
+		for (int i = 0; i < this.levels.length; i++) {
 			if (this.levels[i].isBeaten() && i != 29 && !this.levels[i + 1].isUnlocked()) {
 				this.levels[i + 1].setUnlocked(true);
+				this.current_level = i + 1;
 			}
 		}
 	}
@@ -302,7 +294,6 @@ public class LevelSelector extends GameState {
 
 	@Override
 	public void dispose() {
-
 	}
 
 	@Override

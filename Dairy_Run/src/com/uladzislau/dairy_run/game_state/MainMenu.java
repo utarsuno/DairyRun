@@ -24,8 +24,6 @@ public class MainMenu extends GameState {
 	private ClickableText initiate_button;
 	private ClickableText options;
 	private ClickableText terminate;
-	private ClickableText top_score;
-	private ClickableText top_speed;
 
 	public MainMenu(DairyRun dairy_run, byte id) {
 		super(dairy_run, id);
@@ -48,27 +46,20 @@ public class MainMenu extends GameState {
 				- FontManager.FONT.PIXEL_REGULAR.getWidth("Options"), Map.size * 3, FontManager.FONT.PIXEL_REGULAR.getWidth("Options"), Map.size), new ColorXv(
 				ColorXv.TEAL.getR(), ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(), ColorXv.BLUE.getG(),
 				ColorXv.BLUE.getB()), 800);
-
-		this.top_score = new ClickableText("Top Score: " + Score.getMilkHighScore(), new Rectanglei(ScreenUtil.screen_width
-				- FontManager.FONT.PIXEL_REGULAR.getWidth("Top Score: " + Score.getMilkHighScore()), ScreenUtil.screen_height - Map.size,
-				FontManager.FONT.PIXEL_REGULAR.getWidth("Top Score: " + Score.getMilkHighScore()), Map.size), new ColorXv(
-				ColorXv.TEAL.getR(), ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(), ColorXv.BLUE.getG(),
-				ColorXv.BLUE.getB()), 800);
 	}
 
 	private boolean song_started = false;
 
 	@Override
 	public void update(float delta) {
-		if (!this.song_started && AudioManager.isMusicOn()) {
-			if (this.dairy_run.getResourceManager().music_initialized) {
-				AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.play(1.0f);
-				this.song_started = true;
-			}
-		}
+//		if (!this.song_started && AudioManager.isMusicOn()) {
+//			if (this.dairy_run.getResourceManager().music_initialized) {
+//				AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.play(1.0f);
+//				this.song_started = true;
+//			}
+//		}
 		this.initiate_button.update(delta);
 		this.terminate.update(delta);
-		this.top_score.update(delta);
 		this.options.update(delta);
 		if (this.initiate_button.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
 			this.dairy_run.getGameStateManager().changeState(GameStateManager.LEVEL_SELECTOR);
@@ -91,7 +82,6 @@ public class MainMenu extends GameState {
 		this.initiate_button.render(this.sprite_batch, true);
 		this.terminate.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.options.render(this.sprite_batch, true);
-		this.top_score.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 
 		// Render the music toggle button.
 		StaticGUI.music_button.render(this.sprite_batch);
@@ -101,6 +91,8 @@ public class MainMenu extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
+		AudioManager.stopAllMusic();
+		AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.loop(1.0f);
 	}
 
 	@Override

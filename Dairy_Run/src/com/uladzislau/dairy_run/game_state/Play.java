@@ -32,8 +32,8 @@ import com.uladzislau.dairy_run.world.Map;
 public class Play extends GameState {
 
 	private Background[] backgrounds;
-	private House[] houses;
 	private GroundBlock[] ground_blocks;
+	private House[] houses;
 	private Tree[] trees;
 	private Player player;
 
@@ -42,7 +42,7 @@ public class Play extends GameState {
 
 	private CircleButton[] buttons;
 
-	private int current_scroll;
+	private float current_scroll;
 	private float velocity;
 	private float acceleration;
 
@@ -61,8 +61,6 @@ public class Play extends GameState {
 	private ClickableText retry;
 	private ClickableText options;
 	private ClickableText main_menu;
-
-	private ClickableText run;
 
 	private Level level;
 
@@ -98,7 +96,7 @@ public class Play extends GameState {
 		this.trees = new Tree[30];
 		for (int i = 0; i < this.trees.length; i++) {
 			this.trees[i] = new Tree(this.ground_level, i, this.trees.length);
-			this.trees[i].resetPosition(this.current_scroll);
+			this.trees[i].resetPosition((int) this.current_scroll);
 		}
 		// Create the buttons.
 		this.buttons = new CircleButton[4];
@@ -147,17 +145,6 @@ public class Play extends GameState {
 
 	@Override
 	public void update(float delta) {
-		if (!this.song_started) {
-			if (this.dairy_run.getResourceManager().music_initialized) {
-				if (AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.isPlaying()) {
-					AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.stop();
-				}
-				AudioManager.MUSIC.TEMP_MUSIC.play(1.0f);
-				if (AudioManager.MUSIC.TEMP_MUSIC.isPlaying()) {
-					this.song_started = true;
-				}
-			}
-		}
 		if (this.just_resumed) {
 			if (InfoUtil.CURRENT_PLATEFORM == InfoUtil.DESKTOP) {
 				if (this.resumeTimer.getTotalDelta() == 0) {
@@ -191,7 +178,7 @@ public class Play extends GameState {
 			}
 
 			if (this.tapped_to_start) {
-				this.player.update(delta, this.current_scroll);
+				this.player.update(delta, (int) this.current_scroll);
 
 				if (!this.lost) {
 					this.acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
@@ -201,21 +188,21 @@ public class Play extends GameState {
 
 				// If the background has moved off the screen, shift it back into view.
 				for (Background background : this.backgrounds) {
-					background.update(this.current_scroll);
+					background.update((int) this.current_scroll);
 				}
 
 				// If the house has moved off the screen, randomize it and shift it back into view.
 				for (House house : this.houses) {
-					house.update(delta, this.current_scroll);
+					house.update(delta, (int) this.current_scroll);
 				}
 
 				// If the ground block has moved off the screen, shift it back into view.
 				for (GroundBlock gb : this.ground_blocks) {
-					gb.update(this.current_scroll);
+					gb.update((int) this.current_scroll);
 				}
 
 				for (Tree tree : this.trees) {
-					tree.update(this.current_scroll);
+					tree.update((int) this.current_scroll);
 				}
 
 				// Check for button press. If pressed they will do their respective actions.
@@ -261,6 +248,7 @@ public class Play extends GameState {
 					if (this.level.getNumberOfMilksNeededToWin() != -1) {
 						if (this.player.getNumberOfMilksDelivered() >= this.level.getNumberOfMilksNeededToWin()) {
 							this.level.setBeaten(true);
+							AudioManager.SOUND.VICTORY.playSound();
 							this.dairy_run.getGameStateManager().changeState(GameStateManager.PREVIOUS_STATE);
 							this.state_is_transitioning = true;
 						}
@@ -283,13 +271,13 @@ public class Play extends GameState {
 
 	public void renderGround() {
 		for (GroundBlock gb : this.ground_blocks) {
-			gb.render(this.sprite_batch, this.current_scroll);
+			gb.render(this.sprite_batch, (int) this.current_scroll);
 		}
 	}
 
 	public void renderBackground() {
 		for (Background background : this.backgrounds) {
-			background.render(this.sprite_batch, this.current_scroll);
+			background.render(this.sprite_batch, (int) this.current_scroll);
 		}
 	}
 
@@ -306,13 +294,13 @@ public class Play extends GameState {
 		this.sprite_batch.begin();
 		// Render the trees.
 		for (Tree tree : this.trees) {
-			tree.render(this.sprite_batch, this.current_scroll);
+			tree.render(this.sprite_batch, (int) this.current_scroll);
 		}
 		// Render the houses.
 		for (House house : this.houses) {
 			// Make sure the house is on-screen before rendering it.
 			if (house.getX() + this.current_scroll < ScreenUtil.screen_width) {
-				house.render(this.sprite_batch, house.getX() + this.current_scroll);
+				house.render(this.sprite_batch, house.getX() + (int) this.current_scroll);
 			}
 		}
 
@@ -333,7 +321,7 @@ public class Play extends GameState {
 		}
 
 		for (Chaser chaser : this.chasers) {
-			chaser.render(this.sprite_batch, this.current_scroll);
+			chaser.render(this.sprite_batch, (int) this.current_scroll);
 		}
 
 		if (this.just_resumed) {
@@ -348,11 +336,11 @@ public class Play extends GameState {
 					- FontManager.FONT.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
 			// Render the player ready to sprint.
 			Player.render(this.sprite_batch, this.player.getX(), this.ground_level, Map.size, Map.size, Player.READY_TO_SPRINT);
-			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
+			this.player.renderPlayerStats(this.sprite_batch, (int) this.current_scroll);
 		} else {
 			// Render the player.
-			this.player.render(this.sprite_batch, this.current_scroll);
-			this.player.renderPlayerStats(this.sprite_batch, this.current_scroll);
+			this.player.render(this.sprite_batch, (int) this.current_scroll);
+			this.player.renderPlayerStats(this.sprite_batch, (int) this.current_scroll);
 
 			if (this.player.isScared()) {
 				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "RUN!", Color.RED, ScreenUtil.screen_width / 2
@@ -391,7 +379,7 @@ public class Play extends GameState {
 			this.ground_blocks[i].setX(i * Map.size);
 		}
 		for (int i = 0; i < this.trees.length; i++) {
-			this.trees[i].resetPosition(this.current_scroll);
+			this.trees[i].resetPosition((int) this.current_scroll);
 		}
 	}
 
@@ -450,6 +438,8 @@ public class Play extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
+		AudioManager.stopAllMusic();
+		AudioManager.MUSIC.TEMP_MUSIC.loop(1.0f);
 		this.state_is_transitioning = false; // TODO: Rename this lol
 		if (this.game_in_session) {
 			resume();
@@ -508,6 +498,11 @@ public class Play extends GameState {
 
 	@Override
 	public void stateFinishedFadingInToExit() {
+		if (AudioManager.MUSIC.TEMP_MUSIC.isInitialized()) {
+			if (AudioManager.MUSIC.TEMP_MUSIC.isPlaying()) {
+				AudioManager.MUSIC.TEMP_MUSIC.stop();
+			}
+		}
 		reset();
 	}
 
