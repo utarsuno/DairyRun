@@ -82,15 +82,15 @@ public class Play extends GameState {
 				Background.BLUE);
 		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), 0,
 				TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE);
-		// Create the houses.
-		this.houses = new House[10];
-		for (int i = 0; i < this.houses.length; i++) {
-			this.houses[i] = new House(this);
-		}
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
 			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, Map.size, Map.size, this.ground_blocks.length);
+		}
+		// Create the houses.
+		this.houses = new House[10];
+		for (int i = 0; i < this.houses.length; i++) {
+			this.houses[i] = new House(this);
 		}
 		// Create the trees.
 		this.trees = new Tree[30];
@@ -358,7 +358,7 @@ public class Play extends GameState {
 			}
 		}
 
-		this.sprite_batch.end();
+
 	}
 
 	private void setLost(boolean b) {
@@ -438,7 +438,6 @@ public class Play extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
-		AudioManager.stopAllMusic();
 		AudioManager.MUSIC.TEMP_MUSIC.loop(1.0f);
 		this.state_is_transitioning = false; // TODO: Rename this lol
 		if (this.game_in_session) {

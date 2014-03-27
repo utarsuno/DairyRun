@@ -17,6 +17,8 @@ public class ResourceManager {
 
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
+	
+	private AudioManager audioManager;
 
 	public void initialize_all_resources_and_information(DairyRun dr) {
 		this.texture_initialized = false;
@@ -28,6 +30,8 @@ public class ResourceManager {
 		ScreenUtil.init();
 		InfoUtil.init();
 		Map.init();
+		
+		this.audioManager = new AudioManager();
 
 		this.shapeRenderer = new ShapeRenderer();
 		this.spriteBatch = new SpriteBatch();
@@ -137,6 +141,10 @@ public class ResourceManager {
 
 	public void setSpriteBatch(SpriteBatch spriteBatch) {
 		this.spriteBatch = spriteBatch;
+	}
+
+	public AudioManager getAudioManager() {
+		return this.audioManager;
 	}
 
 }

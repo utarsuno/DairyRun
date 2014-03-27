@@ -2,14 +2,12 @@ package com.uladzislau.dairy_run.game_state;
 
 import java.util.Stack;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
+import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 
 public class GameStateManager {
@@ -35,8 +33,10 @@ public class GameStateManager {
 	private DeltaTimer transitioning_states_timer;
 
 	private ResourceManager resourceManager;
+	
+	private AudioManager audioManager;
 
-	public GameStateManager(DairyRun dr, ResourceManager rm) {
+	public GameStateManager(DairyRun dr, ResourceManager rm, AudioManager audioManager) {
 		this.resourceManager = rm;
 		this.transitioning_states_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 250);
 		this.main_menu = new MainMenu(dr, GameStateManager.MAIN_MENU);
@@ -51,6 +51,8 @@ public class GameStateManager {
 		this.current_state = this.main_menu;
 		this.current_state.stateChangedToThis();
 		this.state_history = new Stack<Byte>();
+		this.audioManager = audioManager;
+		this.audioManager.sendGameStateManager(this);
 		GameStateManager.transitioning_states = false;
 		GameStateManager.fading_out = false;
 	}
@@ -85,16 +87,16 @@ public class GameStateManager {
 	public void render() {
 		this.current_state.render();
 
-		Gdx.gl.glEnable(GL10.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		this.resourceManager.getShapeRenderer().begin(ShapeType.Filled);
 		if (GameStateManager.fading_out) {
-			this.resourceManager.getShapeRenderer().setColor(0.0f, 0.0f, 0.0f, 1.0f - this.transitioning_states_timer.percentComplete());
+			this.resourceManager.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, 1.0f - this.transitioning_states_timer.percentComplete());
 		} else {
-			this.resourceManager.getShapeRenderer().setColor(0.0f, 0.0f, 0.0f, this.transitioning_states_timer.percentComplete());
+			this.resourceManager.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, this.transitioning_states_timer.percentComplete());
 		}
-		this.resourceManager.getShapeRenderer().rect(0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height);
-		this.resourceManager.getShapeRenderer().end();
+		this.resourceManager.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 2), 0, 0,
+				ScreenUtil.screen_width, ScreenUtil.screen_height);
+
+		this.resourceManager.getSpriteBatch().end();
+		this.resourceManager.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	@SuppressWarnings("boxing")
@@ -155,6 +157,7 @@ public class GameStateManager {
 		default:
 			break;
 		}
+		AudioManager.pauseAllMusic();
 		this.current_state.stateChangedToThis();
 	}
 
@@ -178,6 +181,27 @@ public class GameStateManager {
 			break;
 		}
 		return this.current_state;
+	}
+
+	public void resumeMusicForCurrentState() {
+		System.out.println("resume");
+		if (this.current_state == this.main_menu) {
+			if (AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.isPaused()) {
+				AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.play();
+			}
+		} else if (this.current_state == this.level_selector) {
+			if (AudioManager.MUSIC.LEVEL_SELECTOR_MUSIC.isPaused()) {
+				AudioManager.MUSIC.LEVEL_SELECTOR_MUSIC.play();
+			}
+		} else if (this.current_state == this.options) {
+			if (AudioManager.MUSIC.TEMP_OPTIONS.isPaused()) {
+				AudioManager.MUSIC.TEMP_OPTIONS.play();
+			}
+		} else if (this.current_state == this.play) {
+			if (AudioManager.MUSIC.TEMP_MUSIC.isPaused()) {
+				AudioManager.MUSIC.TEMP_MUSIC.play();
+			}
+		}
 	}
 
 }

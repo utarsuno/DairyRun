@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.uladzislau.dairy_run.game_state.GameStateManager;
+import com.uladzislau.dairy_run.game_state.LevelSelector;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 import com.uladzislau.dairy_run.utility.P;
 import com.uladzislau.dairy_run.utility.StaticUtil;
@@ -395,7 +397,7 @@ public class AudioManager {
 	public static void inverseMusic() {
 		music_on ^= true;
 		if (music_on) {
-			startAllMusic();
+			gsm.resumeMusicForCurrentState();
 		} else {
 			pauseAllMusic();
 		}
@@ -408,6 +410,12 @@ public class AudioManager {
 	public static void inverseAudio() {
 		inverseMusic();
 		inverseSound();
+	}
+
+	private static GameStateManager gsm;
+	
+	public void sendGameStateManager(GameStateManager gameStateManager) {
+		gsm = gameStateManager;
 	}
 
 }

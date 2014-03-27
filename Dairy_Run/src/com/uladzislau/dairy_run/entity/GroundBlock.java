@@ -28,8 +28,7 @@ public class GroundBlock extends Entity {
 		this.water_block = false;
 	}
 
-	private void randomize(int current_scroll) {
-		setX(getX() + this.length * Map.size);
+	public void randomize() {
 		if (Dice.get_Random_Integer_From_Min_To_Max(0, 40) == 5) {
 			this.regular_block = true;
 		} else {
@@ -57,27 +56,36 @@ public class GroundBlock extends Entity {
 		}
 	}
 
+	public void setPosition(boolean forward) {
+		if (forward) {
+			setX(getX() + this.length * Map.size);
+		} else {
+			setX(getX() - (this.length * Map.size));
+		}
+	}
+
 	public void update(int current_scroll) {
 		if (getX() + Map.size + current_scroll < 0) {
-			randomize(current_scroll);
+			randomize();
+			setPosition(true);
 		}
 	}
 
 	public void render(SpriteBatch sb, int current_scroll) {
 		if (this.regular_block) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 12 + 29), this.getX() + current_scroll,
-					this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 12 + 29), this.getX() + current_scroll, this.getY() - this.getHeight(),
+					this.getWidth(), this.getHeight());
 		} else {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 3), this.getX() + current_scroll,
-					this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 3), this.getX() + current_scroll, this.getY() - this.getHeight(),
+					this.getWidth(), this.getHeight());
 		}
 
 		if (this.regular_ground_block) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), this.getX() + current_scroll,
-					this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), this.getX() + current_scroll, this.getY() - this.getHeight() * 2,
+					this.getWidth(), this.getHeight());
 		} else {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 4), this.getX() + current_scroll,
-					this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 4), this.getX() + current_scroll, this.getY() - this.getHeight() * 2,
+					this.getWidth(), this.getHeight());
 		}
 
 		if (this.grass) {

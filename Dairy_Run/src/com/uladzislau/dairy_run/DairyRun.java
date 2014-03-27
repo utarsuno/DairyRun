@@ -17,7 +17,7 @@ public class DairyRun implements ApplicationListener {
 	private ResourceManager resourceManager;
 
 	public static long start_time;
-
+	
 	public static boolean paused = false;
 
 	@SuppressWarnings("unused")
@@ -28,11 +28,11 @@ public class DairyRun implements ApplicationListener {
 
 		this.resourceManager = new ResourceManager();
 		this.resourceManager.initialize_all_resources_and_information(this);
-		System.out.println(this.resourceManager.credits_information());
+		// System.out.println(this.resourceManager.credits_information());
 
 		new InputManager(this);
 
-		this.gameStateManager = new GameStateManager(this, this.resourceManager);
+		this.gameStateManager = new GameStateManager(this, this.resourceManager, this.resourceManager.getAudioManager());
 
 		DairyRun.paused = false;
 
@@ -56,6 +56,7 @@ public class DairyRun implements ApplicationListener {
 
 	@Override
 	public void resize(int width, int height) {
+		// Resizing is not currently supported.
 	}
 
 	@Override

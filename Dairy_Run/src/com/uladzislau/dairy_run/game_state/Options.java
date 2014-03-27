@@ -51,17 +51,19 @@ public class Options extends GameState {
 	public void render() {
 		this.sprite_batch.begin();
 		Background.render(this.sprite_batch, Background.BLUE);
+		
+		this.sprite_batch.end();
+		this.soundSlider.render();
+		this.sprite_batch.begin();
+		
 		GroundBlock.render(this.sprite_batch, 0, GroundBlock.SNOW);
 		StaticGUI.music_button.render(this.sprite_batch);
 		StaticGUI.back_button.render(this.sprite_batch);
 		this.soundPercentage.render(this.sprite_batch, true);
-		this.sprite_batch.end();
-		this.soundSlider.render();
 	}
 
 	@Override
 	public void stateChangedToThis() {
-		AudioManager.stopAllMusic();
 		AudioManager.MUSIC.TEMP_OPTIONS.loop(1.0f);
 	}
 

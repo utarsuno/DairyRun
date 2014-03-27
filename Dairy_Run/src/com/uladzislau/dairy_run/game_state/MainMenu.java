@@ -52,12 +52,6 @@ public class MainMenu extends GameState {
 
 	@Override
 	public void update(float delta) {
-//		if (!this.song_started && AudioManager.isMusicOn()) {
-//			if (this.dairy_run.getResourceManager().music_initialized) {
-//				AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.play(1.0f);
-//				this.song_started = true;
-//			}
-//		}
 		this.initiate_button.update(delta);
 		this.terminate.update(delta);
 		this.options.update(delta);
@@ -86,12 +80,11 @@ public class MainMenu extends GameState {
 		// Render the music toggle button.
 		StaticGUI.music_button.render(this.sprite_batch);
 
-		this.sprite_batch.end();
+		//this.sprite_batch.end();
 	}
 
 	@Override
 	public void stateChangedToThis() {
-		AudioManager.stopAllMusic();
 		AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.loop(1.0f);
 	}
 

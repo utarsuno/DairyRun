@@ -1,7 +1,6 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.TextureManager;
 
@@ -31,16 +30,13 @@ public class Background extends Entity {
 		if (getX() + current_scroll * Background.SCROLL_RATE < ScreenUtil.screen_width) {
 			switch (this.type) {
 			case BLUE:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BLUE, (int) (this.getX() + current_scroll * Background.SCROLL_RATE),
-						this.getY());
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BLUE, (int) (this.getX() + current_scroll * Background.SCROLL_RATE), this.getY());
 				break;
 			case GREEN:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, GREEN, (int) (this.getX() + current_scroll * Background.SCROLL_RATE),
-						this.getY());
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, GREEN, (int) (this.getX() + current_scroll * Background.SCROLL_RATE), this.getY());
 				break;
 			case BROWN:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BROWN, (int) (this.getX() + current_scroll * Background.SCROLL_RATE),
-						this.getY());
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BROWN, (int) (this.getX() + current_scroll * Background.SCROLL_RATE), this.getY());
 				break;
 			default:
 				break;
