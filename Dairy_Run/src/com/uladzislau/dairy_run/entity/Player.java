@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.uladzislau.dairy_run.game_state.GameStateManager;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.gui.Heart;
 import com.uladzislau.dairy_run.information.ScreenUtil;

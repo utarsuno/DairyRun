@@ -73,6 +73,8 @@ public class MainMenu extends GameState {
 		this.sprite_batch.begin();
 		Background.render(this.sprite_batch, Background.GREEN);
 		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(19), 0, 0, Map.size * 7, Map.size * 7);
+		
+		this.sprite_batch.draw(TextureManager.TEXTURE.BACKGROUND.getTexture(), 0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height);
 		this.initiate_button.render(this.sprite_batch, true);
 		this.terminate.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.options.render(this.sprite_batch, true);

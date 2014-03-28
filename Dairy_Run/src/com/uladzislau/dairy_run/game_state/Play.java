@@ -88,7 +88,7 @@ public class Play extends GameState {
 			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, Map.size, Map.size, this.ground_blocks.length);
 		}
 		// Create the houses.
-		this.houses = new House[10];
+		this.houses = new House[5];
 		for (int i = 0; i < this.houses.length; i++) {
 			this.houses[i] = new House(this);
 		}
@@ -285,13 +285,10 @@ public class Play extends GameState {
 	public void render() {
 
 		// Background does not need to be transparent so blending is disabled for performance.
+		this.sprite_batch.begin();
 		this.sprite_batch.disableBlending();
-		this.sprite_batch.begin();
 		renderBackground();
-		this.sprite_batch.end();
-
 		this.sprite_batch.enableBlending();
-		this.sprite_batch.begin();
 		// Render the trees.
 		for (Tree tree : this.trees) {
 			tree.render(this.sprite_batch, (int) this.current_scroll);

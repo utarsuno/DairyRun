@@ -64,16 +64,13 @@ public class LevelSelector extends GameState {
 		for (int i = 0; i < this.ground_blocks.length; i++) {
 			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length);
 		}
-
 		createLevels();
 	}
 
 	private void createLevels() {
-		for (int i = 0; i < this.levels.length; i++) {
-			this.levels[i].setBeaten(false);
-		}
 		// Level One.
 		this.levels[0].setDescription("Deliver 10 milks.");
+		this.levels[0].setBeaten(false);
 		this.levels[0].setInitialVelocity(5f);
 		this.levels[0].setVelocityMatters(false);
 		this.levels[0].setVelocityNeededToWin(0);
@@ -86,31 +83,35 @@ public class LevelSelector extends GameState {
 		this.levels[0].setStrawberryMilkButtonEnabled(false);
 		// Level Two.
 		this.levels[1].setDescription("Deliver 20 milks.");
+		this.levels[1].setThisLevelEqualToLevel(this.levels[0]);
 		this.levels[1].setInitialVelocity(10f);
-		this.levels[1].setVelocityMatters(false);
-		this.levels[1].setVelocityNeededToWin(0);
 		this.levels[1].setNumberOfMilksNeededToWin(20);
 		this.levels[1].setUnlocked(false);
-		this.levels[1].setRunButtonEnabled(false);
-		this.levels[1].setCreateChasers(false);
-		this.levels[1].setRegularMilkButtonEnabled(true);
-		this.levels[1].setChocolateMilkButtonEnabled(false);
-		this.levels[1].setStrawberryMilkButtonEnabled(false);
 		// Level Three.
 		this.levels[2].setDescription("Deliver 30 milks.");
+		this.levels[2].setThisLevelEqualToLevel(this.levels[1]);
 		this.levels[2].setInitialVelocity(15f);
-		this.levels[2].setVelocityMatters(false);
-		this.levels[2].setVelocityNeededToWin(0);
 		this.levels[2].setNumberOfMilksNeededToWin(30);
-		this.levels[2].setUnlocked(false);
-		this.levels[2].setRunButtonEnabled(false);
-		this.levels[2].setCreateChasers(false);
-		this.levels[2].setRegularMilkButtonEnabled(true);
-		this.levels[2].setChocolateMilkButtonEnabled(false);
-		this.levels[2].setStrawberryMilkButtonEnabled(false);
+		// Level Four.
+		this.levels[3].setDescription("Deliver 10 milks.");
+		this.levels[3].setThisLevelEqualToLevel(this.levels[2]);
+		this.levels[3].setInitialVelocity(6f);
+		this.levels[3].setNumberOfMilksNeededToWin(10);
+		this.levels[3].setChocolateMilkButtonEnabled(true);
+		// Level Five.
+		this.levels[4].setDescription("Deliver 20 milks.");
+		this.levels[4].setThisLevelEqualToLevel(this.levels[3]);
+		this.levels[4].setInitialVelocity(12f);
+		this.levels[4].setNumberOfMilksNeededToWin(20);
+		// Level Six.
+		this.levels[5].setDescription("Deliver 30 milks.");
+		this.levels[5].setThisLevelEqualToLevel(this.levels[4]);
+		this.levels[5].setInitialVelocity(18f);
+		this.levels[5].setNumberOfMilksNeededToWin(30);
 		// TODO: TEMP!!!!!!!!!!!!!!!!!!!!!
-		for (int i = 3; i < 30; i++) {
+		for (int i = 6; i < 30; i++) {
 			this.levels[i].setDescription(":D");
+			this.levels[i].setBeaten(false);
 			this.levels[i].setVelocityMatters(false);
 			this.levels[i].setVelocityNeededToWin(0);
 			this.levels[i].setNumberOfMilksNeededToWin(10);
@@ -129,34 +130,6 @@ public class LevelSelector extends GameState {
 	@Override
 	public void update(float delta) {
 
-		if (InputManager.pointersDown[0] && !InputManager.pointersDragging[0] && !this.button_pressed) {
-			// Check to see if the first button has been pressed.
-			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, 0, ScreenUtil.screen_height / 2 - Map.size,
-					Map.size * 2, Map.size * 2)) {
-				if (this.current_level != 0) {
-					this.current_level--;
-					this.button_pressed = true;
-					this.transition_left = true;
-				}
-			}
-			// Check to see if the second button has been pressed.
-			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, ScreenUtil.screen_width - Map.size * 2,
-					ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2)) {
-				if (this.current_level != this.levels.length - 1) {
-					this.current_level++;
-					this.button_pressed = true;
-					this.transition_right = true;
-				}
-			}
-			// Check to see if the play button has been pressed.
-			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, ScreenUtil.screen_width / 2 - Map.size,
-					((Play) this.dairy_run.getGameStateManager().getState(GameStateManager.PLAY)).ground_level, Map.size * 2, Map.size * 2)) {
-				if (this.levels[this.current_level].isUnlocked()) {
-					this.play.setLevel(this.levels[this.current_level]);
-					this.dairy_run.getGameStateManager().changeState(GameStateManager.PLAY);
-				}
-			}
-		}
 		if (!InputManager.pointersDown[0]) {
 			this.button_pressed = false;
 		}
@@ -197,15 +170,43 @@ public class LevelSelector extends GameState {
 					.setX((int) (-1 * (int) ((this.current_level - 1) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / 30.0f)) + ((float) this.offset / ScreenUtil.screen_width)
 							* (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / 30.0f)));
 			for (int i = 0; i < this.ground_blocks.length; i++) {
-				this.ground_blocks[i].setX(this.ground_blocks[i].getX() + delta_offset);
+				this.ground_blocks[i].setX(this.ground_blocks[i].getX() + this.delta_offset);
 				if (this.ground_blocks[i].getX() + Map.size < 0) {
 					this.ground_blocks[i].randomize();
 					this.ground_blocks[i].setX(this.ground_blocks[i].getX() + Map.size * (this.ground_blocks.length));
 				}
 			}
-
 		} else {
 			this.backgrounds[0].setX(-1 * (int) ((this.current_level) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / 30.0f)));
+
+			if (InputManager.pointersDown[0] && !InputManager.pointersDragging[0] && !this.button_pressed) {
+				// Check to see if the first button has been pressed.
+				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, 0, ScreenUtil.screen_height / 2 - Map.size,
+						Map.size * 2, Map.size * 2)) {
+					if (this.current_level != 0) {
+						this.current_level--;
+						this.button_pressed = true;
+						this.transition_left = true;
+					}
+				}
+				// Check to see if the second button has been pressed.
+				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, ScreenUtil.screen_width - Map.size * 2,
+						ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2)) {
+					if (this.current_level != this.levels.length - 1) {
+						this.current_level++;
+						this.button_pressed = true;
+						this.transition_right = true;
+					}
+				}
+				// Check to see if the play button has been pressed.
+				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, ScreenUtil.screen_width / 2 - Map.size,
+						((Play) this.dairy_run.getGameStateManager().getState(GameStateManager.PLAY)).ground_level, Map.size * 2, Map.size * 2)) {
+					if (this.levels[this.current_level].isUnlocked()) {
+						this.play.setLevel(this.levels[this.current_level]);
+						this.dairy_run.getGameStateManager().changeState(GameStateManager.PLAY);
+					}
+				}
+			}
 		}
 
 		this.backgrounds[1].setX(this.backgrounds[0].getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth());
@@ -334,7 +335,6 @@ public class LevelSelector extends GameState {
 
 	@Override
 	public void resume() {
-
 	}
 
 	@Override

@@ -45,12 +45,12 @@ public class ClickableText {
 		this.animatationTimer = new DeltaTimer();
 	}
 
-	public ClickableText(CharSequence title, CharSequence title2, ColorXv initialColor, ColorXv highlightColor, int duration) {
+	public ClickableText(CharSequence title, CharSequence title2, ColorXv color1, ColorXv color2, int duration) {
 		this.title = title;
 		this.title2 = title2;
 		this.highlightTimer = new DeltaTimer(DeltaTimer.RUN_ONCE, duration);
-		this.initialColorXv = initialColor;
-		this.highlightColorXv = highlightColor;
+		this.initialColorXv = new ColorXv(color1.getR(), color1.getG(), color1.getB(), color1.getA());
+		this.highlightColorXv = new ColorXv(color2.getR(), color2.getG(), color2.getB(), color2.getA());
 		this.colorXv = new ColorXv();
 		this.colorXv.setTo(this.initialColorXv);
 		this.animatationTimer = new DeltaTimer();
@@ -81,7 +81,7 @@ public class ClickableText {
 		}
 
 		this.highlightTimer.update(delta);
-		
+
 		switch (InfoUtil.CURRENT_PLATEFORM) {
 		case InfoUtil.DESKTOP:
 			if (this.isMouseOverMe()) {
@@ -230,15 +230,14 @@ public class ClickableText {
 
 	@Override
 	public String toString() {
-		return "x: " + getRectanglei().getX() + "\ty: " + getRectanglei().getY() + "\tw: " + getRectanglei().getWidth() + "\th: "
-				+ getRectanglei().getHeight();
+		return "x: " + getRectanglei().getX() + "\ty: " + getRectanglei().getY() + "\tw: " + getRectanglei().getWidth() + "\th: " + getRectanglei().getHeight();
 	}
 
 	public void render(SpriteBatch sprite_batch, boolean b) {
 
-		FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new Color(this.colorXv.getR(), this.colorXv.getG(),
-				this.colorXv.getB(), this.colorXv.getA()), getRectanglei().getX(), getRectanglei().getX() + getRectanglei().getWidth(),
-				getRectanglei().getY(), getRectanglei().getY() + getRectanglei().getHeight());
+		FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new Color(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(),
+				this.colorXv.getA()), getRectanglei().getX(), getRectanglei().getX() + getRectanglei().getWidth(), getRectanglei().getY(), getRectanglei()
+				.getY() + getRectanglei().getHeight());
 
 	}
 

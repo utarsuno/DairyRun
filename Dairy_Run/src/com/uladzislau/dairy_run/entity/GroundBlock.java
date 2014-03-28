@@ -10,13 +10,12 @@ public class GroundBlock extends Entity {
 
 	public final static short GRASS = 31 * 5 + 12; // temp
 	public final static short SNOW = 31 * 2 + 3;
+	public final static short SNOW_GROUND = 31 * 3 + 2;
 
 	private int length;
 
 	private boolean regular_block;
 	private boolean regular_ground_block;
-	// TODO: This may or may not be added later.
-	private boolean water_block;
 
 	private boolean grass;
 	private short grass_block;
@@ -25,19 +24,11 @@ public class GroundBlock extends Entity {
 		super(x, y, width, height);
 		this.length = length;
 		this.grass = false;
-		this.water_block = false;
 	}
 
 	public void randomize() {
 		if (Dice.get_Random_Integer_From_Min_To_Max(0, 40) == 5) {
 			this.regular_block = true;
-		} else {
-			this.regular_block = false;
-			if (Dice.nextBoolean()) {
-				this.water_block = true;
-			} else {
-				this.water_block = false;
-			}
 		}
 		if (Dice.get_Random_Integer_From_Min_To_Max(0, 60) == 5) {
 			this.regular_ground_block = true;
@@ -46,9 +37,9 @@ public class GroundBlock extends Entity {
 		}
 		if (Dice.get_Random_Integer_From_Min_To_Max(0, 16) == 5) {
 			if (Dice.nextBoolean()) {
-				grass_block = 17;
+				this.grass_block = 17;
 			} else {
-				grass_block = 17 + 30;
+				this.grass_block = 17 + 30;
 			}
 			this.grass = true;
 		} else {
@@ -94,17 +85,11 @@ public class GroundBlock extends Entity {
 		}
 	}
 
-	public static void render(SpriteBatch sb, int y, short type) {
-		switch (type) {
-		case SNOW:
-			int tx = 0;
-			while (tx < ScreenUtil.screen_width + Map.size) {
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(SNOW), tx, y, Map.size, Map.size);
-				tx += Map.size;
-			}
-			break;
-		default:
-			break;
+	public static void render(SpriteBatch sb, int y, short block) {
+		int tx = 0;
+		while (tx < ScreenUtil.screen_width + Map.size) {
+			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(block), tx, y, Map.size, Map.size);
+			tx += Map.size;
 		}
 	}
 

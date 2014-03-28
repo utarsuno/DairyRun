@@ -17,7 +17,7 @@ public class DairyRun implements ApplicationListener {
 	private ResourceManager resourceManager;
 
 	public static long start_time;
-	
+
 	public static boolean paused = false;
 
 	@SuppressWarnings("unused")
@@ -26,11 +26,11 @@ public class DairyRun implements ApplicationListener {
 
 		DairyRun.start_time = System.currentTimeMillis();
 
+		new InputManager(this);
+
 		this.resourceManager = new ResourceManager();
 		this.resourceManager.initialize_all_resources_and_information(this);
 		// System.out.println(this.resourceManager.credits_information());
-
-		new InputManager(this);
 
 		this.gameStateManager = new GameStateManager(this, this.resourceManager, this.resourceManager.getAudioManager());
 
@@ -43,13 +43,25 @@ public class DairyRun implements ApplicationListener {
 		if (!paused) {
 			this.gameStateManager.update(delta);
 		}
+
+		// Debugging.
+		if (Gdx.graphics.getFramesPerSecond() < 60 && Gdx.graphics.getFramesPerSecond() != 0) {
+			StaticUtil.error("Frame Rate Is ", "" + Gdx.graphics.getFramesPerSecond());
+		}
 	}
 
 	@Override
 	public void render() {
+		// Update the game logic before rendering.
 		update((Gdx.graphics.getDeltaTime()));
+
+		// Render the game if it is not paused. This if statement may not be needed.
 		if (!paused) {
+			// Clear the 2D screen.
 			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			// LibGDX might already be calling this.
+			Gdx.gl.glEnable(GL10.GL_CULL_FACE);
+			Gdx.gl.glCullFace(GL10.GL_FRONT);
 			this.gameStateManager.render();
 		}
 	}

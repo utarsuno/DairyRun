@@ -20,7 +20,7 @@ public class ResourceManager {
 	
 	private AudioManager audioManager;
 
-	public void initialize_all_resources_and_information(DairyRun dr) {
+	public void initialize_all_resources_and_information(DairyRun dairyRun) {
 		this.texture_initialized = false;
 		this.music_initialized = false;
 		this.sound_initialized = false;
@@ -40,6 +40,7 @@ public class ResourceManager {
 		for (TextureManager.SPRITESHEET spritesheet : TextureManager.SPRITESHEET.values()) {
 			spritesheet.initialize();
 		}
+		TextureManager.TEXTURE.BACKGROUND.initialize();
 		TextureManager.SPRITESHEET.BACKGROUNDS.setHeight((ScreenUtil.screen_height));
 		TextureManager.SPRITESHEET.BACKGROUNDS.setWidth((int) (ScreenUtil.screen_height / 63.0f * 231.0f));
 		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setHeight(Map.size);
@@ -50,7 +51,7 @@ public class ResourceManager {
 		FontManager.FONT.PIXEL_REGULAR.initialize();
 		this.texture_initialized = true;
 
-		StaticGUI.inititialize(dr);
+		StaticGUI.inititialize(dairyRun);
 
 		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}

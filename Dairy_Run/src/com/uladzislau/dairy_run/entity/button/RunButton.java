@@ -16,15 +16,6 @@ import com.uladzislau.dairy_run.world.Map;
 
 public class RunButton extends CircleButton {
 
-	private Circlef[] pointerCircles = new Circlef[8];
-	{
-		for (int i = 0; i < 8; i++) {
-			this.pointerCircles[i] = new Circlef(0, 0, ScreenUtil.screen_diagonal * 0.01f);
-		}
-	}
-	private boolean[] track = new boolean[8];
-	private boolean[] increments = new boolean[8];
-
 	private float velocity_increase;
 	private float player_position_increase;
 	private float acceleration_time = 1000;
@@ -41,45 +32,15 @@ public class RunButton extends CircleButton {
 		this.play = play;
 		this.velocity_increase = 0.50f;
 		this.player_position_increase = ScreenUtil.screen_width * 0.02f;
-		for (int i = 0; i < this.track.length; i++) {
-			this.track[i] = true;
-		}
 		this.deltaTimers = new ArrayList<DeltaTimer>();
 		this.timer_transition = new ArrayList<Boolean>();
 		this.pixels = new ArrayList<Float>();
+		super.inititialize();
 	}
 
 	@Override
 	public void update(float delta) {
-		for (int i = 0; i < InputManager.pointers.length; i++) {
-			this.pointerCircles[i].setX(InputManager.pointers[i].x);
-			this.pointerCircles[i].setY(InputManager.pointers[i].y);
-		}
-		for (int j = 0; j < InputManager.pointersDown.length; j++) {
-			if (InputManager.pointersDown[j]) {
-				if (this.isCollidingWithAnotherCirclef(this.pointerCircles[j])) {
-					if (this.track[j]) {
-						this.increments[j] = true;
-						this.track[j] = false;
-					}
-				} else {
-					this.increments[j] = false;
-				}
-			} else {
-				this.track[j] = true;
-			}
-		}
-		for (int i = 0; i < this.increments.length; i++) {
-			if (this.increments[i]) {
-				this.play.setVelocity(this.play.getVelocity() + this.velocity_increase);
-				// TODO: Add a system that only adds a new delta timer when there is no more reusable, expired, deltaTimers.
-				this.deltaTimers.add(new DeltaTimer());
-				this.timer_transition.add(true);
-				this.pixels.add(0f);
-				AudioManager.SOUND.POP.playSound();
-				this.increments[i] = false;
-			}
-		}
+		super.update(delta);
 		for (int i = 0; i < this.deltaTimers.size(); i++) {
 			this.deltaTimers.get(i).update(delta);
 			if (this.timer_transition.get(i)) {
@@ -89,8 +50,7 @@ public class RunButton extends CircleButton {
 					this.timer_transition.set(i, false);
 				}
 			} else {
-				this.pixels.set(i, this.player_position_increase
-						* (1.0f - (this.deltaTimers.get(i).getTotalDelta() / this.deccelartion_time)));
+				this.pixels.set(i, this.player_position_increase * (1.0f - (this.deltaTimers.get(i).getTotalDelta() / this.deccelartion_time)));
 				if (this.deltaTimers.get(i).getTotalDelta() > this.deccelartion_time) {
 					this.deltaTimers.remove(i);
 					this.timer_transition.remove(i);
@@ -106,28 +66,13 @@ public class RunButton extends CircleButton {
 
 	@Override
 	public void render(SpriteBatch sb) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 19), this.getX() - Map.size / 2, this.getY() - Map.size / 2,
-				Map.size, Map.size);
+		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 19), this.getX() - Map.size / 2, this.getY() - Map.size / 2, Map.size, Map.size);
 	}
 
 	public void reset() {
 		this.deltaTimers.clear();
 		this.timer_transition.clear();
 		this.pixels.clear();
-	}
-
-	@Override
-	public void debugRender(ShapeRenderer sr) {
-		sr.setColor(1.0f, 0.0f, 0.0f, 1.0f);
-		sr.begin(ShapeType.Filled);
-		sr.circle(this.getX(), this.getY(), this.getRadius());
-		sr.end();
-		sr.setColor(0.0f, 0.0f, 1.0f, 1.0f);
-		sr.begin(ShapeType.Filled);
-		for (int i = 0; i < 8; i++) {
-			sr.circle(this.pointerCircles[i].getX(), this.pointerCircles[i].getY(), this.pointerCircles[i].getRadius());
-		}
-		sr.end();
 	}
 
 	public float getVelocity_increase() {
@@ -140,6 +85,15 @@ public class RunButton extends CircleButton {
 
 	public float getPlayerPositionIncrease() {
 		return this.player_position_increase;
+	}
+
+	@Override
+	public void doButtonAction() {
+		// TODO: Add a system that only adds a new delta timer when there is no more reusable, expired, deltaTimers.
+		this.deltaTimers.add(new DeltaTimer());
+		this.timer_transition.add(true);
+		this.pixels.add(0f);
+		AudioManager.SOUND.POP.playSound();
 	}
 
 }

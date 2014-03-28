@@ -1,21 +1,22 @@
 package com.uladzislau.dairy_run.gui;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.manager.InputManager;
+import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.math_utility.MathUtil;
 
 public class Slider {
 
-	public ShapeRenderer shapeRenderer;
 	private Rectanglei rectanglei;
 	private float limit;
 	private boolean slidable;
 	private final ColorXv colorXv;
 	private final ColorXv minColorXv;
 	private final ColorXv maxColorXv;
+
+	private float original_width;
 
 	private int target_position;
 	private float current_position;
@@ -31,8 +32,8 @@ public class Slider {
 		this.limit = 1.0f;
 		this.current_position = this.rectanglei.getX() + this.rectanglei.getWidth();
 		this.target_position = (int) this.current_position;
-		this.shapeRenderer = new ShapeRenderer();
 		this.slidable = true;
+		this.original_width = this.rectanglei.getWidth();
 	}
 
 	private boolean dragging = true;
@@ -96,27 +97,22 @@ public class Slider {
 
 	}
 
-	public void render() {
-		// AlphaBlending.begin();
-		this.shapeRenderer.begin(ShapeType.Filled);
-		if (!this.slidable) {
-			this.shapeRenderer.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA() / 2);
-		} else {
-			this.shapeRenderer.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA());
-		}
-		this.shapeRenderer.rect(this.rectanglei.getX(), this.rectanglei.getY(), (int) (this.percentageFull() * this.rectanglei.getWidth()),
-				this.rectanglei.getHeight());
-		this.shapeRenderer.end();
+	public void render(SpriteBatch sb) {
 
-		this.shapeRenderer.begin(ShapeType.Line);
+		sb.setColor(1.0f, 1.0f, 1.0f, 0.15f);
+		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 2), this.rectanglei.getX(), this.rectanglei.getY(), this.rectanglei.getWidth(),
+				this.rectanglei.getHeight());
+
 		if (!this.slidable) {
-			this.shapeRenderer.setColor(1.0f, 1.0f, 1.0f, 0.5f);
+			sb.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA() / 2);
 		} else {
-			this.shapeRenderer.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+			sb.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA());
 		}
-		this.shapeRenderer.rect(this.rectanglei.getX(), this.rectanglei.getY(), this.rectanglei.getWidth(), this.rectanglei.getHeight());
-		this.shapeRenderer.end();
-		// AlphaBlending.end();
+
+		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 21 + 9), this.rectanglei.getX(), this.rectanglei.getY(), this.rectanglei.getWidth()
+				* this.percentageFull(), this.rectanglei.getHeight());
+
+		sb.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	public boolean isBeingDragging() {
@@ -145,7 +141,6 @@ public class Slider {
 	}
 
 	public void dispose() {
-		this.shapeRenderer.dispose();
 	}
 
 	public void setSlidable(boolean slidable) {

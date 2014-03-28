@@ -156,4 +156,23 @@ public class Level {
 		this.beaten = beaten;
 	}
 
+	public void setThisLevelEqualToLevel(Level l) {
+		this.description = l.getDescription();
+		this.beaten = l.isBeaten();
+		this.number_of_milks_needed_to_win = l.getNumberOfMilksNeededToWin();
+		this.number_of_lives_needed = l.getNumberOfLivesNeeded();
+		this.run_button_enabled = l.isRunButtonEnabled();
+		this.regular_milk_button_enabled = l.isRegularMilkButtonEnabled();
+		this.chocolate_milk_button_enabled = l.isChocolateMilkButtonEnabled();
+		this.strawberry_milk_button_enabled = l.isStrawberryMilkButtonEnabled();
+		this.createChasers = l.isCreateChasers();
+		this.initial_velocity = l.initial_velocity;
+		this.bronze_recieved = l.bronze_recieved;
+		this.silver_recieved = l.silver_recieved;
+		this.gold_recieved = l.gold_recieved;
+		this.unlocked = l.isUnlocked();
+		this.velocity_matters = l.isVelocityMatters();
+		this.velocity_needed = l.getVelocityNeededToWin();
+	}
+
 }

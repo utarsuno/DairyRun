@@ -17,6 +17,7 @@ public class ColorXv {
 	public static final ColorXv DARK_TEAL = new ColorXv(0.0f, 157f / 255f, 1.0f);
 	public static final ColorXv TEAL = new ColorXv(0.733333333f, 1.0f, 1.0f);
 	public static final ColorXv SLATE_BLUE = new ColorXv(131.0f / 255.0f, 111.0f / 255.0f, 1.0f);
+	public static final ColorXv PURPLE = new ColorXv(160.0f / 255.0f, 32.0f / 255.0f, 240.0f / 255.0f);
 	public static final ColorXv GRAY = new ColorXv(190.0f / 255.0f, 190.0f / 255.0f, 190.0f / 255.0f, 1.0f);
 	public static final ColorXv BLACK = new ColorXv(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -82,8 +83,8 @@ public class ColorXv {
 	}
 
 	public static ColorXv lighterVersion(ColorXv colorXv, float percentage_lighter) {
-		return new ColorXv(colorXv.r - percentage_lighter * (1.0f - colorXv.r), colorXv.g - percentage_lighter * (1.0f - colorXv.g),
-				colorXv.b - percentage_lighter * (1.0f - colorXv.b));
+		return new ColorXv(colorXv.r - percentage_lighter * (1.0f - colorXv.r), colorXv.g - percentage_lighter * (1.0f - colorXv.g), colorXv.b
+				- percentage_lighter * (1.0f - colorXv.b));
 	}
 
 	@Override

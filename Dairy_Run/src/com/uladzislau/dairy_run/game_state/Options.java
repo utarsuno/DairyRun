@@ -1,5 +1,6 @@
 package com.uladzislau.dairy_run.game_state;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
@@ -31,18 +32,31 @@ public class Options extends GameState {
 	public void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch) {
 		this.sprite_batch = batch;
 		this.shape_renderer = shapeRenderer;
-		this.soundSlider = new Slider(Map.size, Map.size * 2, ScreenUtil.screen_width - Map.size * 4, Map.size, ColorXv.GREEN, ColorXv.RED);
 
-		this.soundPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 3, Map.size * 2, Map.size * 2,
-				Map.size), new ColorXv(ColorXv.TEAL.getR(), ColorXv.TEAL.getG(), ColorXv.TEAL.getB()), new ColorXv(ColorXv.BLUE.getR(),
-				ColorXv.BLUE.getG(), ColorXv.BLUE.getB()), 800);
+		this.musicSlider = new Slider(Map.size, Map.size * 5, ScreenUtil.screen_width - Map.size * 5, Map.size, ColorXv.GREEN, ColorXv.RED);
+
+		this.musicPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 4, Map.size * 5, Map.size * 2, Map.size),
+				ColorXv.BLACK, ColorXv.PURPLE, 800);
+
+		this.soundSlider = new Slider(Map.size, Map.size * 2, ScreenUtil.screen_width - Map.size * 5, Map.size, ColorXv.GREEN, ColorXv.RED);
+
+		this.soundPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 4, Map.size * 2, Map.size * 2, Map.size),
+				ColorXv.BLACK, ColorXv.PURPLE, 800);
 	}
 
 	@Override
 	public void update(float delta) {
+		this.musicSlider.update((int) (delta * 1000.0f));
+		this.musicPercentage.update(delta);
 		this.soundSlider.update((int) (delta * 1000.0f));
 		this.soundPercentage.update(delta);
-		this.soundPercentage.setTitle("" + AudioManager.getSoundLevel() + "%");
+
+		AudioManager.setAudioLevel(this.soundSlider.percentageFull());
+		this.soundPercentage.setTitle("" + (int) (AudioManager.getSoundLevel() * 100) + "%");
+
+		AudioManager.setMusicLevel(this.musicSlider.percentageFull());
+		this.musicPercentage.setTitle("" + (int) (AudioManager.getMusicLevel() * 100) + "%");
+
 		StaticGUI.music_button.update(delta);
 		StaticGUI.back_button.update(delta);
 	}
@@ -51,15 +65,19 @@ public class Options extends GameState {
 	public void render() {
 		this.sprite_batch.begin();
 		Background.render(this.sprite_batch, Background.BLUE);
-		
-		this.sprite_batch.end();
-		this.soundSlider.render();
-		this.sprite_batch.begin();
-		
-		GroundBlock.render(this.sprite_batch, 0, GroundBlock.SNOW);
+
+		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Sound", Color.BLACK, Map.size, Map.size * 3, Map.size, false);
+		this.soundSlider.render(this.sprite_batch);
+		this.soundPercentage.render(this.sprite_batch, true);
+
+		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Music", Color.BLACK, Map.size, Map.size * 6, Map.size, false);
+		this.musicSlider.render(this.sprite_batch);
+		this.musicPercentage.render(this.sprite_batch, true);
+
+		GroundBlock.render(this.sprite_batch, Map.size / 2, GroundBlock.SNOW);
+		GroundBlock.render(this.sprite_batch, 0, GroundBlock.SNOW_GROUND);
 		StaticGUI.music_button.render(this.sprite_batch);
 		StaticGUI.back_button.render(this.sprite_batch);
-		this.soundPercentage.render(this.sprite_batch, true);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 public class TextureManager {
 
 	public enum TEXTURE implements Resource {
-		NONE("none", "none");
+		BACKGROUND("test", "self-made");
 
 		private final String name;
 		private final String source;
@@ -238,7 +238,6 @@ public class TextureManager {
 
 		@Override
 		public void resize() {
-			
 		}
 
 	}
