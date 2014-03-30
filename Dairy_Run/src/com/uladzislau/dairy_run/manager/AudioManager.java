@@ -10,6 +10,8 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 public class AudioManager {
 
 	/* Sound Files Supported: WAV, MP3, OGG */
+	
+	// Sound to add ----- http://opengameart.org/content/bubbles-pop
 
 	private static boolean audio_on = true;
 	protected static boolean music_on = true;
@@ -24,21 +26,19 @@ public class AudioManager {
 	private static DeltaTimer fade_timer;
 
 	public enum SOUND implements Resource {
-		INTERFACE_00("beep" + java.io.File.separator + "interface_00", "Created with BFxr."), INTERFACE_01("beep" + java.io.File.separator
-				+ "interface_01", "http://www.freesound.org/people/LloydEvans09/sounds/185828/"), COMPLETED("completed",
-				"http://opengameart.org/content/completion-sound"), COIN_ECHO("coin_echo",
-				"http://opengameart.org/content/picked-coin-echo"), PAIN_ONE("pain" + java.io.File.separator + "pain_jack_01",
+		INTERFACE_00("beep" + java.io.File.separator + "interface_00", "Created with BFxr."), INTERFACE_01("beep" + java.io.File.separator + "interface_01",
+				"http://www.freesound.org/people/LloydEvans09/sounds/185828/"), COMPLETED("completed", "http://opengameart.org/content/completion-sound"), COIN_ECHO(
+				"coin_echo", "http://opengameart.org/content/picked-coin-echo"), PAIN_ONE("pain" + java.io.File.separator + "pain_jack_01",
 				"http://opengameart.org/content/fps-placeholder-sounds"), PAIN_TWO("pain" + java.io.File.separator + "pain_jack_02",
 				"http://opengameart.org/content/fps-placeholder-sounds"), PAIN_THREE("pain" + java.io.File.separator + "pain_jack_03",
 				"http://opengameart.org/content/fps-placeholder-sounds"), DEATH_ONE("death" + java.io.File.separator + "death_jack_01",
 				"http://opengameart.org/content/fps-placeholder-sounds"), DEATH_TWO("death" + java.io.File.separator + "death_jack_02",
 				"http://opengameart.org/content/fps-placeholder-sounds"), JUMP("jumping" + java.io.File.separator + "boing_jack_01",
 				"http://opengameart.org/content/fps-placeholder-sounds"), LAND("jumping" + java.io.File.separator + "land",
-				"http://opengameart.org/content/fps-placeholder-sounds"), POP("pop",
-				"http://opengameart.org/content/fps-placeholder-sounds"), MILK("milk" + java.io.File.separator + "milk", "darreon"), MILK2(
-				"milk" + java.io.File.separator + "milk2", "darreon"), MILK3("milk" + java.io.File.separator + "milk3", "darreon"), TRANSITION_00(
-				"transition" + java.io.File.separator + "transition_00", "https://www.freesound.org/people/Halgrimm/sounds/195463/"), VICTORY(
-				"victory" + java.io.File.separator + "Lively Meadow Victory Fanfare",
+				"http://opengameart.org/content/fps-placeholder-sounds"), POP("pop", "http://opengameart.org/content/fps-placeholder-sounds"), MILK("milk"
+				+ java.io.File.separator + "milk", "darreon"), MILK2("milk" + java.io.File.separator + "milk2", "darreon"), MILK3("milk"
+				+ java.io.File.separator + "milk3", "darreon"), TRANSITION_00("transition" + java.io.File.separator + "transition_00",
+				"https://www.freesound.org/people/Halgrimm/sounds/195463/"), VICTORY("victory" + java.io.File.separator + "Lively Meadow Victory Fanfare",
 				"http://www.matthewpablo.com/archives/many-new-tracks-1-29-14");
 
 		private final String name;
@@ -57,8 +57,8 @@ public class AudioManager {
 		@Override
 		public void initialize() {
 			if (this.sound == null) {
-				this.sound = Gdx.audio.newSound(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator
-						+ "sound" + java.io.File.separator + this.name + ".mp3"));
+				this.sound = Gdx.audio.newSound(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator + "sound"
+						+ java.io.File.separator + this.name + ".mp3"));
 				this.initialized = true;
 			} else {
 				StaticUtil.error("Audio Error", "You are trying to init " + this.name + " twice.");
@@ -68,7 +68,7 @@ public class AudioManager {
 		public void playSound() {
 			if (sound_on && !this.muted) {
 				if (this.initialized) {
-					this.sound.play();
+					this.sound.play(AudioManager.sound_level);
 				} else {
 					StaticUtil.error("Audio", this.name + " was told to be played but has not yet been initialized.");
 				}
@@ -134,10 +134,8 @@ public class AudioManager {
 	}
 
 	public enum MUSIC implements Resource {
-		TEMP_MUSIC("HolFix - Pixel Parade", "get it later lol"), TEMP_MAIN_MENU_MUSIC("HolFix - Happy Moment Remix",
-				"Holflix, get it later though"), LEVEL_SELECTOR_MUSIC("Lively Meadow",
-				"http://www.matthewpablo.com/archives/many-new-tracks-1-29-14"), TEMP_OPTIONS(
-				"HolFix - Jeremy the Different Giraffe Theme",
+		TEMP_MUSIC("HolFix - Pixel Parade", "get it later lol"), TEMP_MAIN_MENU_MUSIC("HolFix - Happy Moment Remix", "Holflix, get it later though"), LEVEL_SELECTOR_MUSIC(
+				"Lively Meadow", "http://www.matthewpablo.com/archives/many-new-tracks-1-29-14"), TEMP_OPTIONS("HolFix - Jeremy the Different Giraffe Theme",
 				"http://www.youtube.com/watch?v=5Alrqovf9E8&index=9&list=PLyBvLDmLwbZsHRnniCV5cJ9FM2WLR7a7I");
 		private final String name;
 		private final String source;
@@ -157,8 +155,8 @@ public class AudioManager {
 		@Override
 		public void initialize() {
 			if (this.music == null) {
-				this.music = Gdx.audio.newMusic(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator
-						+ "music" + java.io.File.separator + this.name + ".mp3"));
+				this.music = Gdx.audio.newMusic(Gdx.files.internal("data" + java.io.File.separator + "audio" + java.io.File.separator + "music"
+						+ java.io.File.separator + this.name + ".mp3"));
 				this.initialized = true;
 			} else {
 				StaticUtil.error("Audio Error", "You are trying to init + " + this.name + " twice.");
@@ -228,8 +226,7 @@ public class AudioManager {
 
 		@Override
 		public String currentStatus() {
-			return "Initialized: " + this.initialized + "\tMuted: " + this.muted + "\tisPlaying: " + this.isPlaying() + "\tisPaused: "
-					+ this.isPaused();
+			return "Initialized: " + this.initialized + "\tMuted: " + this.muted + "\tisPlaying: " + this.isPlaying() + "\tisPaused: " + this.isPaused();
 		}
 
 		public boolean isMuted() {
@@ -377,8 +374,8 @@ public class AudioManager {
 	}
 
 	public static String getInfo() {
-		String info = "Audio On: " + audio_on + "\t" + "Music On: " + music_on + "\t" + "Sound On: " + sound_on + "\t" + "Audio Level: "
-				+ audio_level + "\t" + "Sound Level: " + sound_level + "\t" + "Music Level: " + music_level;
+		String info = "Audio On: " + audio_on + "\t" + "Music On: " + music_on + "\t" + "Sound On: " + sound_on + "\t" + "Audio Level: " + audio_level + "\t"
+				+ "Sound Level: " + sound_level + "\t" + "Music Level: " + music_level;
 		for (MUSIC music : MUSIC.values()) {
 			if (music.isPlaying()) {
 				info += "\t" + music.name();
@@ -410,7 +407,7 @@ public class AudioManager {
 	}
 
 	private static GameStateManager gsm;
-	
+
 	public void sendGameStateManager(GameStateManager gameStateManager) {
 		gsm = gameStateManager;
 	}

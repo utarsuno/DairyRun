@@ -16,8 +16,6 @@ public class Slider {
 	private final ColorXv minColorXv;
 	private final ColorXv maxColorXv;
 
-	private float original_width;
-
 	private int target_position;
 	private float current_position;
 	private float old_velocity;
@@ -33,7 +31,6 @@ public class Slider {
 		this.current_position = this.rectanglei.getX() + this.rectanglei.getWidth();
 		this.target_position = (int) this.current_position;
 		this.slidable = true;
-		this.original_width = this.rectanglei.getWidth();
 	}
 
 	private boolean dragging = true;
@@ -140,9 +137,6 @@ public class Slider {
 		return (float) MathUtil.round((this.current_position - this.rectanglei.getX()) / (this.rectanglei.getWidth()), 2);
 	}
 
-	public void dispose() {
-	}
-
 	public void setSlidable(boolean slidable) {
 		this.slidable = slidable;
 	}
@@ -165,6 +159,9 @@ public class Slider {
 
 	public int getTargetPosition() {
 		return this.target_position;
+	}
+	
+	public void dispose() {
 	}
 
 }

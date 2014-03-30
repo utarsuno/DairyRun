@@ -35,12 +35,12 @@ public class Options extends GameState {
 
 		this.musicSlider = new Slider(Map.size, Map.size * 5, ScreenUtil.screen_width - Map.size * 5, Map.size, ColorXv.GREEN, ColorXv.RED);
 
-		this.musicPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 4, Map.size * 5, Map.size * 2, Map.size),
+		this.musicPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 4, Map.size * 5, Map.size * 4, Map.size),
 				ColorXv.BLACK, ColorXv.PURPLE, 800);
 
 		this.soundSlider = new Slider(Map.size, Map.size * 2, ScreenUtil.screen_width - Map.size * 5, Map.size, ColorXv.GREEN, ColorXv.RED);
 
-		this.soundPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 4, Map.size * 2, Map.size * 2, Map.size),
+		this.soundPercentage = new ClickableText("100%", new Rectanglei(ScreenUtil.screen_width - Map.size * 4, Map.size * 2, Map.size * 4, Map.size),
 				ColorXv.BLACK, ColorXv.PURPLE, 800);
 	}
 
@@ -51,7 +51,7 @@ public class Options extends GameState {
 		this.soundSlider.update((int) (delta * 1000.0f));
 		this.soundPercentage.update(delta);
 
-		AudioManager.setAudioLevel(this.soundSlider.percentageFull());
+		AudioManager.setSoundLevel(this.soundSlider.percentageFull());
 		this.soundPercentage.setTitle("" + (int) (AudioManager.getSoundLevel() * 100) + "%");
 
 		AudioManager.setMusicLevel(this.musicSlider.percentageFull());
@@ -68,11 +68,11 @@ public class Options extends GameState {
 
 		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Sound", Color.BLACK, Map.size, Map.size * 3, Map.size, false);
 		this.soundSlider.render(this.sprite_batch);
-		this.soundPercentage.render(this.sprite_batch, true);
+		this.soundPercentage.render(this.sprite_batch, false);
 
 		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Music", Color.BLACK, Map.size, Map.size * 6, Map.size, false);
 		this.musicSlider.render(this.sprite_batch);
-		this.musicPercentage.render(this.sprite_batch, true);
+		this.musicPercentage.render(this.sprite_batch, false);
 
 		GroundBlock.render(this.sprite_batch, Map.size / 2, GroundBlock.SNOW);
 		GroundBlock.render(this.sprite_batch, 0, GroundBlock.SNOW_GROUND);

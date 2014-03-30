@@ -17,7 +17,7 @@ public class Map {
 	}
 
 	public int getGroundLevel() {
-		return ground_level;
+		return this.ground_level;
 	}
 
 	public void setGroundLevel(int ground_level) {

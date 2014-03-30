@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.utility.StaticUtil;
 import com.uladzislau.dairy_run.world.Map;
 
@@ -100,7 +101,7 @@ public class FontManager {
 			this.font.setColor(Color.WHITE);
 		}
 
-		public void render(SpriteBatch sprite_batch, String string, Color color, int x, int y1, int h, boolean centered) {
+		public void render(SpriteBatch sprite_batch, String string, Color color, int x, int y, int h, boolean centered) {
 			this.font.setColor(color);
 			float x_scale_temp = this.x_scale;
 			float y_scale_temp = this.y_scale;
@@ -108,9 +109,26 @@ public class FontManager {
 			this.setXScale(height_scale * this.x_scale);
 			this.setYScale(height_scale * this.y_scale);
 			if (centered) {
-				this.font.draw(sprite_batch, string, x - this.getWidth(string) / 2, y1 + h);
+				this.font.draw(sprite_batch, string, x - this.getWidth(string) / 2, y + h);
 			} else {
-				this.font.draw(sprite_batch, string, x, y1 + h);
+				this.font.draw(sprite_batch, string, x, y + h);
+			}
+			this.setXScale(x_scale_temp);
+			this.setYScale(y_scale_temp);
+			this.font.setColor(Color.WHITE);
+		}
+		
+		public void render(SpriteBatch sprite_batch, String string, ColorXv colorXv, int x, int y, int h, boolean centerX) {
+			this.font.setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
+			float x_scale_temp = this.x_scale;
+			float y_scale_temp = this.y_scale;
+			float height_scale = ((float) h / (this.getHeight(string)));
+			this.setXScale(height_scale * this.x_scale);
+			this.setYScale(height_scale * this.y_scale);
+			if (centerX) {
+				this.font.draw(sprite_batch, string, x - this.getWidth(string) / 2, y + h);
+			} else {
+				this.font.draw(sprite_batch, string, x, y + h);
 			}
 			this.setXScale(x_scale_temp);
 			this.setYScale(y_scale_temp);

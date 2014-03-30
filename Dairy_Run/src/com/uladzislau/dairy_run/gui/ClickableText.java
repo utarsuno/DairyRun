@@ -129,24 +129,51 @@ public class ClickableText {
 		}
 	}
 
-	public void render(SpriteBatch batch, BitmapFont font) {
-
+	public void render(SpriteBatch sprite_batch, BitmapFont font) {
 		switch (this.type) {
 		case ANIMATED_TEXT:
 			font.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA());
 			CharSequence charSequence = this.title.subSequence(0, this.chars_finished);
-			font.drawMultiLine(batch, charSequence, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
+			font.drawMultiLine(sprite_batch, charSequence, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
 			break;
 		default:
 			font.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA());
 			if (this.first_title) {
-				font.draw(batch, this.title, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
+				font.draw(sprite_batch, this.title, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
 			} else {
-				font.draw(batch, this.title2, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
+				font.draw(sprite_batch, this.title2, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
 			}
 			break;
 		}
+	}
 
+	public void render(SpriteBatch sprite_batch, BitmapFont font, boolean centeredX) {
+		switch (this.type) {
+		case ANIMATED_TEXT:
+			font.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA());
+			CharSequence charSequence = this.title.subSequence(0, this.chars_finished);
+			font.drawMultiLine(sprite_batch, charSequence, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
+			break;
+		default:
+			font.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA());
+			if (centeredX) {
+				if (this.first_title) {
+					font.draw(sprite_batch, this.title, getRectanglei().getX() - getRectanglei().getWidth() / 2, getRectanglei().getY()
+							+ getRectanglei().getHeight());
+				} else {
+					font.draw(sprite_batch, this.title2, getRectanglei().getX() - getRectanglei().getWidth() / 2, getRectanglei().getY()
+							+ getRectanglei().getHeight());
+				}
+			} else {
+				if (this.first_title) {
+					font.draw(sprite_batch, this.title, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
+				} else {
+					font.draw(sprite_batch, this.title2, getRectanglei().getX(), getRectanglei().getY() + getRectanglei().getHeight());
+				}
+			}
+
+			break;
+		}
 	}
 
 	public void setType(byte type) {
@@ -233,11 +260,24 @@ public class ClickableText {
 		return "x: " + getRectanglei().getX() + "\ty: " + getRectanglei().getY() + "\tw: " + getRectanglei().getWidth() + "\th: " + getRectanglei().getHeight();
 	}
 
-	public void render(SpriteBatch sprite_batch, boolean b) {
+	public void render(SpriteBatch sprite_batch, boolean centerX) {
 
-		FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new Color(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(),
-				this.colorXv.getA()), getRectanglei().getX(), getRectanglei().getX() + getRectanglei().getWidth(), getRectanglei().getY(), getRectanglei()
-				.getY() + getRectanglei().getHeight());
+		FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, this.colorXv, this.rectangle.getX(), this.rectangle.getY(),
+				this.rectangle.getHeight(), centerX);
+
+		// if (centerX) {
+		// FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new Color(this.colorXv.getR(), this.colorXv.getG(),
+		// this.colorXv.getB(),
+		// this.colorXv.getA()), getRectanglei().getX() - this.getRectanglei().getWidth() / 2, getRectanglei().getX() +
+		// getRectanglei().getWidth(),
+		// getRectanglei().getY(), getRectanglei().getY() + getRectanglei().getHeight());
+		// } else {
+		// FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new Color(this.colorXv.getR(), this.colorXv.getG(),
+		// this.colorXv.getB(),
+		// this.colorXv.getA()), getRectanglei().getX(), getRectanglei().getX() + getRectanglei().getWidth(), getRectanglei().getY(),
+		// getRectanglei()
+		// .getY() + getRectanglei().getHeight());
+		// }
 
 	}
 
