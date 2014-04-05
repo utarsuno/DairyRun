@@ -1,6 +1,7 @@
 package com.uladzislau.dairy_run.entity.button;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.math.geometry.Circlef;
@@ -55,6 +56,9 @@ public abstract class CircleButton extends Circlef {
 
 	public abstract void render(SpriteBatch sb);
 
+	public void render(SpriteBatch sb, ColorXv colorXv) {
+	}
+	
 	public boolean[] getTrack() {
 		return this.track;
 	}

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.game_state.Level;
 import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
@@ -17,7 +18,7 @@ public class ResourceManager {
 
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
-	
+
 	private AudioManager audioManager;
 
 	public void initialize_all_resources_and_information(DairyRun dairyRun) {
@@ -27,10 +28,14 @@ public class ResourceManager {
 		this.music_initializer.start();
 		this.sound_initializer.start();
 
+		AudioManager.setAudioLevel(1.0f);
+		AudioManager.setMusicLevel(0.5f);
+		AudioManager.setSoundLevel(1.0f);
+
 		ScreenUtil.init();
 		InfoUtil.init();
 		Map.init();
-		
+
 		this.audioManager = new AudioManager();
 
 		this.shapeRenderer = new ShapeRenderer();
@@ -52,6 +57,8 @@ public class ResourceManager {
 		this.texture_initialized = true;
 
 		StaticGUI.inititialize(dairyRun);
+		
+		Level.createEndlessLevel();
 
 		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
 	}
@@ -110,9 +117,7 @@ public class ResourceManager {
 	public void dipose_all_resources() {
 		this.spriteBatch.dispose();
 		this.shapeRenderer.dispose();
-		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
-			texture.dispose();
-		}
+		TextureManager.TEXTURE.BACKGROUND.dispose();
 		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.dispose();
 		for (TextureManager.ANIMATION_SPRITESHEET animation_sprite_sheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
 			animation_sprite_sheet.dispose();

@@ -28,8 +28,8 @@ public class Main {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Rectangle bounds = ge.getMaximumWindowBounds();
 
-		cfg.width = (int) (bounds.getWidth() * .75);
-		cfg.height = (int) (bounds.getHeight() * .75);
+		cfg.width = (int) (bounds.getWidth() * .80);
+		cfg.height = (int) (bounds.getHeight() * .70);
 		cfg.samples = 200;
 		cfg.resizable = false;
 

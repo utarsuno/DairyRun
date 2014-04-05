@@ -35,8 +35,9 @@ public class FontManager {
 		@Override
 		public void initialize() {
 			if (this.font == null) {
-				this.font = new BitmapFont(Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name + ".fnt"),
-						Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name + ".png"), false);
+				this.font = new BitmapFont(Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name
+						+ ".fnt"), Gdx.files.internal("data" + java.io.File.separator + "font" + java.io.File.separator + this.name
+						+ ".png"), false);
 
 				this.setXScale(1.0f);
 				this.setYScale(1.0f);
@@ -117,7 +118,7 @@ public class FontManager {
 			this.setYScale(y_scale_temp);
 			this.font.setColor(Color.WHITE);
 		}
-		
+
 		public void render(SpriteBatch sprite_batch, String string, ColorXv colorXv, int x, int y, int h, boolean centerX) {
 			this.font.setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
 			float x_scale_temp = this.x_scale;
@@ -238,6 +239,10 @@ public class FontManager {
 			float height_scale = ((float) Map.size) / ((float) this.getHeight("A"));
 			this.setXScale(width_scale * this.x_scale);
 			this.setYScale(height_scale * this.y_scale);
+		}
+
+		public void setColor(ColorXv colorXv) {
+			this.font.setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
 		}
 
 	}

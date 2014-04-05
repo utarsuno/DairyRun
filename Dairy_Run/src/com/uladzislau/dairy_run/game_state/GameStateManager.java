@@ -184,7 +184,6 @@ public class GameStateManager {
 	}
 
 	public void resumeMusicForCurrentState() {
-		System.out.println("resume");
 		if (this.current_state == this.main_menu) {
 			if (AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.isPaused()) {
 				AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.play();

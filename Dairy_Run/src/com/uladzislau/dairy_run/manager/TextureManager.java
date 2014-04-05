@@ -12,17 +12,19 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 public class TextureManager {
 
 	public enum TEXTURE implements Resource {
-		BACKGROUND("test", "self-made");
+		BACKGROUND("main_menu_hd", "brozie");
 
 		private final String name;
 		private final String source;
 		private int width;
 		private int height;
 		private Texture texture;
+		private boolean initialized;
 
 		TEXTURE(String name, String source) {
 			this.name = name;
 			this.source = source;
+			this.initialized = false;
 		}
 
 		@Override
@@ -30,6 +32,7 @@ public class TextureManager {
 			if (this.texture == null) {
 				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
 						+ this.name + ".png"));
+				this.initialized = true;
 			} else {
 				StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
 			}
@@ -47,7 +50,11 @@ public class TextureManager {
 		@Override
 		public void dispose() {
 			if (this.texture != null) {
+				this.initialized = false;
 				this.texture.dispose();
+				this.texture = null;
+			} else {
+				StaticUtil.error("Texture Error: ", this.name + " has already been disposed.");
 			}
 		}
 

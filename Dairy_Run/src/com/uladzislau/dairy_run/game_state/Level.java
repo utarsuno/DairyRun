@@ -2,6 +2,12 @@ package com.uladzislau.dairy_run.game_state;
 
 public class Level {
 
+	public static final Level ENDLESS = new Level(true);
+	
+	public static void createEndlessLevel() {
+		ENDLESS.setBeaten(false);
+	}
+	
 	private String description;
 
 	private boolean beaten = false;

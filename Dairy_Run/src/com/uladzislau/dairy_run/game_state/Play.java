@@ -308,7 +308,11 @@ public class Play extends GameState {
 			this.buttons[0].render(this.sprite_batch);
 		}
 		if (this.level.isRegularMilkButtonEnabled()) {
-			this.buttons[1].render(this.sprite_batch);
+			if (!this.level.isRunButtonEnabled() && !this.level.isChocolateMilkButtonEnabled() && !this.level.isStrawberryMilkButtonEnabled()) {
+				this.buttons[1].render(this.sprite_batch);
+			} else {
+				this.buttons[1].render(this.sprite_batch);
+			}
 		}
 		if (this.level.isChocolateMilkButtonEnabled()) {
 			this.buttons[2].render(this.sprite_batch);

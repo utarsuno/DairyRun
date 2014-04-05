@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.entity.Background;
 import com.uladzislau.dairy_run.entity.GroundBlock;
 import com.uladzislau.dairy_run.entity.Player;
@@ -275,9 +276,9 @@ public class LevelSelector extends GameState {
 		}
 
 		// Render the toggle music button.
-		StaticGUI.music_button.render(this.sprite_batch);
+		StaticGUI.music_button.render(this.sprite_batch, ColorXv.BROWN);
 		// Render the back button.
-		StaticGUI.back_button.render(this.sprite_batch);
+		StaticGUI.back_button.render(this.sprite_batch, ColorXv.BROWN);
 
 	}
 
@@ -287,6 +288,9 @@ public class LevelSelector extends GameState {
 	}
 
 	private void renderLevelDescription(int x_offset, int level) {
+//		if () {
+//			
+//		}
 		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[level].getDescription(), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset
 				+ x_offset, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
 	}

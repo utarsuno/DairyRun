@@ -23,7 +23,6 @@ public class AudioManager {
 
 	public static boolean music_fading_in = false;
 	public static boolean music_fading_out = false;
-	private static DeltaTimer fade_timer;
 
 	public enum SOUND implements Resource {
 		INTERFACE_00("beep" + java.io.File.separator + "interface_00", "Created with BFxr."), INTERFACE_01("beep" + java.io.File.separator + "interface_01",
@@ -242,13 +241,6 @@ public class AudioManager {
 			this.play(v);
 		}
 
-	}
-
-	public static void init() {
-		setAudioLevel(1.0f);
-		setMusicLevel(1.0f);
-		setSoundLevel(1.0f);
-		fade_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 1000);
 	}
 
 	public static void update(int delta) {

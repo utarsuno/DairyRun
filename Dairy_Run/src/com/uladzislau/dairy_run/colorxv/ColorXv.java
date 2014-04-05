@@ -13,11 +13,13 @@ public class ColorXv {
 	public static final ColorXv GREEN = new ColorXv(0.0f, 1.0f, 0.0f);
 	public static final ColorXv LIGHT_GREEN = new ColorXv(0.4f, 1.0f, 0.4f);
 	public static final ColorXv BLUE = new ColorXv(0.0f, 0.0f, 1.0f);
+	public static final ColorXv DARK_BLUE = new ColorXv(0.0f, 0.0f, 139.0f / 255.0f);
 	public static final ColorXv TITLE_BLUE = new ColorXv(6.0f / 255.0f, 7.0f / 255.0f, 170f / 255.0f, 50.0f / 255.0f);
 	public static final ColorXv DARK_TEAL = new ColorXv(0.0f, 157f / 255f, 1.0f);
 	public static final ColorXv TEAL = new ColorXv(0.733333333f, 1.0f, 1.0f);
 	public static final ColorXv SLATE_BLUE = new ColorXv(131.0f / 255.0f, 111.0f / 255.0f, 1.0f);
 	public static final ColorXv PURPLE = new ColorXv(160.0f / 255.0f, 32.0f / 255.0f, 240.0f / 255.0f);
+	public static final ColorXv BROWN = new ColorXv(139.0f / 255.0f, 69.0f / 255.0f, 19.0f / 255.0f);
 	public static final ColorXv GRAY = new ColorXv(190.0f / 255.0f, 190.0f / 255.0f, 190.0f / 255.0f, 1.0f);
 	public static final ColorXv BLACK = new ColorXv(0.0f, 0.0f, 0.0f, 1.0f);
 
