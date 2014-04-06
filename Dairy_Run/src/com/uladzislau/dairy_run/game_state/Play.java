@@ -353,12 +353,11 @@ public class Play extends GameState {
 				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1,
 						ScreenUtil.screen_width - Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
 
-				this.game_over.render(this.sprite_batch, true);
-				this.retry.render(this.sprite_batch, true);
-				this.main_menu.render(this.sprite_batch, true);
+				this.game_over.render(this.sprite_batch, false);
+				this.retry.render(this.sprite_batch, false);
+				this.main_menu.render(this.sprite_batch, false);
 			}
 		}
-
 
 	}
 
