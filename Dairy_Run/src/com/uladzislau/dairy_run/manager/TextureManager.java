@@ -11,6 +11,12 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class TextureManager {
 
+	public static final short BLACK = 31 * 4 + 2;
+	public static final short PAUSE = 31 * 7 + 23;
+	public static final short REGULAR = 31 * 6 + 20;
+	public static final short CHOCOLATE = 31 * 6 + 21;
+	public static final short STRAWBERRY = 31 * 6 + 22;
+	
 	public enum TEXTURE implements Resource {
 		BACKGROUND("main_menu_hd", "brozie");
 

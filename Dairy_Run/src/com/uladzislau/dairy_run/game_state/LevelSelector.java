@@ -70,12 +70,12 @@ public class LevelSelector extends GameState {
 
 	private void createLevels() {
 		// Level One.
-		this.levels[0].setDescription("Deliver 10 milks.");
+		this.levels[0].setDescription("Deliver 5 milks.");
 		this.levels[0].setBeaten(false);
-		this.levels[0].setInitialVelocity(5f);
+		this.levels[0].setInitialVelocity(6f);
 		this.levels[0].setVelocityMatters(false);
 		this.levels[0].setVelocityNeededToWin(0);
-		this.levels[0].setNumberOfMilksNeededToWin(10);
+		this.levels[0].setNumberOfMilksNeededToWin(5);
 		this.levels[0].setUnlocked(true);
 		this.levels[0].setRunButtonEnabled(false);
 		this.levels[0].setCreateChasers(false);
@@ -84,15 +84,15 @@ public class LevelSelector extends GameState {
 		this.levels[0].setStrawberryMilkButtonEnabled(false);
 		// Level Two.
 		this.levels[1].setThisLevelEqualToLevel(this.levels[0]);
-		this.levels[1].setDescription("Deliver 20 milks.");
-		this.levels[1].setInitialVelocity(10f);
-		this.levels[1].setNumberOfMilksNeededToWin(20);
+		this.levels[1].setDescription("Deliver 10 milks.");
+		this.levels[1].setInitialVelocity(12f);
+		this.levels[1].setNumberOfMilksNeededToWin(10);
 		this.levels[1].setUnlocked(false);
 		// Level Three.
 		this.levels[2].setThisLevelEqualToLevel(this.levels[1]);
-		this.levels[2].setDescription("Deliver 30 milks.");
-		this.levels[2].setInitialVelocity(15f);
-		this.levels[2].setNumberOfMilksNeededToWin(30);
+		this.levels[2].setDescription("Deliver 20 milks.");
+		this.levels[2].setInitialVelocity(18f);
+		this.levels[2].setNumberOfMilksNeededToWin(20);
 		// Level Four.
 		this.levels[3].setThisLevelEqualToLevel(this.levels[2]);
 		this.levels[3].setDescription("Deliver 10 milks.");

@@ -138,4 +138,8 @@ public class ColorXv {
 				Dice.get_Random_Float_From_Min_To_Max(0.0f, 1.0f));
 	}
 
+	public ColorXv withAlphaOf(float alpha) {
+		return new ColorXv(r, g, b, alpha);
+	}
+
 }

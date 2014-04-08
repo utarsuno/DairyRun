@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
-import com.uladzislau.dairy_run.entity.button.MilkButton;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
@@ -101,50 +100,50 @@ public class House {
 			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
 			if (r == 0) {
 				if (this.play.getLevel().isRegularMilkButtonEnabled()) {
-					this.milk_needed[i] = MilkButton.REGULAR;
+					this.milk_needed[i] = TextureManager.REGULAR;
 				} else {
 					if (this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 						if (Dice.nextBoolean()) {
-							this.milk_needed[i] = MilkButton.CHOCOLATE;
+							this.milk_needed[i] = TextureManager.CHOCOLATE;
 						} else {
-							this.milk_needed[i] = MilkButton.STRAWBERRY;
+							this.milk_needed[i] = TextureManager.STRAWBERRY;
 						}
 					} else if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
-						this.milk_needed[i] = MilkButton.CHOCOLATE;
+						this.milk_needed[i] = TextureManager.CHOCOLATE;
 					} else if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
-						this.milk_needed[i] = MilkButton.STRAWBERRY;
+						this.milk_needed[i] = TextureManager.STRAWBERRY;
 					}
 				}
 			} else if (r == 1) {
 				if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
-					this.milk_needed[i] = MilkButton.CHOCOLATE;
+					this.milk_needed[i] = TextureManager.CHOCOLATE;
 				} else {
 					if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 						if (Dice.nextBoolean()) {
-							this.milk_needed[i] = MilkButton.REGULAR;
+							this.milk_needed[i] = TextureManager.REGULAR;
 						} else {
-							this.milk_needed[i] = MilkButton.STRAWBERRY;
+							this.milk_needed[i] = TextureManager.STRAWBERRY;
 						}
 					} else if (this.play.getLevel().isRegularMilkButtonEnabled()) {
-						this.milk_needed[i] = MilkButton.REGULAR;
+						this.milk_needed[i] = TextureManager.REGULAR;
 					} else if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
-						this.milk_needed[i] = MilkButton.STRAWBERRY;
+						this.milk_needed[i] = TextureManager.STRAWBERRY;
 					}
 				}
 			} else if (r == 2) {
 				if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
-					this.milk_needed[i] = MilkButton.STRAWBERRY;
+					this.milk_needed[i] = TextureManager.STRAWBERRY;
 				} else {
 					if (this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isRegularMilkButtonEnabled()) {
 						if (Dice.nextBoolean()) {
-							this.milk_needed[i] = MilkButton.REGULAR;
+							this.milk_needed[i] = TextureManager.REGULAR;
 						} else {
-							this.milk_needed[i] = MilkButton.STRAWBERRY;
+							this.milk_needed[i] = TextureManager.STRAWBERRY;
 						}
 					} else if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
-						this.milk_needed[i] = MilkButton.CHOCOLATE;
+						this.milk_needed[i] = TextureManager.CHOCOLATE;
 					} else if (this.play.getLevel().isRegularMilkButtonEnabled()) {
-						this.milk_needed[i] = MilkButton.REGULAR;
+						this.milk_needed[i] = TextureManager.REGULAR;
 					}
 				}
 			}
@@ -264,18 +263,16 @@ public class House {
 		for (int i = 0; i < this.number_of_milks; i++) {
 			sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f - this.milkFader[i].percentComplete());
 			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_needed[i]),
-					x
-							+ ((Map.size * this.width) - MathUtils.round(((Map.size * 0.1f)) * (this.number_of_milks - 1) + Map.size
-									* this.number_of_milks)) / 2 + Map.size * i + (Map.size * 0.1f) * i
-							- (Map.size * (1.0f + this.milkFader[i].percentComplete())) / 2 + Map.size / 2, Map.size * (this.height + 2)
-							- Map.size / 2 - (Map.size * (1.0f + this.milkFader[i].percentComplete())) / 2 + Map.size / 2, Map.size
+					x + ((Map.size * this.width) - MathUtils.round(((Map.size * 0.1f)) * (this.number_of_milks - 1) + Map.size * this.number_of_milks)) / 2
+							+ Map.size * i + (Map.size * 0.1f) * i - (Map.size * (1.0f + this.milkFader[i].percentComplete())) / 2 + Map.size / 2, Map.size
+							* (this.height + 2) - Map.size / 2 - (Map.size * (1.0f + this.milkFader[i].percentComplete())) / 2 + Map.size / 2, Map.size
 							* (1.0f + this.milkFader[i].percentComplete()), Map.size * (1.0f + this.milkFader[i].percentComplete()));
 			sb.setColor(sb.getColor().r, sb.getColor().g, sb.getColor().b, 1.0f);
 		}
 	}
 
 	public void renderWindowLayer(SpriteBatch sb, int x, int y, short window) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.window), x, y, Map.size, Map.size);
+		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.window + (this.house / 3) * 4), x, y, Map.size, Map.size);
 	}
 
 	public void renderDoorLayer(SpriteBatch sb, int layer, int x, int y, byte door) {
@@ -295,13 +292,12 @@ public class House {
 			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 1 + house), x + Map.size * i, y, Map.size, Map.size);
 			for (int j = 0; j < this.brick_layers[current_height_layer].length; j++) {
 				if (current_height_layer > 0 && j > 0 && j < w - 1 && this.brick_layers[current_height_layer][j] != -1) {
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * this.brick_layers[current_height_layer][j] + 9), x
-							+ Map.size * j, y, Map.size, Map.size);
+					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * this.brick_layers[current_height_layer][j] + 9), x + Map.size * j, y,
+							Map.size, Map.size);
 				}
 			}
 		}
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 2 + house), x + Map.size * (w - 1), y, Map.size,
-				Map.size);
+		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 2 + house), x + Map.size * (w - 1), y, Map.size, Map.size);
 	}
 
 	private void renderRoofLayer(SpriteBatch sb, int layer, int x, int y, int w, byte roof) {

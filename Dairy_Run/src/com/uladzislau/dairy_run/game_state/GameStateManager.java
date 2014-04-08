@@ -203,4 +203,10 @@ public class GameStateManager {
 		}
 	}
 
+	public void inStatePause() {
+		if (this.current_state == this.play) {
+			this.play.inStatePause();
+		}
+	}
+
 }

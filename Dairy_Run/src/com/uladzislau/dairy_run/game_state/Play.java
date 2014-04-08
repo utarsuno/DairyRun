@@ -19,6 +19,7 @@ import com.uladzislau.dairy_run.entity.button.CircleButton;
 import com.uladzislau.dairy_run.entity.button.MilkButton;
 import com.uladzislau.dairy_run.entity.button.RunButton;
 import com.uladzislau.dairy_run.gui.ClickableText;
+import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
@@ -78,10 +79,9 @@ public class Play extends GameState {
 		this.ground_level = (int) (Map.size * 1.5);
 		// Create the background.
 		this.backgrounds = new Background[2];
-		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height,
-				Background.BLUE);
-		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), 0,
-				TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE);
+		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE);
+		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(),
+				ScreenUtil.screen_height, Background.BLUE);
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
@@ -102,11 +102,11 @@ public class Play extends GameState {
 		this.buttons = new CircleButton[4];
 		this.buttons[0] = new RunButton((ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f, this);
 		this.buttons[1] = new MilkButton((ScreenUtil.screen_width / 20) * 3 + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f,
-				MilkButton.REGULAR, this);
-		this.buttons[2] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) * 3 - Map.size / 2, Map.size / 8
-				+ Map.size / 2, Map.size * 0.6f, MilkButton.CHOCOLATE, this);
-		this.buttons[3] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) - Map.size / 2, Map.size / 8 + Map.size
-				/ 2, Map.size * 0.6f, MilkButton.STRAWBERRY, this);
+				TextureManager.REGULAR, this);
+		this.buttons[2] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) * 3 - Map.size / 2, Map.size / 8 + Map.size / 2,
+				Map.size * 0.6f, TextureManager.CHOCOLATE, this);
+		this.buttons[3] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) - Map.size / 2, Map.size / 8 + Map.size / 2,
+				Map.size * 0.6f, TextureManager.STRAWBERRY, this);
 		// Create the player.
 		this.player = new Player((int) (Map.size * 2.5f), this.ground_level, this);
 		this.score = new Score();
@@ -218,6 +218,8 @@ public class Play extends GameState {
 				if (this.level.isStrawberryMilkButtonEnabled()) {
 					this.buttons[3].update(delta);
 				}
+				
+				StaticGUI.pause_button.update(delta);
 
 				if (this.lost) {
 					this.game_over.update(delta);
@@ -326,15 +328,17 @@ public class Play extends GameState {
 		}
 
 		if (this.just_resumed) {
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "TAP TO RESUME", ScreenUtil.screen_width / 2
-					- FontManager.FONT.PIXEL_REGULAR.getWidth("TAP TO RESUME") / 2, ScreenUtil.screen_height / 2
-					- FontManager.FONT.PIXEL_REGULAR.getHeight("TAP TO RESUME") / 2);
+			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "TAP TO RESUME",
+					ScreenUtil.screen_width / 2 - FontManager.FONT.PIXEL_REGULAR.getWidth("TAP TO RESUME") / 2, ScreenUtil.screen_height / 2
+							- FontManager.FONT.PIXEL_REGULAR.getHeight("TAP TO RESUME") / 2);
 		}
+		
+		StaticGUI.pause_button.render(this.sprite_batch, ColorXv.LIGHT_GREEN.withAlphaOf(.85f));
 
 		if (!this.tapped_to_start) {
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "Tap To Begin", ScreenUtil.screen_width / 2
-					- FontManager.FONT.PIXEL_REGULAR.getWidth("Tap To Begin") / 2, ScreenUtil.screen_height / 2
-					- FontManager.FONT.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
+			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "Tap To Begin",
+					ScreenUtil.screen_width / 2 - FontManager.FONT.PIXEL_REGULAR.getWidth("Tap To Begin") / 2, ScreenUtil.screen_height / 2
+							- FontManager.FONT.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
 			// Render the player ready to sprint.
 			Player.render(this.sprite_batch, this.player.getX(), this.ground_level, Map.size, Map.size, Player.READY_TO_SPRINT);
 			this.player.renderPlayerStats(this.sprite_batch, (int) this.current_scroll);
@@ -344,14 +348,14 @@ public class Play extends GameState {
 			this.player.renderPlayerStats(this.sprite_batch, (int) this.current_scroll);
 
 			if (this.player.isScared()) {
-				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "RUN!", Color.RED, ScreenUtil.screen_width / 2
-						- ScreenUtil.screen_width / 4, ScreenUtil.screen_width / 2 + ScreenUtil.screen_width / 4, ScreenUtil.screen_height
-						/ 2 - ScreenUtil.screen_height / 8, ScreenUtil.screen_height / 2 + ScreenUtil.screen_height / 8);
+				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "RUN!", Color.RED, ScreenUtil.screen_width / 2 - ScreenUtil.screen_width / 4,
+						ScreenUtil.screen_width / 2 + ScreenUtil.screen_width / 4, ScreenUtil.screen_height / 2 - ScreenUtil.screen_height / 8,
+						ScreenUtil.screen_height / 2 + ScreenUtil.screen_height / 8);
 			}
 
 			if (this.lost) {
-				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1,
-						ScreenUtil.screen_width - Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
+				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1, ScreenUtil.screen_width
+						- Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
 
 				this.game_over.render(this.sprite_batch, false);
 				this.retry.render(this.sprite_batch, false);
@@ -443,6 +447,11 @@ public class Play extends GameState {
 		if (this.game_in_session) {
 			resume();
 		}
+	}
+	
+	@Override
+	public void inStatePause() {
+		//TODO: Implememnt this.
 	}
 
 	@Override

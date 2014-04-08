@@ -64,17 +64,22 @@ public class Options extends GameState {
 		this.controls = new ClickableText("Controls", new Rectanglei(Map.size / 2 + Map.size * "Audio".length() + Map.size, ScreenUtil.screen_height - Map.size
 				- Map.size / 4, Map.size * "Controls".length(), Map.size), ColorXv.DARK_BLUE, ColorXv.PURPLE, 800);
 
-		this.layout_one = new ClickableText("One", new Rectanglei(Map.size / 2, ScreenUtil.screen_height - Map.size * 3.5f, Map.size * 3.5f, Map.size),
+		String layout_one_title = "left";
+		String layout_two_title = "right";
+		String layout_three_title = "split";
+		String layout_four_title = "dupl.";
+
+		this.layout_one = new ClickableText(layout_one_title, new Rectanglei(Map.size / 2, ScreenUtil.screen_height - Map.size * 3.5f,
+				layout_one_title.length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.DARK_BLUE, 800);
+
+		this.layout_two = new ClickableText(layout_two_title, new Rectanglei(Map.size * 6.5f, ScreenUtil.screen_height - Map.size * 3.5f,
+				layout_two_title.length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.DARK_BLUE, 800);
+
+		this.layout_three = new ClickableText(layout_three_title, new Rectanglei(Map.size / 2, Map.size * 3, layout_three_title.length() * Map.size, Map.size),
 				ColorXv.BLACK, ColorXv.DARK_BLUE, 800);
 
-		this.layout_two = new ClickableText("Two", new Rectanglei(Map.size * 6.5f, ScreenUtil.screen_height - Map.size * 3.5f, Map.size * 3, Map.size),
+		this.layout_four = new ClickableText(layout_four_title, new Rectanglei(Map.size * 6.5f, Map.size * 3, layout_four_title.length() * Map.size, Map.size),
 				ColorXv.BLACK, ColorXv.DARK_BLUE, 800);
-
-		this.layout_three = new ClickableText("Three", new Rectanglei(Map.size / 2, Map.size * 3, Map.size * 5, Map.size), ColorXv.BLACK, ColorXv.DARK_BLUE,
-				800);
-
-		this.layout_four = new ClickableText("Four", new Rectanglei(Map.size * 6.5f, Map.size * 3, Map.size * 4, Map.size), ColorXv.BLACK, ColorXv.DARK_BLUE,
-				800);
 
 		Options.current_layout = 3;
 	}
@@ -139,6 +144,10 @@ public class Options extends GameState {
 			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Music", Color.BLACK, Map.size / 2, (int) (Map.size * 5.0f), Map.size, false);
 			this.musicSlider.render(this.sprite_batch);
 			this.musicPercentage.render(this.sprite_batch, false);
+
+			// Underline the audio text.
+			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), this.audio.getRectanglei().getX() - Map.size
+					/ 2, this.audio.getRectanglei().getY() - Map.size / 4, this.audio.getTitle().length() * Map.size + Map.size, Map.size / 4);
 		} else {
 
 			if (Options.current_layout == 0) {
@@ -147,45 +156,49 @@ public class Options extends GameState {
 				this.layout_three.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_four.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.REGULAR, Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.CHOCOLATE, Map.size * 3, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.STRAWBERRY, Map.size * 4, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, Map.size * 3, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, Map.size * 4, 0);
 			} else if (Options.current_layout == 1) {
 				this.layout_one.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_two.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 				this.layout_three.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_four.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, ScreenUtil.screen_width - Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.REGULAR, ScreenUtil.screen_width - Map.size * 3, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, ScreenUtil.screen_width - Map.size * 3, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
 			} else if (Options.current_layout == 2) {
 				this.layout_one.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_two.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_three.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 				this.layout_four.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.REGULAR, Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.CHOCOLATE, ScreenUtil.screen_width - Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.STRAWBERRY, ScreenUtil.screen_width - Map.size * 3, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 2, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 3, 0);
 			} else if (Options.current_layout == 3) {
 				this.layout_one.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_two.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_three.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_four.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.REGULAR, Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.CHOCOLATE, Map.size * 3, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.STRAWBERRY, Map.size * 4, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, Map.size * 3, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, Map.size * 4, 0);
 				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, ScreenUtil.screen_width - Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.REGULAR, ScreenUtil.screen_width - Map.size * 3, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, MilkButton.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, ScreenUtil.screen_width - Map.size * 3, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
+				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
 			}
 			this.layout_one.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 			this.layout_two.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 			this.layout_three.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 			this.layout_four.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
+
+			// Underline the controls text.
+			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), this.controls.getRectanglei().getX() - Map.size
+					/ 2, this.controls.getRectanglei().getY() - Map.size / 4, this.controls.getTitle().length() * Map.size + Map.size, Map.size / 4);
 		}
 
 		this.audio.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
@@ -202,26 +215,32 @@ public class Options extends GameState {
 
 	@Override
 	public void stateFinishedFadingInToExit() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void stateFinishedFadingInToEntrance() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void stateFinishedFadingOut() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void pause() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void resume() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void dispose() {
+		// Intentionally left blank.
 	}
 
 }

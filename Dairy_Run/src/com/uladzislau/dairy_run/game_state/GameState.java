@@ -45,4 +45,7 @@ public abstract class GameState {
 		return this.STATE_ID;
 	}
 
+	public void inStatePause() {		
+	}
+
 }

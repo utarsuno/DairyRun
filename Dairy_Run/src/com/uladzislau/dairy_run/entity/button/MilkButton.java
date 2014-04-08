@@ -7,10 +7,6 @@ import com.uladzislau.dairy_run.world.Map;
 
 public class MilkButton extends CircleButton {
 
-	public static final short REGULAR = 31 * 6 + 20;
-	public static final short CHOCOLATE = 31 * 6 + 21;
-	public static final short STRAWBERRY = 31 * 6 + 22;
-
 	private short milk_type;
 
 	private Play play;
