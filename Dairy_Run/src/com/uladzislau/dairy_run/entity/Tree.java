@@ -19,8 +19,8 @@ public class Tree {
 
 	private boolean render;
 
-	int position_in_array;
-	int array_size;
+	private int position_in_array;
+	private int array_size;
 
 	public Tree(int y, int i, int array_size) {
 		this.position_in_array = i;

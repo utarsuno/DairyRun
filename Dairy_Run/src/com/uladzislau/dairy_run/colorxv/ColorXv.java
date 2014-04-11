@@ -139,7 +139,7 @@ public class ColorXv {
 	}
 
 	public ColorXv withAlphaOf(float alpha) {
-		return new ColorXv(r, g, b, alpha);
+		return new ColorXv(this.r, this.g, this.b, alpha);
 	}
 
 }

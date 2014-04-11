@@ -58,7 +58,7 @@ public abstract class CircleButton extends Circlef {
 
 	public void render(SpriteBatch sb, ColorXv colorXv) {
 	}
-	
+
 	public boolean[] getTrack() {
 		return this.track;
 	}

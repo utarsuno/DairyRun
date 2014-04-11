@@ -2,7 +2,6 @@ package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.Color;
 
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.manager.FontManager;
@@ -38,6 +37,7 @@ public class Chaser {
 	public static int number_of_chasers_created = 0;
 
 	// TODO: Possible have a static rectangle method (in geometry class) which takes dimensions and determines if they are colliding
+	// TODO: ^^^^ This has been created. Implement it now.
 	private Rectanglei rectanglei;
 
 	public Chaser(short[] milks_not_delievered, float current_scroll, float v, int acceleration_time, Play play) {
@@ -72,15 +72,15 @@ public class Chaser {
 			if (this.yellTimer.isFinished()) {
 				this.yelling ^= true;
 
-//				 int random = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
-//				 if (random == 0) {
-//				 AudioManager.SOUND.MILK.playSound(0.10f);
-//				 } else if (random == 1) {
-//				 AudioManager.SOUND.MILK2.playSound(0.10f);
-//				 } else if (random == 2) {
-//				 AudioManager.SOUND.MILK3.playSound(0.10f);
-//				 }
-				
+				// int random = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+				// if (random == 0) {
+				// AudioManager.SOUND.MILK.playSound(0.10f);
+				// } else if (random == 1) {
+				// AudioManager.SOUND.MILK2.playSound(0.10f);
+				// } else if (random == 2) {
+				// AudioManager.SOUND.MILK3.playSound(0.10f);
+				// }
+
 				this.yellTimer.reset();
 			}
 			if (this.killable) {
@@ -99,12 +99,11 @@ public class Chaser {
 
 	public void render(SpriteBatch sb, int current_scroll) {
 		if (this.yelling) {
-			FontManager.FONT.PIXEL_REGULAR.render(sb, "MILK!", Color.RED, this.x - Map.size / 4, this.x + Map.size / 4 + Map.size,
-					this.play.ground_level + Map.size * 1.0f, this.play.ground_level + Map.size * 1.5f);
+			FontManager.FONT.PIXEL_REGULAR.render(sb, "MILK!", Color.RED, this.x - Map.size / 4, this.x + Map.size / 4 + Map.size, this.play.ground_level
+					+ Map.size * 1.0f, this.play.ground_level + Map.size * 1.5f);
 		}
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.character + 28
-				+ TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrameNumber()), this.x, this.play.ground_level, Map.size,
-				Map.size);
+				+ TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrameNumber()), this.x, this.play.ground_level, Map.size, Map.size);
 	}
 
 	public int getX() {

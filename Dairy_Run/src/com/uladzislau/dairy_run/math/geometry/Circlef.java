@@ -20,6 +20,13 @@ public class Circlef {
 		float radiusSum = getRadius() + circlef.getRadius();
 		return dx * dx + dy * dy <= radiusSum * radiusSum;
 	}
+	
+	public boolean isPointInsideOrOnMe(int px, int py) {
+		if (Math.pow((px - this.x),2) + Math.pow((py - this.y), 2) <= (this.radius * this.radius)) {
+			return true;
+		}
+		return false;
+	}
 
 	public float getX() {
 		return this.x;

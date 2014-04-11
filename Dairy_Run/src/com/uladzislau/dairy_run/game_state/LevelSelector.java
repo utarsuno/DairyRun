@@ -1,7 +1,6 @@
 package com.uladzislau.dairy_run.game_state;
 
 import com.badlogic.gdx.graphics.Color;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
@@ -63,7 +62,7 @@ public class LevelSelector extends GameState {
 		this.ground_blocks = new GroundBlock[(ScreenUtil.screen_width / Map.size) + 2];
 		// this.ground_blocks = new GroundBlock[1];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length, GroundBlock.Theme.GRASS);
 		}
 		createLevels();
 	}
@@ -71,8 +70,9 @@ public class LevelSelector extends GameState {
 	private void createLevels() {
 		// Level One.
 		this.levels[0].setDescription("Deliver 5 milks.");
+		this.levels[0].setPauseOnFirstHouseReached("To deliever milk");
 		this.levels[0].setBeaten(false);
-		this.levels[0].setInitialVelocity(6f);
+		this.levels[0].setInitialVelocity(5f);
 		this.levels[0].setVelocityMatters(false);
 		this.levels[0].setVelocityNeededToWin(0);
 		this.levels[0].setNumberOfMilksNeededToWin(5);
@@ -82,35 +82,54 @@ public class LevelSelector extends GameState {
 		this.levels[0].setRegularMilkButtonEnabled(true);
 		this.levels[0].setChocolateMilkButtonEnabled(false);
 		this.levels[0].setStrawberryMilkButtonEnabled(false);
+		this.levels[0].setGroundTheme(GroundBlock.Theme.GRASS);
 		// Level Two.
 		this.levels[1].setThisLevelEqualToLevel(this.levels[0]);
 		this.levels[1].setDescription("Deliver 10 milks.");
-		this.levels[1].setInitialVelocity(12f);
+		this.levels[1].setInitialVelocity(7.5f);
 		this.levels[1].setNumberOfMilksNeededToWin(10);
 		this.levels[1].setUnlocked(false);
-		// Level Three.
+		// Level Three. This is the last level that is only regular milk.
 		this.levels[2].setThisLevelEqualToLevel(this.levels[1]);
 		this.levels[2].setDescription("Deliver 20 milks.");
-		this.levels[2].setInitialVelocity(18f);
+		this.levels[2].setInitialVelocity(10f);
 		this.levels[2].setNumberOfMilksNeededToWin(20);
 		// Level Four.
 		this.levels[3].setThisLevelEqualToLevel(this.levels[2]);
-		this.levels[3].setDescription("Deliver 10 milks.");
+		this.levels[3].setDescription("Deliver 6 milks.");
 		this.levels[3].setInitialVelocity(6f);
-		this.levels[3].setNumberOfMilksNeededToWin(10);
+		this.levels[3].setNumberOfMilksNeededToWin(6);
 		this.levels[3].setChocolateMilkButtonEnabled(true);
 		// Level Five.
 		this.levels[4].setThisLevelEqualToLevel(this.levels[3]);
-		this.levels[4].setDescription("Deliver 20 milks.");
-		this.levels[4].setInitialVelocity(12f);
-		this.levels[4].setNumberOfMilksNeededToWin(20);
-		// Level Six.
+		this.levels[4].setDescription("Deliver 12 milks.");
+		this.levels[4].setInitialVelocity(9f);
+		this.levels[4].setNumberOfMilksNeededToWin(11);
+		// Level Six. This is the last level that is only regular milk and chocolate milk.
 		this.levels[5].setThisLevelEqualToLevel(this.levels[4]);
-		this.levels[5].setDescription("Deliver 30 milks.");
-		this.levels[5].setInitialVelocity(18f);
+		this.levels[5].setDescription("Deliver 18 milks.");
+		this.levels[5].setInitialVelocity(12f);
 		this.levels[5].setNumberOfMilksNeededToWin(30);
+		// Level Seven.
+		this.levels[6].setThisLevelEqualToLevel(this.levels[5]);
+		this.levels[6].setDescription("Deliver 7 milks.");
+		this.levels[6].setInitialVelocity(8f);
+		this.levels[6].setNumberOfMilksNeededToWin(7);
+		this.levels[6].setStrawberryMilkButtonEnabled(true);
+		// Level Eight.
+		this.levels[7].setThisLevelEqualToLevel(this.levels[6]);
+		this.levels[7].setDescription("Deliver 14 milks.");
+		this.levels[7].setInitialVelocity(12f);
+		this.levels[7].setNumberOfMilksNeededToWin(7);
+		this.levels[7].setStrawberryMilkButtonEnabled(true);
+		// Level Nine.
+		this.levels[8].setThisLevelEqualToLevel(this.levels[7]);
+		this.levels[8].setDescription("Deliver 21 milks.");
+		this.levels[8].setInitialVelocity(16f);
+		this.levels[8].setNumberOfMilksNeededToWin(7);
+		this.levels[8].setStrawberryMilkButtonEnabled(true);
 		// TODO: TEMP!!!!!!!!!!!!!!!!!!!!!
-		for (int i = 6; i < 30; i++) {
+		for (int i = 9; i < 30; i++) {
 			this.levels[i].setDescription(":D");
 			this.levels[i].setBeaten(false);
 			this.levels[i].setVelocityMatters(false);
@@ -153,6 +172,10 @@ public class LevelSelector extends GameState {
 		this.delta_offset = this.offset - this.previous_offset;
 		this.previous_offset = this.offset;
 
+		for (int i = 0; i < this.ground_blocks.length; i++) {
+			this.ground_blocks[i].update(delta);
+		}
+		
 		if (this.transition_left) {
 			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
 			this.backgrounds[0]
@@ -204,6 +227,7 @@ public class LevelSelector extends GameState {
 						((Play) this.dairy_run.getGameStateManager().getState(GameStateManager.PLAY)).ground_level, Map.size * 2, Map.size * 2)) {
 					if (this.levels[this.current_level].isUnlocked()) {
 						this.play.setLevel(this.levels[this.current_level]);
+						this.play.initialize();
 						this.dairy_run.getGameStateManager().changeState(GameStateManager.PLAY);
 					}
 				}
@@ -335,26 +359,32 @@ public class LevelSelector extends GameState {
 
 	@Override
 	public void pause() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void resume() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void dispose() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void stateFinishedFadingInToExit() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void stateFinishedFadingInToEntrance() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void stateFinishedFadingOut() {
+		// Intentionally left blank.
 	}
 
 }

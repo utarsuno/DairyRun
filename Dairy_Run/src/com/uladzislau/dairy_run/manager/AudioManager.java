@@ -10,7 +10,7 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 public class AudioManager {
 
 	/* Sound Files Supported: WAV, MP3, OGG */
-	
+
 	// Sound to add ----- http://opengameart.org/content/bubbles-pop
 
 	private static boolean audio_on = true;
@@ -38,7 +38,8 @@ public class AudioManager {
 				+ java.io.File.separator + "milk", "darreon"), MILK2("milk" + java.io.File.separator + "milk2", "darreon"), MILK3("milk"
 				+ java.io.File.separator + "milk3", "darreon"), TRANSITION_00("transition" + java.io.File.separator + "transition_00",
 				"https://www.freesound.org/people/Halgrimm/sounds/195463/"), VICTORY("victory" + java.io.File.separator + "Lively Meadow Victory Fanfare",
-				"http://www.matthewpablo.com/archives/many-new-tracks-1-29-14");
+				"http://www.matthewpablo.com/archives/many-new-tracks-1-29-14"), DOORBELL("doorbell",
+				"https://www.freesound.org/people/Corsica_S/sounds/163730/");
 
 		private final String name;
 		private final String source;

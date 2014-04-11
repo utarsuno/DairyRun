@@ -32,6 +32,8 @@ import com.uladzislau.dairy_run.world.Map;
 
 public class Play extends GameState {
 
+	private final ColorXv PAUSE_COLOR = new ColorXv(ColorXv.RED.getR(), ColorXv.RED.getG(), ColorXv.RED.getB(), 0.60f);
+
 	private Background[] backgrounds;
 	private GroundBlock[] ground_blocks;
 	private House[] houses;
@@ -58,6 +60,9 @@ public class Play extends GameState {
 
 	private boolean game_in_session = false;
 
+	private boolean pause_menu_open = false;
+
+	private ClickableText paused;
 	private ClickableText game_over;
 	private ClickableText retry;
 	private ClickableText options;
@@ -71,10 +76,13 @@ public class Play extends GameState {
 
 	@Override
 	public void initialize(ShapeRenderer sr, SpriteBatch sb) {
-
 		// Used for rendering.
 		this.shape_renderer = sr;
 		this.sprite_batch = sb;
+		initialize();
+	}
+
+	public void initialize() {
 		// Set the ground level.
 		this.ground_level = (int) (Map.size * 1.5);
 		// Create the background.
@@ -85,13 +93,17 @@ public class Play extends GameState {
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, Map.size, Map.size, this.ground_blocks.length);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, Map.size, Map.size, this.ground_blocks.length,
+					this.level.getGroundBlockTheme());
 		}
 		// Create the houses.
 		this.houses = new House[5];
 		for (int i = 0; i < this.houses.length; i++) {
 			this.houses[i] = new House(this);
+			this.houses[i].createHouse((i + 1) * 10 * Map.size, this.ground_level);
 		}
+		this.velocity = this.level.getInitialVelocity();
+
 		// Create the trees.
 		this.trees = new Tree[30];
 		for (int i = 0; i < this.trees.length; i++) {
@@ -113,26 +125,22 @@ public class Play extends GameState {
 		this.resumeTimer = new DeltaTimer();
 		this.chasers = new ArrayList<Chaser>();
 
-		// TODO: Customize the size of these
-		this.game_over = new ClickableText("Game Over", new Rectanglei(Map.size * 2.25f, ScreenUtil.screen_height - Map.size * 3.0f,
-				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
-						- (ScreenUtil.screen_height - Map.size * 2.0f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+		this.paused = new ClickableText("Resume", new Rectanglei(ScreenUtil.screen_width / 2 - (Map.size * "Resume".length()) / 2, Map.size * 5.4f,
+				"Resume".length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.WHITE, 800);
 
-		this.retry = new ClickableText("Retry", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 4.5f,
-				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.5f), (ScreenUtil.screen_height - Map.size * 1f)
-						- (ScreenUtil.screen_height - Map.size * 2.0f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+		this.game_over = new ClickableText("Game Over", new Rectanglei(ScreenUtil.screen_width / 2 - (Map.size * "Game Over".length()) / 2, Map.size * 5.4f,
+				"Game Over".length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.WHITE, 800);
 
-		this.options = new ClickableText("Options", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 4.5f,
-				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.5f), (ScreenUtil.screen_height - Map.size * 1f)
-						- (ScreenUtil.screen_height - Map.size * 2.0f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+		this.retry = new ClickableText("retry", new Rectanglei(ScreenUtil.screen_width / 2 - (Map.size * "retry".length()) / 2, Map.size * 4.2f,
+				"retry".length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.WHITE, 800);
 
-		this.main_menu = new ClickableText("Main Menu", new Rectanglei(Map.size * 2.5f, ScreenUtil.screen_height - Map.size * 6.5f,
-				(ScreenUtil.screen_width - Map.size * 3.5f) - (Map.size * 1.0f), (ScreenUtil.screen_height - Map.size * 1f)
-						- (ScreenUtil.screen_height - Map.size * 2.0f)), new ColorXv(0.0f, 0.0f, 0.0f), new ColorXv(1.0f, 1.0f, 1.0f), 800);
+		this.options = new ClickableText("options", new Rectanglei(ScreenUtil.screen_width / 2 - (Map.size * "options".length()) / 2, Map.size * 3,
+				"options".length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.WHITE, 800);
 
+		this.main_menu = new ClickableText("main menu", new Rectanglei(ScreenUtil.screen_width / 2 - (Map.size * "main_menu".length()) / 2, Map.size * 1.8f,
+				"main_menu".length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.WHITE, 800);
 	}
 
-	private boolean song_started = false;
 	private boolean just_resumed = false;
 
 	private boolean pc_mouse_down_on_first_resume_update = false;
@@ -178,62 +186,97 @@ public class Play extends GameState {
 			}
 
 			if (this.tapped_to_start) {
-				this.player.update(delta, (int) this.current_scroll);
+				if (!this.pause_menu_open) {
+					this.player.update(delta, (int) this.current_scroll);
 
-				if (!this.lost) {
-					this.acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
-					this.velocity += this.acceleration;
-				}
-				this.current_scroll -= this.velocity;
+					if (!this.lost) {
+						this.acceleration = 0.00002f * ScreenUtil.screen_width * delta * 1;
+						this.velocity += this.acceleration;
+					}
+					this.current_scroll -= this.velocity;
 
-				// If the background has moved off the screen, shift it back into view.
-				for (Background background : this.backgrounds) {
-					background.update((int) this.current_scroll);
-				}
+					// If the background has moved off the screen, shift it back into view.
+					for (Background background : this.backgrounds) {
+						background.update((int) this.current_scroll);
+					}
 
-				// If the house has moved off the screen, randomize it and shift it back into view.
-				for (House house : this.houses) {
-					house.update(delta, (int) this.current_scroll);
-				}
+					// If the house has moved off the screen, randomize it and shift it back into view.
+					for (House house : this.houses) {
+						house.update(delta, (int) this.current_scroll);
+					}
 
-				// If the ground block has moved off the screen, shift it back into view.
-				for (GroundBlock gb : this.ground_blocks) {
-					gb.update((int) this.current_scroll);
-				}
+					// If the ground block has moved off the screen, shift it back into view.
+					for (GroundBlock gb : this.ground_blocks) {
+						gb.update((int) this.current_scroll);
+					}
 
-				for (Tree tree : this.trees) {
-					tree.update((int) this.current_scroll);
-				}
+					for (Tree tree : this.trees) {
+						tree.update((int) this.current_scroll);
+					}
 
-				// Check for button press. If pressed they will do their respective actions.
-				if (this.level.isRunButtonEnabled()) {
-					this.buttons[0].update(delta);
+					// Check for button press. If pressed they will do their respective actions.
+					if (this.level.isRunButtonEnabled()) {
+						this.buttons[0].update(delta);
+					}
+					if (this.level.isRegularMilkButtonEnabled()) {
+						this.buttons[1].update(delta);
+					}
+					if (this.level.isChocolateMilkButtonEnabled()) {
+						this.buttons[2].update(delta);
+					}
+					if (this.level.isStrawberryMilkButtonEnabled()) {
+						this.buttons[3].update(delta);
+					}
+				} else {
+					this.paused.update(delta);
+					this.retry.update(delta);
+					this.main_menu.update(delta);
+					this.options.update(delta);
+
+					if (!InputManager.pointersDragging[0]) {
+						if (this.paused.isMouseDownOnMe()) {
+							this.pause_menu_open = false;
+						}
+						if (this.main_menu.isMouseDownOnMe()) {
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
+							this.dairy_run.getGameStateManager().clearHistoryStates();
+							setLost(false);
+							this.pause_menu_open = false;
+						}
+						if (this.retry.isMouseDownOnMe()) {
+							retry();
+							this.pause_menu_open = false;
+						}
+						if (this.options.isMouseDownOnMe()) {
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.OPTIONS);
+							this.pause_menu_open = false;
+						}
+					}
+
 				}
-				if (this.level.isRegularMilkButtonEnabled()) {
-					this.buttons[1].update(delta);
-				}
-				if (this.level.isChocolateMilkButtonEnabled()) {
-					this.buttons[2].update(delta);
-				}
-				if (this.level.isStrawberryMilkButtonEnabled()) {
-					this.buttons[3].update(delta);
-				}
-				
-				StaticGUI.pause_button.update(delta);
 
 				if (this.lost) {
 					this.game_over.update(delta);
 					this.retry.update(delta);
 					this.main_menu.update(delta);
+					this.options.update(delta);
 
-					if (this.main_menu.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
-						this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
-						this.dairy_run.getGameStateManager().clearHistoryStates();
-						setLost(false);
+					if (!InputManager.pointersDragging[0]) {
+						if (this.main_menu.isMouseDownOnMe()) {
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
+							this.dairy_run.getGameStateManager().clearHistoryStates();
+							setLost(false);
+						}
+						if (this.retry.isMouseDownOnMe()) {
+							retry();
+						}
+						if (this.options.isMouseDownOnMe()) {
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.OPTIONS);
+						}
 					}
-					if (this.retry.isMouseDownOnMe() && !InputManager.pointersDragging[0]) {
-						retry();
-					}
+
+				} else {
+					StaticGUI.pause_button.update(delta);
 				}
 
 				// TODO: Make a more elegant system.
@@ -332,8 +375,8 @@ public class Play extends GameState {
 					ScreenUtil.screen_width / 2 - FontManager.FONT.PIXEL_REGULAR.getWidth("TAP TO RESUME") / 2, ScreenUtil.screen_height / 2
 							- FontManager.FONT.PIXEL_REGULAR.getHeight("TAP TO RESUME") / 2);
 		}
-		
-		StaticGUI.pause_button.render(this.sprite_batch, ColorXv.LIGHT_GREEN.withAlphaOf(.85f));
+
+		StaticGUI.pause_button.render(this.sprite_batch, this.PAUSE_COLOR);
 
 		if (!this.tapped_to_start) {
 			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "Tap To Begin",
@@ -360,9 +403,26 @@ public class Play extends GameState {
 				this.game_over.render(this.sprite_batch, false);
 				this.retry.render(this.sprite_batch, false);
 				this.main_menu.render(this.sprite_batch, false);
+				this.options.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont(), false);
+			} else if (this.pause_menu_open) {
+				if (this.paused.isMouseOverMe()) {
+					this.sprite_batch.setColor(1.0f, 1.0f, 1.0f, 0.2f);
+				}
+				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1, ScreenUtil.screen_width
+						- Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
+				if (this.pause_menu_open) {
+					this.paused.render(this.sprite_batch, this.sprite_batch.getColor());
+					this.retry.render(this.sprite_batch, this.sprite_batch.getColor());
+					this.main_menu.render(this.sprite_batch, this.sprite_batch.getColor());
+					this.options.render(this.sprite_batch, this.sprite_batch.getColor());
+				} else {
+					this.paused.render(this.sprite_batch, false);
+					this.retry.render(this.sprite_batch, false);
+					this.main_menu.render(this.sprite_batch, false);
+					this.options.render(this.sprite_batch, false);
+				}
 			}
 		}
-
 	}
 
 	private void setLost(boolean b) {
@@ -442,16 +502,19 @@ public class Play extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
+		if (this.level == null) {
+			this.level = Level.ENDLESS;
+		}
 		AudioManager.MUSIC.TEMP_MUSIC.loop(1.0f);
 		this.state_is_transitioning = false; // TODO: Rename this lol
 		if (this.game_in_session) {
 			resume();
 		}
 	}
-	
+
 	@Override
 	public void inStatePause() {
-		//TODO: Implememnt this.
+		this.pause_menu_open = true;
 	}
 
 	@Override
@@ -466,6 +529,7 @@ public class Play extends GameState {
 
 	@Override
 	public void dispose() {
+		// Intentionally left blank.
 	}
 
 	public void setVelocity(float v) {
@@ -494,10 +558,6 @@ public class Play extends GameState {
 
 	public void setLevel(Level level) {
 		this.level = level;
-		for (int i = 0; i < this.houses.length; i++) {
-			this.houses[i].createHouse((i + 1) * 10 * Map.size, this.ground_level);
-		}
-		this.velocity = this.level.getInitialVelocity();
 	}
 
 	public House[] getHouses() {
@@ -516,10 +576,12 @@ public class Play extends GameState {
 
 	@Override
 	public void stateFinishedFadingInToEntrance() {
+		// Intentionally left blank.
 	}
 
 	@Override
 	public void stateFinishedFadingOut() {
+		// Intentionally left blank.
 	}
 
 }

@@ -11,12 +11,23 @@ import com.uladzislau.dairy_run.utility.StaticUtil;
 
 public class TextureManager {
 
-	public static final short BLACK = 31 * 4 + 2;
+	public static final short WHITE = 0;
+	public static final short BLACK = 1;
 	public static final short PAUSE = 31 * 7 + 23;
 	public static final short REGULAR = 31 * 6 + 20;
 	public static final short CHOCOLATE = 31 * 6 + 21;
 	public static final short STRAWBERRY = 31 * 6 + 22;
-	
+
+	public static final short GRASS = 31;
+	public static final short GRASS_WITH_SMILE = 31 + 1;
+	public static final short DIRT = 31 + 2;
+	public static final short DIRT_WITH_SMILE = 31 + 3;
+
+	public static final short SNOW = 31 * 2;
+	public static final short SNOW_WITH_SMILE = 31 * 2 + 1;
+	public static final short SNOW_DIRT = 31 * 2 + 2;
+	public static final short SNOW_DIRT_WITH_SMILE = 31 * 2 + 3;
+
 	public enum TEXTURE implements Resource {
 		BACKGROUND("main_menu_hd", "brozie");
 
@@ -36,8 +47,7 @@ public class TextureManager {
 		@Override
 		public void initialize() {
 			if (this.texture == null) {
-				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
-						+ this.name + ".png"));
+				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator + this.name + ".png"));
 				this.initialized = true;
 			} else {
 				StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
@@ -94,9 +104,8 @@ public class TextureManager {
 	}
 
 	public static enum SPRITESHEET implements TextureResource {
-		PIXEL_SPRITESHEET("pixel_spritesheet", "http://opengameart.org/content/platformer-art-pixel-redux", 31, 31, 2, 2, 21, 21), BACKGROUNDS(
-				"Backgrounds", "http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231,
-				63);
+		PIXEL_SPRITESHEET("pixel_spritesheet", "http://opengameart.org/content/platformer-art-pixel-redux", 31, 31, 2, 2, 21, 21), BACKGROUNDS("Backgrounds",
+				"http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231, 63);
 
 		private final String name;
 		private final String source;
@@ -115,8 +124,7 @@ public class TextureManager {
 		private SPRITESHEET spritesheet;
 		private boolean initialized;
 
-		SPRITESHEET(String name, String source, int cols, int rows, int x_padding, int y_padding, int subimage_pixel_width,
-				int subimage_pixel_height) {
+		SPRITESHEET(String name, String source, int cols, int rows, int x_padding, int y_padding, int subimage_pixel_width, int subimage_pixel_height) {
 			this.name = name;
 			this.source = source;
 			this.cols = cols;
@@ -128,8 +136,8 @@ public class TextureManager {
 			this.frames = new TextureRegion[this.rows * this.cols];
 		}
 
-		SPRITESHEET(String name, String source, SPRITESHEET spritesheet, int start_pixel_x, int start_pixel_y, int cols, int rows,
-				int x_padding, int y_padding, int subimage_pixel_width, int subimage_pixel_height) {
+		SPRITESHEET(String name, String source, SPRITESHEET spritesheet, int start_pixel_x, int start_pixel_y, int cols, int rows, int x_padding,
+				int y_padding, int subimage_pixel_width, int subimage_pixel_height) {
 			this.name = name;
 			this.source = source;
 			this.spritesheet = spritesheet;
@@ -148,8 +156,7 @@ public class TextureManager {
 		public void initialize() {
 			if (this.start_pixel_x == -1) {
 				if (this.texture == null) {
-					this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator
-							+ this.name + ".png"));
+					this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator + this.name + ".png"));
 					this.texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 					int x = 0;
 					int y = 0;
@@ -175,8 +182,8 @@ public class TextureManager {
 				int y = 0;
 				int r = 0;
 				for (int i = 0; i < this.cols * this.rows; i++) {
-					this.frames[i] = new TextureRegion(this.spritesheet.getTexture(), this.start_pixel_x + x + this.x_padding,
-							this.start_pixel_y + y + this.y_padding, this.subimage_pixel_width, this.subimage_pixel_height);
+					this.frames[i] = new TextureRegion(this.spritesheet.getTexture(), this.start_pixel_x + x + this.x_padding, this.start_pixel_y + y
+							+ this.y_padding, this.subimage_pixel_width, this.subimage_pixel_height);
 					r++;
 					if (r == this.rows) {
 						x = 0;

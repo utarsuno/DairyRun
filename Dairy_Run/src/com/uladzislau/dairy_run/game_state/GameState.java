@@ -45,7 +45,8 @@ public abstract class GameState {
 		return this.STATE_ID;
 	}
 
-	public void inStatePause() {		
+	public void inStatePause() {
+		// This method was created for the play state.
 	}
 
 }

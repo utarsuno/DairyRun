@@ -93,6 +93,7 @@ public class RunButton extends CircleButton {
 		this.deltaTimers.add(new DeltaTimer());
 		this.timer_transition.add(true);
 		this.pixels.add(0f);
+		this.play.setVelocity(this.play.getVelocity() + 0.1f);
 		AudioManager.SOUND.POP.playSound();
 	}
 

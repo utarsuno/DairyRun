@@ -46,6 +46,7 @@ public class GameStateManager {
 		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.main_menu.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.level_selector.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
+		((Play) this.play).setLevel(Level.ENDLESS);
 		this.play.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.current_state = this.main_menu;

@@ -41,7 +41,7 @@ public class BackButton extends CircleButton {
 	}
 
 	@Override
-	public void render(SpriteBatch sb) {		
+	public void render(SpriteBatch sb) {
 	}
 
 }

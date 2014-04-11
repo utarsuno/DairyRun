@@ -1,11 +1,26 @@
 package com.uladzislau.dairy_run.game_state;
 
+import com.uladzislau.dairy_run.entity.GroundBlock;
+
 public class Level {
 
 	public static final Level ENDLESS = new Level(true);
 	
 	public static void createEndlessLevel() {
 		ENDLESS.setBeaten(false);
+		ENDLESS.setDescription("ENDLESS");
+		ENDLESS.setBeaten(false);
+		ENDLESS.setInitialVelocity(5f);
+		ENDLESS.setVelocityMatters(true);
+		ENDLESS.setVelocityNeededToWin(0);
+		ENDLESS.setNumberOfMilksNeededToWin(-1);
+		ENDLESS.setUnlocked(true);
+		ENDLESS.setRunButtonEnabled(true); 
+		ENDLESS.setCreateChasers(false);
+		ENDLESS.setRegularMilkButtonEnabled(true);
+		ENDLESS.setChocolateMilkButtonEnabled(true);
+		ENDLESS.setStrawberryMilkButtonEnabled(true);
+		ENDLESS.setGroundTheme(GroundBlock.Theme.GRASS);
 	}
 	
 	private String description;
@@ -21,6 +36,8 @@ public class Level {
 	private boolean createChasers;
 	private float velocity_needed;
 	private float initial_velocity;
+	
+	private GroundBlock.Theme ground_theme;
 
 	private boolean bronze_recieved = false;
 	private boolean silver_recieved = false;
@@ -162,6 +179,14 @@ public class Level {
 		this.beaten = beaten;
 	}
 
+	public GroundBlock.Theme getGroundTheme() {
+		return this.ground_theme;
+	}
+
+	public void setGroundTheme(GroundBlock.Theme ground_theme) {
+		this.ground_theme = ground_theme;
+	}
+
 	public void setThisLevelEqualToLevel(Level l) {
 		this.description = l.getDescription();
 		this.beaten = l.isBeaten();
@@ -179,6 +204,14 @@ public class Level {
 		this.unlocked = l.isUnlocked();
 		this.velocity_matters = l.isVelocityMatters();
 		this.velocity_needed = l.getVelocityNeededToWin();
+		this.ground_theme = l.getGroundBlockTheme();
+	}
+
+	public void setPauseOnFirstHouseReached(String string) {
+	}
+
+	public GroundBlock.Theme getGroundBlockTheme() {
+		return this.ground_theme;
 	}
 
 }

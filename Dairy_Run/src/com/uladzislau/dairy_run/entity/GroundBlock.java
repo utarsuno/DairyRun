@@ -1,49 +1,51 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.uladzislau.dairy_run.information.ScreenUtil;
+import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
+import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.world.Map;
 
 public class GroundBlock extends Entity {
 
-	public final static short GRASS = 31 * 5 + 12; // temp
-	public final static short SNOW = 31 * 2 + 3;
-	public final static short SNOW_GROUND = 31 * 3 + 2;
+	public enum Theme {
+		GRASS, SNOW;
+	}
+
+	private Theme theme;
 
 	private int length;
 
 	private boolean regular_block;
-	private boolean regular_ground_block;
+	private boolean lower_block_is_regular;
 
-	private boolean grass;
-	private short grass_block;
+	private boolean hasMouseDownTouchedMe;
+	private boolean hasMouseDownTouchedLowerMe;
 
-	public GroundBlock(int x, int y, int width, int height, int length) {
+	public GroundBlock(int x, int y, int width, int height, int length, Theme theme) {
 		super(x, y, width, height);
 		this.length = length;
-		this.grass = false;
+		this.regular_block = true;
+		this.lower_block_is_regular = true;
+		this.hasMouseDownTouchedMe = false;
+		this.theme = theme;
+	}
+
+	public GroundBlock() {
+		super(0, 0, 0, 0);
 	}
 
 	public void randomize() {
 		if (Dice.get_Random_Integer_From_Min_To_Max(0, 40) == 5) {
+			this.regular_block = false;
+		} else {
 			this.regular_block = true;
 		}
-		if (Dice.get_Random_Integer_From_Min_To_Max(0, 60) == 5) {
-			this.regular_ground_block = true;
+		if (Dice.get_Random_Integer_From_Min_To_Max(0, 40) == 5) {
+			this.lower_block_is_regular = false;
 		} else {
-			this.regular_ground_block = false;
-		}
-		if (Dice.get_Random_Integer_From_Min_To_Max(0, 16) == 5) {
-			if (Dice.nextBoolean()) {
-				this.grass_block = 17;
-			} else {
-				this.grass_block = 17 + 30;
-			}
-			this.grass = true;
-		} else {
-			this.grass = false;
+			this.lower_block_is_regular = true;
 		}
 	}
 
@@ -60,36 +62,104 @@ public class GroundBlock extends Entity {
 			randomize();
 			setPosition(true);
 		}
+		if (InputManager.pointersDown[0]) {
+			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, this.getX() + current_scroll,
+					this.getY() - this.getHeight(), this.getWidth(), this.getHeight())) {
+				if (!this.hasMouseDownTouchedMe) {
+					this.regular_block ^= true;
+					this.hasMouseDownTouchedMe = true;
+				}
+			}
+			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, this.getX() + current_scroll,
+					this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight())) {
+				if (!this.hasMouseDownTouchedLowerMe) {
+					this.lower_block_is_regular ^= true;
+					this.hasMouseDownTouchedLowerMe = true;
+				}
+			}
+		} else {
+			this.hasMouseDownTouchedMe = false;
+			this.hasMouseDownTouchedLowerMe = false;
+		}
+	}
+
+	public void update(float delta) {
+		if (InputManager.pointersDown[0]) {
+			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, this.getX(), this.getY() - this.getHeight(),
+					this.getWidth(), this.getHeight())) {
+				if (!this.hasMouseDownTouchedMe) {
+					this.regular_block ^= true;
+					this.hasMouseDownTouchedMe = true;
+				}
+			}
+			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, this.getX(), this.getY() - this.getHeight() * 2,
+					this.getWidth(), this.getHeight())) {
+				if (!this.hasMouseDownTouchedLowerMe) {
+					this.lower_block_is_regular ^= true;
+					this.hasMouseDownTouchedLowerMe = true;
+				}
+			}
+		} else {
+			this.hasMouseDownTouchedMe = false;
+			this.hasMouseDownTouchedLowerMe = false;
+		}
 	}
 
 	public void render(SpriteBatch sb, int current_scroll) {
 		if (this.regular_block) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 12 + 29), this.getX() + current_scroll, this.getY() - this.getHeight(),
-					this.getWidth(), this.getHeight());
+			switch (this.theme) {
+			case GRASS:
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS), this.getX() + current_scroll,
+						this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
+				break;
+			case SNOW:
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW), this.getX() + current_scroll,
+						this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
+				break;
+			default:
+				break;
+			}
 		} else {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 3), this.getX() + current_scroll, this.getY() - this.getHeight(),
-					this.getWidth(), this.getHeight());
+			switch (this.theme) {
+			case GRASS:
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_WITH_SMILE), this.getX() + current_scroll, this.getY()
+						- this.getHeight(), this.getWidth(), this.getHeight());
+				break;
+			case SNOW:
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_WITH_SMILE), this.getX() + current_scroll,
+						this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
+				break;
+			default:
+				break;
+			}
 		}
 
-		if (this.regular_ground_block) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 3), this.getX() + current_scroll, this.getY() - this.getHeight() * 2,
-					this.getWidth(), this.getHeight());
+		if (this.lower_block_is_regular) {
+			switch (this.theme) {
+			case GRASS:
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT), this.getX() + current_scroll,
+						this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+				break;
+			case SNOW:
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_DIRT), this.getX() + current_scroll,
+						this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+				break;
+			default:
+				break;
+			}
 		} else {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 5 + 4), this.getX() + current_scroll, this.getY() - this.getHeight() * 2,
-					this.getWidth(), this.getHeight());
-		}
-
-		if (this.grass) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.grass_block), this.getX() + current_scroll, this.getY(), this.getWidth(),
-					this.getHeight());
-		}
-	}
-
-	public static void render(SpriteBatch sb, int y, short block) {
-		int tx = 0;
-		while (tx < ScreenUtil.screen_width + Map.size) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(block), tx, y, Map.size, Map.size);
-			tx += Map.size;
+			switch (this.theme) {
+			case GRASS:
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_WITH_SMILE), this.getX() + current_scroll,
+						this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+				break;
+			case SNOW:
+				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_DIRT_WITH_SMILE), this.getX() + current_scroll, this.getY()
+						- this.getHeight() * 2, this.getWidth(), this.getHeight());
+				break;
+			default:
+				break;
+			}
 		}
 	}
 

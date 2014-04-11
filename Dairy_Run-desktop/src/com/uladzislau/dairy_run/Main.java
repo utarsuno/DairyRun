@@ -30,7 +30,7 @@ public class Main {
 
 		cfg.width = (int) (bounds.getWidth() * .80);
 		cfg.height = (int) (bounds.getHeight() * .70);
-		cfg.samples = 200;
+		cfg.samples = 0;
 		cfg.resizable = false;
 
 		new LwjglApplication(new DairyRun(), cfg);
