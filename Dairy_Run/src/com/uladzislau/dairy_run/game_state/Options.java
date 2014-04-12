@@ -33,7 +33,7 @@ public class Options extends GameState {
 	private ClickableText layout_two;
 	private ClickableText layout_three;
 	private ClickableText layout_four;
-	
+
 	private GroundBlock[] ground_blocks;
 
 	public static byte current_layout;
@@ -81,11 +81,12 @@ public class Options extends GameState {
 
 		this.layout_four = new ClickableText(layout_four_title, new Rectanglei(Map.size * 6.5f, Map.size * 3, layout_four_title.length() * Map.size, Map.size),
 				ColorXv.BLACK, ColorXv.DARK_BLUE, 800);
-		
+
 		this.ground_blocks = new GroundBlock[(ScreenUtil.screen_width / Map.size) + 2];
 		// this.ground_blocks = new GroundBlock[1];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length, GroundBlock.Theme.SNOW);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length, false,
+					GroundBlock.Theme.SNOW);
 		}
 
 		Options.current_layout = 3;
@@ -130,7 +131,7 @@ public class Options extends GameState {
 				Options.current_layout = 3;
 			}
 		}
-		
+
 		for (GroundBlock gb : this.ground_blocks) {
 			gb.update(delta);
 		}

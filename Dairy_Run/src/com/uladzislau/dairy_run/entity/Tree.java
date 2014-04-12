@@ -8,9 +8,6 @@ import com.uladzislau.dairy_run.world.Map;
 
 public class Tree {
 
-	public static final short TREE_HEIGHT_ONE_DESIGN_ONE = 31 * 22 + 13;
-	public static final short TREE_HEIGHT_ONE_DESIGN_TWO = 31 * 21 + 13;
-
 	private short short_tree_type;
 
 	private int x;
@@ -34,9 +31,9 @@ public class Tree {
 		this.type = Dice.get_Random_Integer_From_Min_To_Max(1, 2);
 		if (this.type == 1) {
 			if (Dice.nextBoolean()) {
-				this.short_tree_type = TREE_HEIGHT_ONE_DESIGN_ONE;
+				this.short_tree_type = TextureManager.TREE_HEIGHT_ONE_DESIGN_ONE;
 			} else {
-				this.short_tree_type = TREE_HEIGHT_ONE_DESIGN_TWO;
+				this.short_tree_type = TextureManager.TREE_HEIGHT_ONE_DESIGN_TWO;
 			}
 		}
 		if (Dice.get_Random_Integer_From_Min_To_Max(0, 100) > 25) {

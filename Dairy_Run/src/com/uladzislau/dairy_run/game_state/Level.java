@@ -1,6 +1,7 @@
 package com.uladzislau.dairy_run.game_state;
 
 import com.uladzislau.dairy_run.entity.GroundBlock;
+import com.uladzislau.dairy_run.manager.AudioManager;
 
 public class Level {
 
@@ -36,16 +37,13 @@ public class Level {
 	private boolean createChasers;
 	private float velocity_needed;
 	private float initial_velocity;
-	
+	private AudioManager.MUSIC music;
 	private GroundBlock.Theme ground_theme;
-
 	private boolean bronze_recieved = false;
 	private boolean silver_recieved = false;
 	private boolean gold_recieved = false;
-
 	private boolean unlocked = false;
-
-	private boolean velocity_matters;
+	private boolean velocity_matters = false;
 
 	public Level(boolean locked_or_not) {
 		this.unlocked = locked_or_not;
@@ -212,6 +210,14 @@ public class Level {
 
 	public GroundBlock.Theme getGroundBlockTheme() {
 		return this.ground_theme;
+	}
+
+	public AudioManager.MUSIC getMusic() {
+		return this.music;
+	}
+
+	public void setMusic(AudioManager.MUSIC music) {
+		this.music = music;
 	}
 
 }

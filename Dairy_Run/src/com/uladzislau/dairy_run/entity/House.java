@@ -97,55 +97,40 @@ public class House {
 		this.number_of_milks = Dice.get_Random_Integer_From_Min_To_Max(1, this.width / 2);
 		for (int i = 0; i < this.number_of_milks; i++) {
 			this.milk_delievered[i] = false;
-			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
-			if (r == 0) {
-				if (this.play.getLevel().isRegularMilkButtonEnabled()) {
+			int r;
+			if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+				r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
+				if (r == 0) {
+					this.milk_needed[i] = TextureManager.REGULAR;
+				} else if (r == 1) {
+					this.milk_needed[i] = TextureManager.CHOCOLATE;
+				} else if (r == 2) {
+					this.milk_needed[i] = TextureManager.STRAWBERRY;
+				}
+			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled() && !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+				if (Dice.nextBoolean()) {
 					this.milk_needed[i] = TextureManager.REGULAR;
 				} else {
-					if (this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
-						if (Dice.nextBoolean()) {
-							this.milk_needed[i] = TextureManager.CHOCOLATE;
-						} else {
-							this.milk_needed[i] = TextureManager.STRAWBERRY;
-						}
-					} else if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
-						this.milk_needed[i] = TextureManager.CHOCOLATE;
-					} else if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
-						this.milk_needed[i] = TextureManager.STRAWBERRY;
-					}
+					this.milk_needed[i] = TextureManager.CHOCOLATE;
 				}
-			} else if (r == 1) {
-				if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
+			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+				if (Dice.nextBoolean()) {
+					this.milk_needed[i] = TextureManager.REGULAR;
+				} else {
+					this.milk_needed[i] = TextureManager.STRAWBERRY;
+				}
+			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled() && !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+				this.milk_needed[i] = TextureManager.REGULAR;
+			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+				if (Dice.nextBoolean()) {
 					this.milk_needed[i] = TextureManager.CHOCOLATE;
 				} else {
-					if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
-						if (Dice.nextBoolean()) {
-							this.milk_needed[i] = TextureManager.REGULAR;
-						} else {
-							this.milk_needed[i] = TextureManager.STRAWBERRY;
-						}
-					} else if (this.play.getLevel().isRegularMilkButtonEnabled()) {
-						this.milk_needed[i] = TextureManager.REGULAR;
-					} else if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
-						this.milk_needed[i] = TextureManager.STRAWBERRY;
-					}
-				}
-			} else if (r == 2) {
-				if (this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 					this.milk_needed[i] = TextureManager.STRAWBERRY;
-				} else {
-					if (this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isRegularMilkButtonEnabled()) {
-						if (Dice.nextBoolean()) {
-							this.milk_needed[i] = TextureManager.REGULAR;
-						} else {
-							this.milk_needed[i] = TextureManager.STRAWBERRY;
-						}
-					} else if (this.play.getLevel().isChocolateMilkButtonEnabled()) {
-						this.milk_needed[i] = TextureManager.CHOCOLATE;
-					} else if (this.play.getLevel().isRegularMilkButtonEnabled()) {
-						this.milk_needed[i] = TextureManager.REGULAR;
-					}
 				}
+			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+				this.milk_needed[i] = TextureManager.STRAWBERRY;
+			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled() && !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+				this.milk_needed[i] = TextureManager.CHOCOLATE;
 			}
 			this.milkFader[i].reset();
 		}

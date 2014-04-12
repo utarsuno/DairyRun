@@ -18,15 +18,26 @@ public class TextureManager {
 	public static final short CHOCOLATE = 31 * 6 + 21;
 	public static final short STRAWBERRY = 31 * 6 + 22;
 
-	public static final short GRASS = 31;
-	public static final short GRASS_WITH_SMILE = 31 + 1;
-	public static final short DIRT = 31 + 2;
-	public static final short DIRT_WITH_SMILE = 31 + 3;
+	public static final short GRASS_BLOCK = 31;
+	public static final short GRASS_BLOCK_WITH_SMILE = 31 + 1;
+	public static final short DIRT_BLOCK = 31 + 2;
+	public static final short DIRT_BLOCK_WITH_SMILE = 31 + 3;
+	
+	public static final short SMALL_BUSH = 31 + 4;
+	public static final short GRASS = 31 + 5;
+	public static final short CACTUS = 31 + 6;
+	public static final short LEFT_WEIRD_THING_BOTTOM_HALF = 31 + 7;
+	public static final short LEFT_WEIRD_THING_TOP_HALF = 31 + 8;
+	public static final short RIGHT_WEIRD_THING_BOTTOM_HALF = 31 + 9;
+	public static final short RIGHT_WEIRD_THING_TOP_HALF = 31 + 10;
 
-	public static final short SNOW = 31 * 2;
-	public static final short SNOW_WITH_SMILE = 31 * 2 + 1;
-	public static final short SNOW_DIRT = 31 * 2 + 2;
-	public static final short SNOW_DIRT_WITH_SMILE = 31 * 2 + 3;
+	public static final short SNOW_BLOCK = 31 * 2;
+	public static final short SNOW_BLOCK_WITH_SMILE = 31 * 2 + 1;
+	public static final short SNOW_BLOCK_DIRT = 31 * 2 + 2;
+	public static final short SNOW_BLOCK_DIRT_WITH_SMILE = 31 * 2 + 3;
+	
+	public static final short TREE_HEIGHT_ONE_DESIGN_ONE = 31 * 22 + 13;
+	public static final short TREE_HEIGHT_ONE_DESIGN_TWO = 31 * 21 + 13;
 
 	public enum TEXTURE implements Resource {
 		BACKGROUND("main_menu_hd", "brozie");
@@ -41,14 +52,14 @@ public class TextureManager {
 		TEXTURE(String name, String source) {
 			this.name = name;
 			this.source = source;
-			this.initialized = false;
+			this.setInitialized(false);
 		}
 
 		@Override
 		public void initialize() {
 			if (this.texture == null) {
 				this.texture = new Texture(Gdx.files.internal("data" + java.io.File.separator + "texture" + java.io.File.separator + this.name + ".png"));
-				this.initialized = true;
+				this.setInitialized(true);
 			} else {
 				StaticUtil.error("Texture Error", "You are trying to init " + this.name + " twice.");
 			}
@@ -66,7 +77,7 @@ public class TextureManager {
 		@Override
 		public void dispose() {
 			if (this.texture != null) {
-				this.initialized = false;
+				this.setInitialized(false);
 				this.texture.dispose();
 				this.texture = null;
 			} else {
@@ -99,6 +110,14 @@ public class TextureManager {
 		public String currentStatus() {
 			// TODO Auto-generated method stub
 			return null;
+		}
+
+		public boolean isInitialized() {
+			return initialized;
+		}
+
+		public void setInitialized(boolean initialized) {
+			this.initialized = initialized;
 		}
 
 	}

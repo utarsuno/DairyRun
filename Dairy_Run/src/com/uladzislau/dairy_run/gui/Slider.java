@@ -160,8 +160,4 @@ public class Slider {
 	public int getTargetPosition() {
 		return this.target_position;
 	}
-	
-	public void dispose() {
-	}
-
 }

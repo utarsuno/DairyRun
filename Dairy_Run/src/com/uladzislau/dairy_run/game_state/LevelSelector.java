@@ -29,7 +29,7 @@ public class LevelSelector extends GameState {
 
 	private boolean transition_left;
 	private boolean transition_right;
-	private boolean button_pressed;  
+	private boolean button_pressed;
 
 	private int offset;
 
@@ -46,7 +46,7 @@ public class LevelSelector extends GameState {
 	public void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch) {
 		this.shape_renderer = shapeRenderer;
 		this.sprite_batch = batch;
-		this.levels = new Level[30];
+		this.levels = new Level[20];
 		for (int i = 0; i < this.levels.length; i++) {
 			this.levels[i] = new Level(false);
 		}
@@ -62,7 +62,9 @@ public class LevelSelector extends GameState {
 		this.ground_blocks = new GroundBlock[(ScreenUtil.screen_width / Map.size) + 2];
 		// this.ground_blocks = new GroundBlock[1];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length, GroundBlock.Theme.GRASS);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length, true,
+					GroundBlock.Theme.GRASS);
+			this.ground_blocks[i].setSpawnDoodads(true);
 		}
 		createLevels();
 	}
@@ -91,9 +93,9 @@ public class LevelSelector extends GameState {
 		this.levels[1].setUnlocked(false);
 		// Level Three. This is the last level that is only regular milk.
 		this.levels[2].setThisLevelEqualToLevel(this.levels[1]);
-		this.levels[2].setDescription("Deliver 20 milks.");
+		this.levels[2].setDescription("Deliver 15 milks.");
 		this.levels[2].setInitialVelocity(10f);
-		this.levels[2].setNumberOfMilksNeededToWin(20);
+		this.levels[2].setNumberOfMilksNeededToWin(15);
 		// Level Four.
 		this.levels[3].setThisLevelEqualToLevel(this.levels[2]);
 		this.levels[3].setDescription("Deliver 6 milks.");
@@ -104,12 +106,12 @@ public class LevelSelector extends GameState {
 		this.levels[4].setThisLevelEqualToLevel(this.levels[3]);
 		this.levels[4].setDescription("Deliver 12 milks.");
 		this.levels[4].setInitialVelocity(9f);
-		this.levels[4].setNumberOfMilksNeededToWin(11);
+		this.levels[4].setNumberOfMilksNeededToWin(12);
 		// Level Six. This is the last level that is only regular milk and chocolate milk.
 		this.levels[5].setThisLevelEqualToLevel(this.levels[4]);
 		this.levels[5].setDescription("Deliver 18 milks.");
 		this.levels[5].setInitialVelocity(12f);
-		this.levels[5].setNumberOfMilksNeededToWin(30);
+		this.levels[5].setNumberOfMilksNeededToWin(18);
 		// Level Seven.
 		this.levels[6].setThisLevelEqualToLevel(this.levels[5]);
 		this.levels[6].setDescription("Deliver 7 milks.");
@@ -120,16 +122,14 @@ public class LevelSelector extends GameState {
 		this.levels[7].setThisLevelEqualToLevel(this.levels[6]);
 		this.levels[7].setDescription("Deliver 14 milks.");
 		this.levels[7].setInitialVelocity(12f);
-		this.levels[7].setNumberOfMilksNeededToWin(7);
-		this.levels[7].setStrawberryMilkButtonEnabled(true);
+		this.levels[7].setNumberOfMilksNeededToWin(14);
 		// Level Nine.
 		this.levels[8].setThisLevelEqualToLevel(this.levels[7]);
 		this.levels[8].setDescription("Deliver 21 milks.");
 		this.levels[8].setInitialVelocity(16f);
-		this.levels[8].setNumberOfMilksNeededToWin(7);
-		this.levels[8].setStrawberryMilkButtonEnabled(true);
+		this.levels[8].setNumberOfMilksNeededToWin(21);
 		// TODO: TEMP!!!!!!!!!!!!!!!!!!!!!
-		for (int i = 9; i < 30; i++) {
+		for (int i = 9; i < 20; i++) {
 			this.levels[i].setDescription(":D");
 			this.levels[i].setBeaten(false);
 			this.levels[i].setVelocityMatters(false);
@@ -175,12 +175,12 @@ public class LevelSelector extends GameState {
 		for (int i = 0; i < this.ground_blocks.length; i++) {
 			this.ground_blocks[i].update(delta);
 		}
-		
+
 		if (this.transition_left) {
 			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
 			this.backgrounds[0]
-					.setX((int) (-1 * (int) ((this.current_level + 1) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / 30.0f)) + ((float) this.offset / ScreenUtil.screen_width)
-							* (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / 30.0f)));
+					.setX((int) (-1 * (int) ((this.current_level + 1) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / (float) this.levels.length)) + ((float) this.offset / ScreenUtil.screen_width)
+							* (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / this.levels.length)));
 			for (int i = 0; i < this.ground_blocks.length; i++) {
 				this.ground_blocks[i].setX(this.ground_blocks[i].getX() + this.delta_offset);
 				if (this.ground_blocks[i].getX() > ScreenUtil.screen_width) {
@@ -191,8 +191,8 @@ public class LevelSelector extends GameState {
 		} else if (this.transition_right) {
 			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
 			this.backgrounds[0]
-					.setX((int) (-1 * (int) ((this.current_level - 1) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / 30.0f)) + ((float) this.offset / ScreenUtil.screen_width)
-							* (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / 30.0f)));
+					.setX((int) (-1 * (int) ((this.current_level - 1) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / (float) this.levels.length)) + ((float) this.offset / ScreenUtil.screen_width)
+							* (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / this.levels.length)));
 			for (int i = 0; i < this.ground_blocks.length; i++) {
 				this.ground_blocks[i].setX(this.ground_blocks[i].getX() + this.delta_offset);
 				if (this.ground_blocks[i].getX() + Map.size < 0) {
@@ -201,7 +201,7 @@ public class LevelSelector extends GameState {
 				}
 			}
 		} else {
-			this.backgrounds[0].setX(-1 * (int) ((this.current_level) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / 30.0f)));
+			this.backgrounds[0].setX(-1 * (int) ((this.current_level) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / (float) this.levels.length)));
 
 			if (InputManager.pointersDown[0] && !InputManager.pointersDragging[0] && !this.button_pressed) {
 				// Check to see if the first button has been pressed.
@@ -312,9 +312,9 @@ public class LevelSelector extends GameState {
 	}
 
 	private void renderLevelDescription(int x_offset, int level) {
-//		if () {
-//			
-//		}
+		// if () {
+		//
+		// }
 		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[level].getDescription(), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset
 				+ x_offset, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
 	}

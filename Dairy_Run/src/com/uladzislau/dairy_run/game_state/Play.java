@@ -1,9 +1,7 @@
 package com.uladzislau.dairy_run.game_state;
 
 import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.Color;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
@@ -69,6 +67,8 @@ public class Play extends GameState {
 	private ClickableText main_menu;
 
 	private Level level;
+	
+	private int current_streak;
 
 	public Play(DairyRun dairy_run, byte id) {
 		super(dairy_run, id);
@@ -93,7 +93,7 @@ public class Play extends GameState {
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, Map.size, Map.size, this.ground_blocks.length,
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, Map.size, Map.size, this.ground_blocks.length, true,
 					this.level.getGroundBlockTheme());
 		}
 		// Create the houses.
@@ -110,7 +110,7 @@ public class Play extends GameState {
 			this.trees[i] = new Tree(this.ground_level, i, this.trees.length);
 			this.trees[i].resetPosition((int) this.current_scroll);
 		}
-		// Create the buttons.
+		// Create the buttons.vv
 		this.buttons = new CircleButton[4];
 		this.buttons[0] = new RunButton((ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f, this);
 		this.buttons[1] = new MilkButton((ScreenUtil.screen_width / 20) * 3 + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f,
