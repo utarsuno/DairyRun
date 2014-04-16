@@ -67,11 +67,11 @@ public class Play extends GameState {
 	private ClickableText main_menu;
 
 	private Level level;
-	
+
 	private int current_streak;
 
-	public Play(DairyRun dairy_run, byte id) {
-		super(dairy_run, id);
+	public Play(DairyRun dairy_run, GameStateManager.STATE state) {
+		super(dairy_run, state);
 	}
 
 	@Override
@@ -85,6 +85,7 @@ public class Play extends GameState {
 	public void initialize() {
 		// Set the ground level.
 		this.ground_level = (int) (Map.size * 1.5);
+		Map.setGroundLevel(this.ground_level);
 		// Create the background.
 		this.backgrounds = new Background[2];
 		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE);
@@ -238,7 +239,7 @@ public class Play extends GameState {
 							this.pause_menu_open = false;
 						}
 						if (this.main_menu.isMouseDownOnMe()) {
-							this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.MAIN_MENU);
 							this.dairy_run.getGameStateManager().clearHistoryStates();
 							setLost(false);
 							this.pause_menu_open = false;
@@ -248,7 +249,7 @@ public class Play extends GameState {
 							this.pause_menu_open = false;
 						}
 						if (this.options.isMouseDownOnMe()) {
-							this.dairy_run.getGameStateManager().changeState(GameStateManager.OPTIONS);
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.OPTIONS);
 							this.pause_menu_open = false;
 						}
 					}
@@ -263,7 +264,7 @@ public class Play extends GameState {
 
 					if (!InputManager.pointersDragging[0]) {
 						if (this.main_menu.isMouseDownOnMe()) {
-							this.dairy_run.getGameStateManager().changeState(GameStateManager.MAIN_MENU);
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.MAIN_MENU);
 							this.dairy_run.getGameStateManager().clearHistoryStates();
 							setLost(false);
 						}
@@ -271,7 +272,7 @@ public class Play extends GameState {
 							retry();
 						}
 						if (this.options.isMouseDownOnMe()) {
-							this.dairy_run.getGameStateManager().changeState(GameStateManager.OPTIONS);
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.OPTIONS);
 						}
 					}
 
@@ -294,7 +295,7 @@ public class Play extends GameState {
 						if (this.player.getNumberOfMilksDelivered() >= this.level.getNumberOfMilksNeededToWin()) {
 							this.level.setBeaten(true);
 							AudioManager.SOUND.VICTORY.playSound();
-							this.dairy_run.getGameStateManager().changeState(GameStateManager.PREVIOUS_STATE);
+							this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.PREVIOUS_STATE);
 							this.state_is_transitioning = true;
 						}
 					}

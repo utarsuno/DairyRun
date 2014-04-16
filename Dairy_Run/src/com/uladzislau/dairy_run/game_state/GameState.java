@@ -3,22 +3,23 @@ package com.uladzislau.dairy_run.game_state;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
+import com.uladzislau.dairy_run.game_state.GameStateManager.STATE;
 
 public abstract class GameState {
 
 	protected ShapeRenderer shape_renderer;
 	protected SpriteBatch sprite_batch;
 
-	protected final byte STATE_ID;
+	protected final GameStateManager.STATE state;
 
 	protected boolean first_update = true;
 	protected boolean first_render = true;
 
 	protected DairyRun dairy_run;
 
-	public GameState(DairyRun dairy_run, byte id) {
+	public GameState(DairyRun dairy_run, GameStateManager.STATE state) {
 		this.dairy_run = dairy_run;
-		this.STATE_ID = id;
+		this.state = state;
 	}
 
 	public abstract void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch);
@@ -41,8 +42,8 @@ public abstract class GameState {
 
 	public abstract void dispose();
 
-	public byte getID() {
-		return this.STATE_ID;
+	public STATE getState() {
+		return this.state;
 	}
 
 	public void inStatePause() {

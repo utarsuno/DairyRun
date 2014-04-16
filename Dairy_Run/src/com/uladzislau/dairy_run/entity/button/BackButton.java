@@ -37,7 +37,7 @@ public class BackButton extends CircleButton {
 
 	@Override
 	public void doButtonAction() {
-		this.dairyRun.getGameStateManager().changeState(GameStateManager.PREVIOUS_STATE);
+		this.dairyRun.getGameStateManager().changeState(GameStateManager.STATE.PREVIOUS_STATE);
 	}
 
 	@Override

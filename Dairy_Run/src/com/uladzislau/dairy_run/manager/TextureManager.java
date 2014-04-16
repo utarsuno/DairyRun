@@ -22,7 +22,7 @@ public class TextureManager {
 	public static final short GRASS_BLOCK_WITH_SMILE = 31 + 1;
 	public static final short DIRT_BLOCK = 31 + 2;
 	public static final short DIRT_BLOCK_WITH_SMILE = 31 + 3;
-	
+
 	public static final short SMALL_BUSH = 31 + 4;
 	public static final short GRASS = 31 + 5;
 	public static final short CACTUS = 31 + 6;
@@ -35,9 +35,11 @@ public class TextureManager {
 	public static final short SNOW_BLOCK_WITH_SMILE = 31 * 2 + 1;
 	public static final short SNOW_BLOCK_DIRT = 31 * 2 + 2;
 	public static final short SNOW_BLOCK_DIRT_WITH_SMILE = 31 * 2 + 3;
-	
+
 	public static final short TREE_HEIGHT_ONE_DESIGN_ONE = 31 * 22 + 13;
 	public static final short TREE_HEIGHT_ONE_DESIGN_TWO = 31 * 21 + 13;
+	
+	public static final short LADDER = 31 * 3;
 
 	public enum TEXTURE implements Resource {
 		BACKGROUND("main_menu_hd", "brozie");
@@ -282,8 +284,9 @@ public class TextureManager {
 	}
 
 	public enum ANIMATION_SPRITESHEET implements Resource {
-		PIXEL_WALKING("pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 28, 29 }), SAD_PIXEL_WALKING(
-				"pixel_walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 31 * 6 + 28, 31 * 6 + 29 });
+		WALKING("walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 28, 29 }), SAD_PIXEL_WALKING("pixel_walking",
+				"http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 31 * 6 + 28, 31 * 6 + 29 }), CLIMBING_STAIRS("climbing",
+				"http://opengameart.org/content/platformer-art-pixel-redux", 120, new int[] { 24, 25 });
 
 		private String name;
 		private String source;

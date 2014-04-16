@@ -57,6 +57,8 @@ public class GroundBlock extends Entity {
 		if (this.doodads_enabled) {
 			randomizeDoodad();
 		}
+		this.hasMouseDownTouchedMe = false;
+		this.hasMouseDownTouchedLowerMe = false;
 	}
 
 	private void randomizeDoodad() {

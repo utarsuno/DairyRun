@@ -40,8 +40,8 @@ public class Options extends GameState {
 
 	private boolean audio_state = true;
 
-	public Options(DairyRun dairy_run, byte id) {
-		super(dairy_run, id);
+	public Options(DairyRun dairy_run, GameStateManager.STATE state) {
+		super(dairy_run, state);
 	}
 
 	@Override

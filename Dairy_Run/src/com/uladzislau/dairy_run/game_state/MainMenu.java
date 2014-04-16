@@ -35,8 +35,8 @@ public class MainMenu extends GameState {
 	private float house_end = (1900.0f / 2048.0f);
 	private DeltaTimer house_timer;
 
-	public MainMenu(DairyRun dairy_run, byte id) {
-		super(dairy_run, id);
+	public MainMenu(DairyRun dairy_run, GameStateManager.STATE state) {
+		super(dairy_run, state);
 	}
 
 	@Override
@@ -124,16 +124,20 @@ public class MainMenu extends GameState {
 
 		if (!InputManager.pointersDragging[0]) {
 			if (this.levels.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.LEVEL_SELECTOR);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.LEVEL_SELECTOR);
 			}
 			if (this.options.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.OPTIONS);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.OPTIONS);
 			}
 			if (this.exit.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.TERMINATE);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.TERMINATE);
 			}
 			if (this.endless.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.PLAY);
+				this.dairy_run.getGameStateManager().resetEndless();
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.PLAY);
+			}
+			if (this.credits.isMouseDownOnMe()) {
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.CREDITS);
 			}
 		}
 		// Detect if the music toggle button is pressed.

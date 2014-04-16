@@ -126,13 +126,16 @@ public class InputManager implements InputProcessor, GestureListener {
 		if (!ignore_input) {
 			switch (keycode) {
 			case ESCAPE:
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.TERMINATE);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.TERMINATE);
 				break;
 			case BACKSPACE:
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.PREVIOUS_STATE);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.PREVIOUS_STATE);
 				break;
 			case Keys.BACK:
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.PREVIOUS_STATE);
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.PREVIOUS_STATE);
+				break;
+			case Keys.MENU:
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.OPTIONS);
 				break;
 			default:
 				break;

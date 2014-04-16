@@ -1,0 +1,9 @@
+INDEX VERSION 1.126+C:\Users\Vlad\Desktop\Dairy Run\github_repo\.metadata\.plugins\org.eclipse.jdt.core
+1995173708.index
+1208323893.index
+3179323707.index
+2146750055.index
+991173483.index
+527117037.index
+896686825.index
+2005925658.index

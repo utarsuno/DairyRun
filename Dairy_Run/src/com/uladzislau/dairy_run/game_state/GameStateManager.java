@@ -12,12 +12,9 @@ import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 
 public class GameStateManager {
 
-	public static final byte PREVIOUS_STATE = -2;
-	public static final byte TERMINATE = -1;
-	public static final byte MAIN_MENU = 0;
-	public static final byte LEVEL_SELECTOR = 1;
-	public static final byte PLAY = 2;
-	public static final byte OPTIONS = 3;
+	public enum STATE {
+		PREVIOUS_STATE, TERMINATE, MAIN_MENU, LEVEL_SELECTOR, PLAY, OPTIONS, CREDITS;
+	}
 
 	public static boolean transitioning_states;
 	public static boolean fading_out;
@@ -27,31 +24,34 @@ public class GameStateManager {
 	private GameState level_selector;
 	private GameState play;
 	private GameState options;
+	private GameState credits;
 
-	private Stack<Byte> state_history;
+	private Stack<STATE> state_history;
 
 	private DeltaTimer transitioning_states_timer;
 
 	private ResourceManager resourceManager;
-	
+
 	private AudioManager audioManager;
 
 	public GameStateManager(DairyRun dr, ResourceManager rm, AudioManager audioManager) {
 		this.resourceManager = rm;
 		this.transitioning_states_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 250);
-		this.main_menu = new MainMenu(dr, GameStateManager.MAIN_MENU);
-		this.play = new Play(dr, GameStateManager.PLAY);
-		this.level_selector = new LevelSelector(dr, GameStateManager.LEVEL_SELECTOR, (Play) this.play);
-		this.options = new Options(dr, GameStateManager.OPTIONS);
+		this.main_menu = new MainMenu(dr, STATE.MAIN_MENU);
+		this.play = new Play(dr, STATE.PLAY);
+		this.level_selector = new LevelSelector(dr, STATE.LEVEL_SELECTOR, (Play) this.play);
+		this.options = new Options(dr, STATE.OPTIONS);
+		this.credits = new Credits(dr, STATE.CREDITS);
 		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.main_menu.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.level_selector.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
-		((Play) this.play).setLevel(Level.ENDLESS);
+		this.credits.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
+		resetEndless();
 		this.play.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.current_state = this.main_menu;
 		this.current_state.stateChangedToThis();
-		this.state_history = new Stack<Byte>();
+		this.state_history = new Stack<STATE>();
 		this.audioManager = audioManager;
 		this.audioManager.sendGameStateManager(this);
 		GameStateManager.transitioning_states = false;
@@ -93,29 +93,27 @@ public class GameStateManager {
 		} else {
 			this.resourceManager.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, this.transitioning_states_timer.percentComplete());
 		}
-		this.resourceManager.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 2), 0, 0,
-				ScreenUtil.screen_width, ScreenUtil.screen_height);
+		this.resourceManager.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 2), 0, 0, ScreenUtil.screen_width,
+				ScreenUtil.screen_height);
 
 		this.resourceManager.getSpriteBatch().end();
 		this.resourceManager.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
-	@SuppressWarnings("boxing")
-	public void changeState(byte state_id) {
+	public void changeState(GameStateManager.STATE state) {
 		AudioManager.SOUND.TRANSITION_00.playSound();
 		transitioning_states = true;
 		this.transitioning_states_timer.reset();
 		InputManager.setIgnoreInput(true);
-		this.state_to_change_to = state_id;
-		if (this.state_to_change_to != GameStateManager.PREVIOUS_STATE) {
-			this.state_history.push(this.current_state.getID());
+		this.state_to_change_to = state;
+		if (this.state_to_change_to != STATE.PREVIOUS_STATE) {
+			this.state_history.push(this.current_state.getState());
 		}
 		GameStateManager.fading_out = false;
 	}
 
-	private byte state_to_change_to;
+	private GameStateManager.STATE state_to_change_to;
 
-	@SuppressWarnings("boxing")
 	private void actuallyChangeState() {
 		switch (this.state_to_change_to) {
 		case PREVIOUS_STATE:
@@ -136,6 +134,9 @@ public class GameStateManager {
 			case OPTIONS:
 				this.current_state = this.options;
 				break;
+			case CREDITS:
+				this.current_state = this.credits;
+				break;
 			default:
 				break;
 			}
@@ -154,6 +155,9 @@ public class GameStateManager {
 			break;
 		case OPTIONS:
 			this.current_state = this.options;
+			break;
+		case CREDITS:
+			this.current_state = this.credits;
 			break;
 		default:
 			break;
@@ -174,8 +178,8 @@ public class GameStateManager {
 		this.state_history.clear();
 	}
 
-	public GameState getState(byte state_id) {
-		switch (state_id) {
+	public GameState getState(GameStateManager.STATE state) {
+		switch (state) {
 		case PLAY:
 			return this.play;
 		default:
@@ -208,6 +212,10 @@ public class GameStateManager {
 		if (this.current_state == this.play) {
 			this.play.inStatePause();
 		}
+	}
+
+	public void resetEndless() {
+		((Play) this.play).setLevel(Level.ENDLESS);
 	}
 
 }

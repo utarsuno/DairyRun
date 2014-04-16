@@ -136,7 +136,8 @@ public class AudioManager {
 	public enum MUSIC implements Resource {
 		TEMP_MUSIC("HolFix - Pixel Parade", "get it later lol"), TEMP_MAIN_MENU_MUSIC("HolFix - Happy Moment Remix", "Holflix, get it later though"), LEVEL_SELECTOR_MUSIC(
 				"Lively Meadow", "http://www.matthewpablo.com/archives/many-new-tracks-1-29-14"), TEMP_OPTIONS("HolFix - Jeremy the Different Giraffe Theme",
-				"http://www.youtube.com/watch?v=5Alrqovf9E8&index=9&list=PLyBvLDmLwbZsHRnniCV5cJ9FM2WLR7a7I");
+				"http://www.youtube.com/watch?v=5Alrqovf9E8&index=9&list=PLyBvLDmLwbZsHRnniCV5cJ9FM2WLR7a7I"), CREDITS_MUSIC("HolFix - Finally Home",
+				"https://www.youtube.com/watch?v=AE3lJjlXS94&list=UU2_gl7WoSGsg7rLvBPTqtEw");
 		private final String name;
 		private final String source;
 		private boolean paused;

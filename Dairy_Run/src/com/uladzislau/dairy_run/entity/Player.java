@@ -59,8 +59,8 @@ public class Player {
 			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.update(delta);
 			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
 		} else {
-			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.update(delta);
-			TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
+			TextureManager.ANIMATION_SPRITESHEET.WALKING.update(delta);
+			TextureManager.ANIMATION_SPRITESHEET.WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
 		}
 	}
 
@@ -71,7 +71,7 @@ public class Player {
 			if (this.scared) {
 				sb.draw(TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
 			} else {
-				sb.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
+				sb.draw(TextureManager.ANIMATION_SPRITESHEET.WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
 			}
 		}
 
@@ -188,7 +188,7 @@ public class Player {
 			sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(type), x, y, w, h);
 			break;
 		case SPRINTING:
-			sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), x, y, w, h);
+			sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.WALKING.getCurrentFrame(), x, y, w, h);
 			break;
 		default:
 			break;
@@ -204,7 +204,7 @@ public class Player {
 		case SPRINTING:
 			// sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), (float) x, (float) y, (float) w,
 			// (float) h, 1.0f, 1.0f, (float) rotation);
-			sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), x, y, xr, yr, w, h, 1.0f, 1.0f,
+			sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.WALKING.getCurrentFrame(), x, y, xr, yr, w, h, 1.0f, 1.0f,
 					rotation);
 			break;
 		default:
@@ -217,7 +217,7 @@ public class Player {
 		case Player.READY_TO_SPRINT:
 			break;
 		case SPRINTING:
-			sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame((TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING
+			sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame((TextureManager.ANIMATION_SPRITESHEET.WALKING
 					.getCurrentFrameNumber() + (31 * 6) + 26)), x, y, w, h);
 			break;
 		default:

@@ -52,7 +52,7 @@ public class Chaser {
 		this.removable = false;
 		this.alive = true;
 		this.killable = false;
-		this.rectanglei = new Rectanglei(x, this.play.ground_level, Map.size, Map.size);
+		this.rectanglei = new Rectanglei(this.x, this.play.ground_level, Map.size, Map.size);
 		randomize();
 	}
 
@@ -103,7 +103,7 @@ public class Chaser {
 					+ Map.size * 1.0f, this.play.ground_level + Map.size * 1.5f);
 		}
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.character + 28
-				+ TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrameNumber()), this.x, this.play.ground_level, Map.size, Map.size);
+				+ TextureManager.ANIMATION_SPRITESHEET.WALKING.getCurrentFrameNumber()), this.x, this.play.ground_level, Map.size, Map.size);
 	}
 
 	public int getX() {
