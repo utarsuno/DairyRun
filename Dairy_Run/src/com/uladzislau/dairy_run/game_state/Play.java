@@ -151,6 +151,8 @@ public class Play extends GameState {
 	private boolean tapped_to_start = false;
 
 	private boolean state_is_transitioning = false;
+	
+	private DeltaTimer play_timer;
 
 	@Override
 	public void update(float delta) {

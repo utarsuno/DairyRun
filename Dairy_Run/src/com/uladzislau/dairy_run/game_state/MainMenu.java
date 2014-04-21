@@ -21,6 +21,7 @@ public class MainMenu extends GameState {
 	private ClickableText endless;
 	private ClickableText levels;
 	private ClickableText options;
+	private ClickableText tutorial;
 	private ClickableText credits;
 	private ClickableText exit;
 
@@ -49,19 +50,22 @@ public class MainMenu extends GameState {
 		this.initial_colorXv = new ColorXv(ColorXv.YELLOW);
 		this.initial_colorXv.setA(0.6f);
 		this.exit = new ClickableText("Exit", new Rectanglei(ScreenUtil.screen_width - FontManager.FONT.PIXEL_REGULAR.getWidth("Exit") * 0.8f, 0, Map.size
-				* "Exit".length(), Map.size), this.initial_colorXv, ColorXv.RED, 800);
+				* "Exit".length(), Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
 		this.credits = new ClickableText("Credits", new Rectanglei(ScreenUtil.screen_width - FontManager.FONT.PIXEL_REGULAR.getWidth("Credits") * 0.8f,
-				Map.size * 1.0f, Map.size * "Credits".length() * 0.8f, Map.size), this.initial_colorXv, ColorXv.RED, 800);
+				Map.size * 1.0f, Map.size * "Credits".length() * 0.8f, Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
-		this.endless = new ClickableText("Endless", new Rectanglei(Map.size / 10.0f, Map.size * 1.0f, Map.size * "Endless".length() * 0.8f, Map.size),
+		this.tutorial = new ClickableText("Tutorial", new Rectanglei(ScreenUtil.screen_width - FontManager.FONT.PIXEL_REGULAR.getWidth("Tutorial") * 0.8f,
+				Map.size * 2.0f, Map.size * "Tutorial".length() * 0.8f, Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
+
+		this.endless = new ClickableText("Endless", new Rectanglei(Map.size / 10.0f, Map.size * 1.0f, Map.size * "Endless".length() * 0.8f, Map.size * 0.8f),
 				this.initial_colorXv, ColorXv.RED, 800);
 
 		this.levels = new ClickableText("Levels", new Rectanglei(Map.size / 10.0f, Map.size * 2.0f, FontManager.FONT.PIXEL_REGULAR.getWidth("Levels") * 0.8f,
-				Map.size), this.initial_colorXv, ColorXv.RED, 800);
+				Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
 		this.options = new ClickableText("Options", new Rectanglei(Map.size + Map.size / 2, 0, FontManager.FONT.PIXEL_REGULAR.getWidth("Options") * 0.8f,
-				Map.size), this.initial_colorXv, ColorXv.RED, 800);
+				Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
 		this.house_corner_x *= ScreenUtil.screen_width;
 		this.house_corner_y *= ScreenUtil.screen_height;
@@ -83,6 +87,7 @@ public class MainMenu extends GameState {
 		this.endless.update(delta);
 		this.options.update(delta);
 		this.credits.update(delta);
+		this.tutorial.update(delta);
 
 		if (this.sun.isPointInsideOrOnMe(InputManager.pointers[0].x, InputManager.pointers[0].y)) {
 			this.update_sun = true;
@@ -157,6 +162,7 @@ public class MainMenu extends GameState {
 		this.levels.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.exit.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		this.options.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
+		this.tutorial.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 		FontManager.FONT.PIXEL_REGULAR.getFont().setScale(FontManager.FONT.PIXEL_REGULAR.getFont().getScaleX() / 0.8f,
 				FontManager.FONT.PIXEL_REGULAR.getFont().getScaleY() / 0.8f);
 

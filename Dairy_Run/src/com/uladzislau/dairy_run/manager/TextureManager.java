@@ -13,6 +13,8 @@ public class TextureManager {
 
 	public static final short WHITE = 0;
 	public static final short BLACK = 1;
+	public static final short CREDITS_TILE = 2;
+	
 	public static final short PAUSE = 31 * 7 + 23;
 	public static final short REGULAR = 31 * 6 + 20;
 	public static final short CHOCOLATE = 31 * 6 + 21;
@@ -38,8 +40,11 @@ public class TextureManager {
 
 	public static final short TREE_HEIGHT_ONE_DESIGN_ONE = 31 * 22 + 13;
 	public static final short TREE_HEIGHT_ONE_DESIGN_TWO = 31 * 21 + 13;
-	
-	public static final short LADDER = 31 * 3;
+
+	public static final short BRONZE_COIN = 31 * 3;
+	public static final short SILVER_COIN = 31 * 3 + 1;
+	public static final short GOLD_COIN = 31 * 3 + 2;
+	public static final short LADDER = 31 * 3 + 3;
 
 	public enum TEXTURE implements Resource {
 		BACKGROUND("main_menu_hd", "brozie");

@@ -93,7 +93,7 @@ public class GameStateManager {
 		} else {
 			this.resourceManager.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, this.transitioning_states_timer.percentComplete());
 		}
-		this.resourceManager.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 4 + 2), 0, 0, ScreenUtil.screen_width,
+		this.resourceManager.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), 0, 0, ScreenUtil.screen_width,
 				ScreenUtil.screen_height);
 
 		this.resourceManager.getSpriteBatch().end();
@@ -204,6 +204,10 @@ public class GameStateManager {
 		} else if (this.current_state == this.play) {
 			if (AudioManager.MUSIC.TEMP_MUSIC.isPaused()) {
 				AudioManager.MUSIC.TEMP_MUSIC.play();
+			}
+		} else if (this.current_state == this.credits) {
+			if (AudioManager.MUSIC.CREDITS_MUSIC.isPaused()) {
+				AudioManager.MUSIC.CREDITS_MUSIC.play();
 			}
 		}
 	}
