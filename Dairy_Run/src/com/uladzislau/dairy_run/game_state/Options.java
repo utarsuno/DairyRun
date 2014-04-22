@@ -223,7 +223,7 @@ public class Options extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
-		AudioManager.MUSIC.TEMP_OPTIONS.loop(1.0f);
+		// Intentionally left blank.
 	}
 
 	@Override

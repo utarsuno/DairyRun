@@ -29,7 +29,7 @@ public class ResourceManager {
 		this.sound_initializer.start();
 
 		AudioManager.setAudioLevel(1.0f);
-		AudioManager.setMusicLevel(0.5f);
+		AudioManager.setMusicLevel(1.0f);
 		AudioManager.setSoundLevel(1.0f);
 
 		ScreenUtil.init();

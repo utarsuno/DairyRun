@@ -3,7 +3,6 @@ package com.uladzislau.dairy_run.game_state;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.entity.Background;
@@ -11,7 +10,6 @@ import com.uladzislau.dairy_run.entity.GroundBlock;
 import com.uladzislau.dairy_run.entity.Player;
 import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.ScreenUtil;
-import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
@@ -345,7 +343,6 @@ public class LevelSelector extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
-		AudioManager.MUSIC.LEVEL_SELECTOR_MUSIC.loop(1.0f);
 		for (int i = 0; i < this.levels.length; i++) {
 			if (this.levels[i].isBeaten() && i != 29 && !this.levels[i + 1].isUnlocked()) {
 				this.levels[i + 1].setUnlocked(true);

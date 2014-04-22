@@ -147,17 +147,6 @@ public class InputManager implements InputProcessor, GestureListener {
 	@Override
 	public boolean keyUp(int keycode) {
 		// System.out.println(keycode);
-		if (keyDown[LEFT_CONTROL] || keyDown[RIGHT_CONTROL]) {
-			if (keyDown[M]) {
-				AudioManager.inverseMusic();
-			}
-			if (keyDown[S]) {
-				AudioManager.inverseSound();
-			}
-			if (keyDown[A]) {
-				AudioManager.inverseAudio();
-			}
-		}
 		keyDown[keycode] = false;
 		return false;
 	}

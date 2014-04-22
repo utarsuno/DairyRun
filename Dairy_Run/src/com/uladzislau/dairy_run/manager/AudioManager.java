@@ -3,7 +3,6 @@ package com.uladzislau.dairy_run.manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.uladzislau.dairy_run.game_state.GameStateManager;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 import com.uladzislau.dairy_run.utility.StaticUtil;
 
@@ -46,7 +45,6 @@ public class AudioManager {
 		private Sound sound;
 		private boolean initialized;
 		private boolean muted;
-		private boolean playOverAllOtherAudio;
 
 		SOUND(String name, String source) {
 			this.name = name;
@@ -66,29 +64,12 @@ public class AudioManager {
 		}
 
 		public void playSound() {
-			if (sound_on && !this.muted) {
+			if (audio_on && sound_on && !this.muted) {
 				if (this.initialized) {
 					this.sound.play(AudioManager.sound_level);
 				} else {
 					StaticUtil.error("Audio", this.name + " was told to be played but has not yet been initialized.");
 				}
-			}
-		}
-
-		public void playOverAllOtherAudio() {
-			if (sound_on && !this.muted) {
-				if (this.initialized) {
-					this.sound.play();
-					this.playOverAllOtherAudio = true;
-				} else {
-					StaticUtil.error("Audio", this.name + " was told to be played but has not yet been initialized.");
-				}
-			}
-		}
-
-		public void playSound(float volume) {
-			if (sound_on && !this.muted) {
-				this.sound.play(volume);
 			}
 		}
 
@@ -181,6 +162,8 @@ public class AudioManager {
 		}
 
 		public void play() {
+			this.paused = false;
+			this.music.setVolume(music_level);
 			this.music.play();
 		}
 
@@ -208,13 +191,6 @@ public class AudioManager {
 			return this.initialized;
 		}
 
-		public void play(float volume) {
-			if (music_on) {
-				this.music.play();
-				this.music.setVolume(volume);
-			}
-		}
-
 		@Override
 		public String getName() {
 			return this.name;
@@ -238,9 +214,8 @@ public class AudioManager {
 			this.muted = muted;
 		}
 
-		public void loop(float v) {
+		public void loop(boolean b) {
 			this.music.setLooping(true);
-			this.play(v);
 		}
 
 	}
@@ -262,9 +237,9 @@ public class AudioManager {
 
 	public static void setMusicLevel(float music_level) {
 		AudioManager.music_level = music_level;
-		for (MUSIC music : MUSIC.values()) {
-			if (music.isInitialized() && music.isPlaying()) {
-				music.setVolume(music_level);
+		for (int i = 0; i < MUSIC.values().length; i++) {
+			if (MUSIC.values()[i].isInitialized() && MUSIC.values()[i].isPlaying()) {
+				MUSIC.values()[i].setVolume(music_level);
 			}
 		}
 	}
@@ -279,25 +254,6 @@ public class AudioManager {
 
 	public static boolean isAudioOn() {
 		return audio_on;
-	}
-
-	public static void setAudioOn(boolean b) {
-		audio_on = b;
-		if (!audio_on) {
-			for (MUSIC music : MUSIC.values()) {
-				if (music.isInitialized() && music.isPlaying()) {
-					music.setPaused(true);
-					music.pause();
-				}
-			}
-		} else {
-			for (MUSIC music : MUSIC.values()) {
-				if (music.isInitialized() && music.isPaused()) {
-					music.setPaused(false);
-					music.play();
-				}
-			}
-		}
 	}
 
 	public static boolean isMusicOn() {
@@ -334,76 +290,15 @@ public class AudioManager {
 		}
 	}
 
-	private static void startAllMusic() {
-		for (MUSIC music : MUSIC.values()) {
-			if (music_on && music.isInitialized() && music.isPaused()) {
-				music.play();
-			}
-		}
-	}
-
-	public static void pauseAllMusic() {
-		for (MUSIC music : MUSIC.values()) {
-			if (music.isInitialized() && music.isPlaying()) {
-				music.pause();
-			}
-		}
-	}
-
-	public static void resumeAllMusic() {
-		for (MUSIC music : MUSIC.values()) {
-			if (music_on && music.isInitialized() && music.isPaused()) {
-				music.setPaused(false);
-				music.play();
-			}
-		}
-	}
-
-	public static void stopAllMusic() {
-		for (MUSIC music : MUSIC.values()) {
-			if (music.isInitialized() && music.isPlaying()) {
-				music.stop();
-			}
-		}
-	}
-
-	public static String getInfo() {
-		String info = "Audio On: " + audio_on + "\t" + "Music On: " + music_on + "\t" + "Sound On: " + sound_on + "\t" + "Audio Level: " + audio_level + "\t"
-				+ "Sound Level: " + sound_level + "\t" + "Music Level: " + music_level;
-		for (MUSIC music : MUSIC.values()) {
-			if (music.isPlaying()) {
-				info += "\t" + music.name();
-			}
-		}
-		return info;
-	}
-
-	public static void setSoundOn(boolean b) {
-		sound_on = b;
-	}
-
-	public static void inverseMusic() {
-		music_on ^= true;
-		if (music_on) {
-			gsm.resumeMusicForCurrentState();
+	public static void toggleAllAudio() {
+		audio_on ^= true;
+		if (audio_on) {
+			music_on = true;
+			sound_on = true;
 		} else {
-			pauseAllMusic();
+			music_on = false;
+			sound_on = false;
 		}
-	}
-
-	public static void inverseSound() {
-		sound_on ^= true;
-	}
-
-	public static void inverseAudio() {
-		inverseMusic();
-		inverseSound();
-	}
-
-	private static GameStateManager gsm;
-
-	public void sendGameStateManager(GameStateManager gameStateManager) {
-		gsm = gameStateManager;
 	}
 
 }

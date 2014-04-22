@@ -291,7 +291,7 @@ public class TextureManager {
 	public enum ANIMATION_SPRITESHEET implements Resource {
 		WALKING("walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 28, 29 }), SAD_PIXEL_WALKING("pixel_walking",
 				"http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 31 * 6 + 28, 31 * 6 + 29 }), CLIMBING_STAIRS("climbing",
-				"http://opengameart.org/content/platformer-art-pixel-redux", 120, new int[] { 24, 25 });
+				"http://opengameart.org/content/platformer-art-pixel-redux", 250, new int[] { 24, 25 });
 
 		private String name;
 		private String source;

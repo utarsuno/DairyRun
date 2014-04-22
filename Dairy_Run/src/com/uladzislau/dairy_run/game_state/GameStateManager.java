@@ -32,16 +32,19 @@ public class GameStateManager {
 
 	private ResourceManager resourceManager;
 
-	private AudioManager audioManager;
-
 	public GameStateManager(DairyRun dr, ResourceManager rm, AudioManager audioManager) {
 		this.resourceManager = rm;
-		this.transitioning_states_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 250);
+		this.transitioning_states_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 200);
 		this.main_menu = new MainMenu(dr, STATE.MAIN_MENU);
+		this.main_menu.setMusic(AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC);
 		this.play = new Play(dr, STATE.PLAY);
+		this.play.setMusic(AudioManager.MUSIC.TEMP_MUSIC);
 		this.level_selector = new LevelSelector(dr, STATE.LEVEL_SELECTOR, (Play) this.play);
+		this.level_selector.setMusic(AudioManager.MUSIC.LEVEL_SELECTOR_MUSIC);
 		this.options = new Options(dr, STATE.OPTIONS);
+		this.options.setMusic(AudioManager.MUSIC.TEMP_OPTIONS);
 		this.credits = new Credits(dr, STATE.CREDITS);
+		this.credits.setMusic(AudioManager.MUSIC.CREDITS_MUSIC);
 		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.main_menu.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.level_selector.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
@@ -52,21 +55,25 @@ public class GameStateManager {
 		this.current_state = this.main_menu;
 		this.current_state.stateChangedToThis();
 		this.state_history = new Stack<STATE>();
-		this.audioManager = audioManager;
-		this.audioManager.sendGameStateManager(this);
 		GameStateManager.transitioning_states = false;
 		GameStateManager.fading_out = false;
 	}
 
+	private float music_level;
+	private boolean music_level_grabbed = false;
+
 	public void update(float delta) {
 		if (GameStateManager.transitioning_states) {
+			if (!this.music_level_grabbed) {
+				this.music_level = AudioManager.getMusicLevel();
+				this.music_level_grabbed = true;
+			}
 			this.transitioning_states_timer.update(delta);
 			if (this.transitioning_states_timer.isFinished()) {
 				if (GameStateManager.fading_out) {
 					InputManager.setIgnoreInput(false);
 					GameStateManager.transitioning_states = false;
 					this.current_state.stateFinishedFadingOut();
-					AudioManager.setMusicLevel(1.0f);
 				} else {
 					this.current_state.stateFinishedFadingInToExit();
 					this.actuallyChangeState();
@@ -75,11 +82,14 @@ public class GameStateManager {
 				}
 			} else {
 				if (GameStateManager.fading_out) {
-					AudioManager.setMusicLevel(this.transitioning_states_timer.percentComplete());
+					AudioManager.setMusicLevel(this.transitioning_states_timer.percentComplete() * this.music_level);
 				} else {
-					AudioManager.setMusicLevel(1.0f - this.transitioning_states_timer.percentComplete());
+					// Fading in.
+					AudioManager.setMusicLevel((1.0f - this.transitioning_states_timer.percentComplete()) * this.music_level);
 				}
 			}
+		} else {
+			this.music_level_grabbed = false;
 		}
 
 		this.current_state.update(delta);
@@ -103,6 +113,9 @@ public class GameStateManager {
 	public void changeState(GameStateManager.STATE state) {
 		AudioManager.SOUND.TRANSITION_00.playSound();
 		transitioning_states = true;
+		if (this.current_state.getMusic().isPlaying()) {
+			this.current_state.getMusic().pause();
+		}
 		this.transitioning_states_timer.reset();
 		InputManager.setIgnoreInput(true);
 		this.state_to_change_to = state;
@@ -162,8 +175,13 @@ public class GameStateManager {
 		default:
 			break;
 		}
-		AudioManager.pauseAllMusic();
 		this.current_state.stateChangedToThis();
+		if (!AudioManager.isAudioOn() && !AudioManager.isMusicOn()) {
+			this.current_state.getMusic().play();
+			this.current_state.getMusic().pause();
+		} else {
+			this.current_state.getMusic().play();
+		}
 	}
 
 	public void pauseCurrentState() {
@@ -186,30 +204,6 @@ public class GameStateManager {
 			break;
 		}
 		return this.current_state;
-	}
-
-	public void resumeMusicForCurrentState() {
-		if (this.current_state == this.main_menu) {
-			if (AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.isPaused()) {
-				AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.play();
-			}
-		} else if (this.current_state == this.level_selector) {
-			if (AudioManager.MUSIC.LEVEL_SELECTOR_MUSIC.isPaused()) {
-				AudioManager.MUSIC.LEVEL_SELECTOR_MUSIC.play();
-			}
-		} else if (this.current_state == this.options) {
-			if (AudioManager.MUSIC.TEMP_OPTIONS.isPaused()) {
-				AudioManager.MUSIC.TEMP_OPTIONS.play();
-			}
-		} else if (this.current_state == this.play) {
-			if (AudioManager.MUSIC.TEMP_MUSIC.isPaused()) {
-				AudioManager.MUSIC.TEMP_MUSIC.play();
-			}
-		} else if (this.current_state == this.credits) {
-			if (AudioManager.MUSIC.CREDITS_MUSIC.isPaused()) {
-				AudioManager.MUSIC.CREDITS_MUSIC.play();
-			}
-		}
 	}
 
 	public void inStatePause() {

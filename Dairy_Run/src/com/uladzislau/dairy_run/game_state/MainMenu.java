@@ -74,6 +74,9 @@ public class MainMenu extends GameState {
 		this.slope = (this.house_corner_y) / (this.house_corner_x - this.house_end);
 		this.b = -1.0f * (this.slope * this.house_corner_x - this.house_corner_y);
 
+		this.getMusic().play();
+		this.getMusic().loop(true);
+
 	}
 
 	private boolean update_sun = false;
@@ -182,7 +185,7 @@ public class MainMenu extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
-		AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC.loop(1.0f);
+		// Intentionally left blank.
 	}
 
 	@Override

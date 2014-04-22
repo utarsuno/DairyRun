@@ -151,7 +151,7 @@ public class Play extends GameState {
 	private boolean tapped_to_start = false;
 
 	private boolean state_is_transitioning = false;
-	
+
 	private DeltaTimer play_timer;
 
 	@Override
@@ -508,7 +508,6 @@ public class Play extends GameState {
 		if (this.level == null) {
 			this.level = Level.ENDLESS;
 		}
-		AudioManager.MUSIC.TEMP_MUSIC.loop(1.0f);
 		this.state_is_transitioning = false; // TODO: Rename this lol
 		if (this.game_in_session) {
 			resume();

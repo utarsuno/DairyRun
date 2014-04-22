@@ -135,6 +135,33 @@ public class FontManager {
 			this.setYScale(y_scale_temp);
 			this.font.setColor(Color.WHITE);
 		}
+		
+		public void render(SpriteBatch sprite_batch, String string, ColorXv colorXv, int x, int y, int h, boolean centerX, int x_position_limit) {
+			this.font.setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
+			float x_scale_temp = this.x_scale;
+			float y_scale_temp = this.y_scale;
+			float height_scale = ((float) h / (this.getHeight(string)));
+			this.setXScale(height_scale * this.x_scale);
+			this.setYScale(height_scale * this.y_scale);
+			
+			if (this.getWidth(string) + x > x_position_limit) {
+				float x_over_scale = (float) (x + this.getWidth(string));
+				x_over_scale /= (float) (x_position_limit);
+				x_over_scale = 1.0f / x_over_scale;
+				
+				this.setXScale(x_over_scale * this.x_scale);
+				this.setYScale(x_over_scale * this.y_scale);
+			}
+			
+			if (centerX) {
+				this.font.draw(sprite_batch, string, x - this.getWidth(string) / 2, y + h);
+			} else {
+				this.font.draw(sprite_batch, string, x, y + h);
+			}
+			this.setXScale(x_scale_temp);
+			this.setYScale(y_scale_temp);
+			this.font.setColor(Color.WHITE);
+		}
 
 		public void render(SpriteBatch sprite_batch, String string, float x1, float x2, float y1, float y2) {
 			float x_scale_temp = this.x_scale;

@@ -1,19 +1,21 @@
 package com.uladzislau.dairy_run.entity.button;
 
 import com.badlogic.gdx.graphics.Color;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
-import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
-import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
-import com.uladzislau.dairy_run.math.geometry.Circlef;
 
 public class MusicButton extends CircleButton {
 
-	public MusicButton(float x, float y, float radius) {
+	private DairyRun dr;
+
+	public MusicButton(float x, float y, float radius, DairyRun dr) {
 		super(x, y, radius);
 		super.inititialize();
+		this.dr = dr;
 	}
 
 	@Override
@@ -38,7 +40,16 @@ public class MusicButton extends CircleButton {
 
 	@Override
 	public void doButtonAction() {
-		AudioManager.setMusicOn(!AudioManager.isMusicOn());
+		AudioManager.toggleAllAudio();
+		if (AudioManager.isAudioOn()) {
+			if (this.dr.getGameStateManager().current_state.getMusic().isPaused()) {
+				this.dr.getGameStateManager().current_state.getMusic().play();
+			}
+		} else {
+			if (this.dr.getGameStateManager().current_state.getMusic().isPlaying()) {
+				this.dr.getGameStateManager().current_state.getMusic().pause();
+			}
+		}
 	}
 
 	@Override

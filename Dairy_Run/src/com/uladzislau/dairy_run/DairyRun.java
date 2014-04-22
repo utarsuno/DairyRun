@@ -1,11 +1,9 @@
 package com.uladzislau.dairy_run;
 
 import com.badlogic.gdx.ApplicationListener;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.uladzislau.dairy_run.game_state.GameStateManager;
-import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.utility.StaticUtil;
@@ -30,7 +28,6 @@ public class DairyRun implements ApplicationListener {
 
 		this.resourceManager = new ResourceManager();
 		this.resourceManager.initialize_all_resources_and_information(this);
-		// System.out.println(this.resourceManager.credits_information());
 
 		this.gameStateManager = new GameStateManager(this, this.resourceManager, this.resourceManager.getAudioManager());
 
@@ -42,11 +39,6 @@ public class DairyRun implements ApplicationListener {
 	public void update(float delta) {
 		if (!paused) {
 			this.gameStateManager.update(delta);
-		}
-
-		// Debugging.
-		if (Gdx.graphics.getFramesPerSecond() < 60 && Gdx.graphics.getFramesPerSecond() != 0) {
-			StaticUtil.error("Frame Rate Is ", "" + Gdx.graphics.getFramesPerSecond());
 		}
 	}
 
@@ -75,14 +67,12 @@ public class DairyRun implements ApplicationListener {
 	public void pause() {
 		DairyRun.paused = true;
 		this.gameStateManager.pauseCurrentState();
-		AudioManager.pauseAllMusic();
 	}
 
 	@Override
 	public void resume() {
 		DairyRun.paused = false;
 		this.gameStateManager.resumeCurrentState();
-		AudioManager.resumeAllMusic();
 	}
 
 	@Override
