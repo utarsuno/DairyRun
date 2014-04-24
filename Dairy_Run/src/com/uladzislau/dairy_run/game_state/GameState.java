@@ -17,7 +17,7 @@ public abstract class GameState {
 
 	protected boolean first_update = true;
 	protected boolean first_render = true;
-
+	
 	protected DairyRun dairy_run;
 
 	public GameState(DairyRun dairy_run, GameStateManager.STATE state) {

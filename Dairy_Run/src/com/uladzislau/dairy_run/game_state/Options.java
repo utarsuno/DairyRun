@@ -85,8 +85,8 @@ public class Options extends GameState {
 		this.ground_blocks = new GroundBlock[(ScreenUtil.screen_width / Map.size) + 2];
 		// this.ground_blocks = new GroundBlock[1];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length, false,
-					GroundBlock.Theme.SNOW);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, Map.size * 1.5f, Map.size, Map.size, this.ground_blocks.length, false,
+					GroundBlock.Theme.SNOW, this.sprite_batch);
 		}
 
 		Options.current_layout = 3;
@@ -94,6 +94,9 @@ public class Options extends GameState {
 
 	@Override
 	public void update(float delta) {
+
+		Map.setCurrentScroll(0);
+
 		this.musicSlider.update((int) (delta * 1000.0f));
 		this.musicPercentage.update(delta);
 		this.soundSlider.update((int) (delta * 1000.0f));
@@ -146,7 +149,7 @@ public class Options extends GameState {
 		Background.render(this.sprite_batch, Background.BLUE);
 
 		for (GroundBlock gb : this.ground_blocks) {
-			gb.render(this.sprite_batch, 0);
+			gb.render();
 		}
 
 		if (this.audio_state) {

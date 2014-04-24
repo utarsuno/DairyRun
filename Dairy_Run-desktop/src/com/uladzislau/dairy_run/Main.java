@@ -8,7 +8,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class Main {
-	
+
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
@@ -30,11 +30,12 @@ public class Main {
 		Rectangle bounds = ge.getMaximumWindowBounds();
 
 		cfg.width = (int) (bounds.getWidth() * .80);
+		// cfg.width = 4500;
 		cfg.height = (int) (bounds.getHeight() * .70);
 		cfg.samples = 1;
 		cfg.resizable = false;
 
 		new LwjglApplication(new DairyRun(), cfg);
 	}
-	
+
 }

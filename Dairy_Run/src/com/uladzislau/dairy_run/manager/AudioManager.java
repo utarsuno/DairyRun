@@ -215,7 +215,7 @@ public class AudioManager {
 		}
 
 		public void loop(boolean b) {
-			this.music.setLooping(true);
+			this.music.setLooping(b);
 		}
 
 	}

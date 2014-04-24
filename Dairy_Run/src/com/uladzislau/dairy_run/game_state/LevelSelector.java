@@ -54,15 +54,16 @@ public class LevelSelector extends GameState {
 
 		// Create the background.
 		this.backgrounds = new Background[2];
-		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE);
+		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE,
+				this.sprite_batch);
 		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(),
-				ScreenUtil.screen_height, Background.BLUE);
+				ScreenUtil.screen_height, Background.BLUE, this.sprite_batch);
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[(ScreenUtil.screen_width / Map.size) + 2];
 		// this.ground_blocks = new GroundBlock[1];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, (int) (Map.size * 1.5f), Map.size, Map.size, this.ground_blocks.length, true,
-					GroundBlock.Theme.GRASS);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, Map.size * 1.5f, Map.size, Map.size, this.ground_blocks.length, true,
+					GroundBlock.Theme.GRASS, this.sprite_batch);
 			this.ground_blocks[i].setSpawnDoodads(true);
 		}
 		createLevels();
@@ -148,6 +149,8 @@ public class LevelSelector extends GameState {
 
 	@Override
 	public void update(float delta) {
+
+		Map.setCurrentScroll(0);
 
 		if (!InputManager.pointersDown[0]) {
 			this.button_pressed = false;
@@ -246,13 +249,13 @@ public class LevelSelector extends GameState {
 		this.sprite_batch.begin();
 
 		// Render the background and ground.
-		this.backgrounds[0].render(this.sprite_batch, 0);
+		this.backgrounds[0].render();
 		if (this.backgrounds[1].getX() < ScreenUtil.screen_width) {
-			this.backgrounds[1].render(this.sprite_batch, 0);
+			this.backgrounds[1].render();
 		}
 
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i].render(this.sprite_batch, 0);
+			this.ground_blocks[i].render();
 		}
 
 		// Render the left button.

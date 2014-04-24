@@ -1,12 +1,13 @@
 package com.uladzislau.dairy_run.game_state;
 
 import com.uladzislau.dairy_run.entity.GroundBlock;
+import com.uladzislau.dairy_run.information.Score;
 import com.uladzislau.dairy_run.manager.AudioManager;
 
 public class Level {
 
 	public static final Level ENDLESS = new Level(true);
-	
+
 	public static void createEndlessLevel() {
 		ENDLESS.setBeaten(false);
 		ENDLESS.setDescription("ENDLESS");
@@ -16,14 +17,15 @@ public class Level {
 		ENDLESS.setVelocityNeededToWin(0);
 		ENDLESS.setNumberOfMilksNeededToWin(-1);
 		ENDLESS.setUnlocked(true);
-		ENDLESS.setRunButtonEnabled(true); 
+		ENDLESS.setRunButtonEnabled(true);
 		ENDLESS.setCreateChasers(false);
 		ENDLESS.setRegularMilkButtonEnabled(true);
 		ENDLESS.setChocolateMilkButtonEnabled(true);
 		ENDLESS.setStrawberryMilkButtonEnabled(true);
 		ENDLESS.setGroundTheme(GroundBlock.Theme.GRASS);
+		ENDLESS.setShowTimer(true);
 	}
-	
+
 	private String description;
 
 	private boolean beaten = false;
@@ -44,9 +46,12 @@ public class Level {
 	private boolean gold_recieved = false;
 	private boolean unlocked = false;
 	private boolean velocity_matters = false;
-
+	private boolean show_timer = false;
+	private Score score;
+	
 	public Level(boolean locked_or_not) {
 		this.unlocked = locked_or_not;
+		this.setScore(new Score());
 	}
 
 	public int getNumberOfMilksNeededToWin() {
@@ -218,6 +223,22 @@ public class Level {
 
 	public void setMusic(AudioManager.MUSIC music) {
 		this.music = music;
+	}
+
+	public boolean isShowTimer() {
+		return this.show_timer;
+	}
+
+	public void setShowTimer(boolean show_timer) {
+		this.show_timer = show_timer;
+	}
+
+	public Score getScore() {
+		return score;
+	}
+
+	public void setScore(Score score) {
+		this.score = score;
 	}
 
 }

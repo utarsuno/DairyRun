@@ -11,7 +11,6 @@ import com.uladzislau.dairy_run.entity.Chaser;
 import com.uladzislau.dairy_run.entity.GroundBlock;
 import com.uladzislau.dairy_run.entity.House;
 import com.uladzislau.dairy_run.entity.Player;
-import com.uladzislau.dairy_run.entity.Score;
 import com.uladzislau.dairy_run.entity.Tree;
 import com.uladzislau.dairy_run.entity.button.CircleButton;
 import com.uladzislau.dairy_run.entity.button.MilkButton;
@@ -19,6 +18,7 @@ import com.uladzislau.dairy_run.entity.button.RunButton;
 import com.uladzislau.dairy_run.gui.ClickableText;
 import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.InfoUtil;
+import com.uladzislau.dairy_run.information.Score;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
@@ -69,6 +69,19 @@ public class Play extends GameState {
 	private Level level;
 
 	private int current_streak;
+	private int max_streak;
+
+	private boolean just_resumed = false;
+
+	private boolean pc_mouse_down_on_first_resume_update = false;
+	private boolean allow_resume = true;
+	private boolean reset = false;
+
+	private boolean tapped_to_start = false;
+
+	private boolean state_is_transitioning = false;
+
+	private DeltaTimer play_timer;
 
 	public Play(DairyRun dairy_run, GameStateManager.STATE state) {
 		super(dairy_run, state);
@@ -88,20 +101,21 @@ public class Play extends GameState {
 		Map.setGroundLevel(this.ground_level);
 		// Create the background.
 		this.backgrounds = new Background[2];
-		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE);
+		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE,
+				this.sprite_batch);
 		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(),
-				ScreenUtil.screen_height, Background.BLUE);
+				ScreenUtil.screen_height, Background.BLUE, this.sprite_batch);
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
 			this.ground_blocks[i] = new GroundBlock(i * Map.size, this.ground_level, Map.size, Map.size, this.ground_blocks.length, true,
-					this.level.getGroundBlockTheme());
+					this.level.getGroundBlockTheme(), this.sprite_batch);
 		}
 		// Create the houses.
 		this.houses = new House[5];
 		for (int i = 0; i < this.houses.length; i++) {
-			this.houses[i] = new House(this);
-			this.houses[i].createHouse((i + 1) * 10 * Map.size, this.ground_level);
+			this.houses[i] = new House(this, this.sprite_batch);
+			this.houses[i].createHouse(i);
 		}
 		this.velocity = this.level.getInitialVelocity();
 
@@ -111,7 +125,9 @@ public class Play extends GameState {
 			this.trees[i] = new Tree(this.ground_level, i, this.trees.length);
 			this.trees[i].resetPosition((int) this.current_scroll);
 		}
-		// Create the buttons.vv
+
+		// TODO: Create 11 buttons and simply update / display the ones needed.
+		// Create the buttons.
 		this.buttons = new CircleButton[4];
 		this.buttons[0] = new RunButton((ScreenUtil.screen_width / 20) + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f, this);
 		this.buttons[1] = new MilkButton((ScreenUtil.screen_width / 20) * 3 + Map.size / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f,
@@ -140,19 +156,9 @@ public class Play extends GameState {
 
 		this.main_menu = new ClickableText("main menu", new Rectanglei(ScreenUtil.screen_width / 2 - (Map.size * "main_menu".length()) / 2, Map.size * 1.8f,
 				"main_menu".length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.WHITE, 800);
+
+		this.play_timer = new DeltaTimer();
 	}
-
-	private boolean just_resumed = false;
-
-	private boolean pc_mouse_down_on_first_resume_update = false;
-	private boolean allow_resume = true;
-	private boolean reset = false;
-
-	private boolean tapped_to_start = false;
-
-	private boolean state_is_transitioning = false;
-
-	private DeltaTimer play_timer;
 
 	@Override
 	public void update(float delta) {
@@ -190,6 +196,13 @@ public class Play extends GameState {
 
 			if (this.tapped_to_start) {
 				if (!this.pause_menu_open) {
+
+					/* Game is fully playing here. */
+
+					if (!GameStateManager.transitioning_states && !this.lost) {
+						this.play_timer.update(delta);
+					}
+
 					this.player.update(delta, (int) this.current_scroll);
 
 					if (!this.lost) {
@@ -197,6 +210,7 @@ public class Play extends GameState {
 						this.velocity += this.acceleration;
 					}
 					this.current_scroll -= this.velocity;
+					Map.setCurrentScroll(this.current_scroll);
 
 					// If the background has moved off the screen, shift it back into view.
 					for (Background background : this.backgrounds) {
@@ -205,7 +219,7 @@ public class Play extends GameState {
 
 					// If the house has moved off the screen, randomize it and shift it back into view.
 					for (House house : this.houses) {
-						house.update(delta, (int) this.current_scroll);
+						house.update(delta);
 					}
 
 					// If the ground block has moved off the screen, shift it back into view.
@@ -239,11 +253,13 @@ public class Play extends GameState {
 					if (!InputManager.pointersDragging[0]) {
 						if (this.paused.isMouseDownOnMe()) {
 							this.pause_menu_open = false;
+							this.just_resumed = true;
 						}
 						if (this.main_menu.isMouseDownOnMe()) {
 							this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.MAIN_MENU);
 							this.dairy_run.getGameStateManager().clearHistoryStates();
 							setLost(false);
+							this.game_in_session = false;
 							this.pause_menu_open = false;
 						}
 						if (this.retry.isMouseDownOnMe()) {
@@ -252,6 +268,7 @@ public class Play extends GameState {
 						}
 						if (this.options.isMouseDownOnMe()) {
 							this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.OPTIONS);
+							this.game_in_session = true;
 							this.pause_menu_open = false;
 						}
 					}
@@ -319,13 +336,13 @@ public class Play extends GameState {
 
 	public void renderGround() {
 		for (GroundBlock gb : this.ground_blocks) {
-			gb.render(this.sprite_batch, (int) this.current_scroll);
+			gb.render();
 		}
 	}
 
 	public void renderBackground() {
 		for (Background background : this.backgrounds) {
-			background.render(this.sprite_batch, (int) this.current_scroll);
+			background.render();
 		}
 	}
 
@@ -345,7 +362,7 @@ public class Play extends GameState {
 		for (House house : this.houses) {
 			// Make sure the house is on-screen before rendering it.
 			if (house.getX() + this.current_scroll < ScreenUtil.screen_width) {
-				house.render(this.sprite_batch, house.getX() + (int) this.current_scroll);
+				house.render();
 			}
 		}
 
@@ -379,6 +396,9 @@ public class Play extends GameState {
 							- FontManager.FONT.PIXEL_REGULAR.getHeight("TAP TO RESUME") / 2);
 		}
 
+		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Score.convertTimeInSecondsToClockTime((int) ((this.play_timer.getTotalDelta() / 1000.0f))),
+				Color.BLACK, ScreenUtil.screen_width / 2, ScreenUtil.screen_height - (int) (Map.size * 0.9f), (int) (Map.size * 0.8f));
+
 		StaticGUI.pause_button.render(this.sprite_batch, this.PAUSE_COLOR);
 
 		if (!this.tapped_to_start) {
@@ -408,9 +428,6 @@ public class Play extends GameState {
 				this.main_menu.render(this.sprite_batch, false);
 				this.options.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont(), false);
 			} else if (this.pause_menu_open) {
-				if (this.paused.isMouseOverMe()) {
-					this.sprite_batch.setColor(1.0f, 1.0f, 1.0f, 0.2f);
-				}
 				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1, ScreenUtil.screen_width
 						- Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
 				if (this.pause_menu_open) {
@@ -469,6 +486,10 @@ public class Play extends GameState {
 		if (!milk_delivered) {
 			AudioManager.SOUND.COIN_ECHO.playSound();
 			this.player.loseOneLife();
+			if (this.current_streak > this.max_streak) {
+				this.max_streak = this.current_streak;
+			}
+			this.current_streak = 0;
 		}
 	}
 
@@ -491,12 +512,14 @@ public class Play extends GameState {
 	public void retry() {
 		setLost(false);
 		this.tapped_to_start = false;
+		this.play_timer.reset();
 		if (InputManager.pointersDown[0]) {
 			this.allow_tap_to_start = false;
 		}
-		Score.setCurrentMilkScore(this.player.getNumberOfMilksDelivered());
-		Score.setCurrentVelocityScore(this.velocity);
+		this.level.getScore().setCurrentMilkScore(this.player.getNumberOfMilksDelivered());
+		this.level.getScore().setCurrentVelocityScore(this.velocity);
 		reset();
+		Map.setCurrentScroll(0);
 	}
 
 	public void createChaser(short[] milks_not_delievered) {
@@ -505,12 +528,12 @@ public class Play extends GameState {
 
 	@Override
 	public void stateChangedToThis() {
-		if (this.level == null) {
-			this.level = Level.ENDLESS;
-		}
+		Map.setCurrentScroll(this.current_scroll);
 		this.state_is_transitioning = false; // TODO: Rename this lol
 		if (this.game_in_session) {
 			resume();
+		} else {
+			this.play_timer.reset();
 		}
 	}
 
@@ -568,12 +591,9 @@ public class Play extends GameState {
 
 	@Override
 	public void stateFinishedFadingInToExit() {
-		if (AudioManager.MUSIC.TEMP_MUSIC.isInitialized()) {
-			if (AudioManager.MUSIC.TEMP_MUSIC.isPlaying()) {
-				AudioManager.MUSIC.TEMP_MUSIC.stop();
-			}
+		if (!this.game_in_session) {
+			reset();
 		}
-		reset();
 	}
 
 	@Override

@@ -26,8 +26,8 @@ public class GroundBlock extends Entity {
 	private boolean doodads_enabled;
 	private short doodad;
 
-	public GroundBlock(int x, int y, int width, int height, int length, boolean enable_doodads, Theme theme) {
-		super(x, y, width, height);
+	public GroundBlock(float x, float y, int width, int height, int length, boolean enable_doodads, Theme theme, SpriteBatch sb) {
+		super(x, y, width, height, sb);
 		this.length = length;
 		this.regular_block = true;
 		this.lower_block_is_regular = true;
@@ -37,10 +37,6 @@ public class GroundBlock extends Entity {
 		if (this.doodads_enabled) {
 			randomizeDoodad();
 		}
-	}
-
-	public GroundBlock() {
-		super(0, 0, 0, 0);
 	}
 
 	public void randomize() {
@@ -100,21 +96,22 @@ public class GroundBlock extends Entity {
 		}
 	}
 
-	public void update(int current_scroll) {
-		if (getX() + Map.size + current_scroll < 0) {
+	@Override
+	public void update(float delta) {
+		if (getX() + Map.size + Map.getCurrentScrollAsInt() < 0) {
 			randomize();
 			setPosition(true);
 		}
 		if (InputManager.pointersDown[0]) {
-			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, this.getX() + current_scroll,
-					this.getY() - this.getHeight(), this.getWidth(), this.getHeight())) {
+			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, (int) (this.getX() + Map.getCurrentScrollAsInt()),
+					(int) (this.getY() - this.getHeight()), this.getWidth(), this.getHeight())) {
 				if (!this.hasMouseDownTouchedMe) {
 					this.regular_block ^= true;
 					this.hasMouseDownTouchedMe = true;
 				}
 			}
-			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, this.getX() + current_scroll,
-					this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight())) {
+			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, (int) (this.getX() + Map.getCurrentScrollAsInt()),
+					(int) (this.getY() - this.getHeight() * 2), this.getWidth(), this.getHeight())) {
 				if (!this.hasMouseDownTouchedLowerMe) {
 					this.lower_block_is_regular ^= true;
 					this.hasMouseDownTouchedLowerMe = true;
@@ -126,53 +123,31 @@ public class GroundBlock extends Entity {
 		}
 	}
 
-	public void update(float delta) {
-		if (InputManager.pointersDown[0]) {
-			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, this.getX(), this.getY() - this.getHeight(),
-					this.getWidth(), this.getHeight())) {
-				if (!this.hasMouseDownTouchedMe) {
-					this.regular_block ^= true;
-					this.hasMouseDownTouchedMe = true;
-				}
-			}
-			if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, this.getX(), this.getY() - this.getHeight() * 2,
-					this.getWidth(), this.getHeight())) {
-				if (!this.hasMouseDownTouchedLowerMe) {
-					this.lower_block_is_regular ^= true;
-					this.hasMouseDownTouchedLowerMe = true;
-				}
-			}
-		} else {
-			this.hasMouseDownTouchedMe = false;
-			this.hasMouseDownTouchedLowerMe = false;
-		}
-	}
-
-	public void render(SpriteBatch sb, int current_scroll) {
-
+	@Override
+	public void render() {
 		if (this.doodads_enabled) {
 			if (this.doodad == TextureManager.LEFT_WEIRD_THING_BOTTOM_HALF) {
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.LEFT_WEIRD_THING_TOP_HALF), this.getX() + current_scroll,
-						this.getY() + this.getHeight(), this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.LEFT_WEIRD_THING_TOP_HALF),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() + this.getHeight(), this.getWidth(), this.getHeight());
 			} else if (this.doodad == TextureManager.RIGHT_WEIRD_THING_BOTTOM_HALF) {
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.RIGHT_WEIRD_THING_TOP_HALF), this.getX() + current_scroll,
-						this.getY() + this.getHeight(), this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.RIGHT_WEIRD_THING_TOP_HALF),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() + this.getHeight(), this.getWidth(), this.getHeight());
 			}
 			if (this.doodad != 0) {
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.doodad), this.getX() + current_scroll, this.getY(), this.getWidth(),
-						this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.doodad), this.getX() + Map.getCurrentScrollAsInt(),
+						this.getY(), this.getWidth(), this.getHeight());
 			}
 		}
 
 		if (this.regular_block) {
 			switch (this.theme) {
 			case GRASS:
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_BLOCK), this.getX() + current_scroll,
-						this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_BLOCK),
+					this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 				break;
 			case SNOW:
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK), this.getX() + current_scroll,
-						this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 				break;
 			default:
 				break;
@@ -180,12 +155,12 @@ public class GroundBlock extends Entity {
 		} else {
 			switch (this.theme) {
 			case GRASS:
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_BLOCK_WITH_SMILE), this.getX() + current_scroll, this.getY()
-						- this.getHeight(), this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_BLOCK_WITH_SMILE),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 				break;
 			case SNOW:
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_WITH_SMILE), this.getX() + current_scroll, this.getY()
-						- this.getHeight(), this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_WITH_SMILE),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 				break;
 			default:
 				break;
@@ -195,12 +170,12 @@ public class GroundBlock extends Entity {
 		if (this.lower_block_is_regular) {
 			switch (this.theme) {
 			case GRASS:
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_BLOCK), this.getX() + current_scroll,
-						this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_BLOCK),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
 				break;
 			case SNOW:
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_DIRT), this.getX() + current_scroll,
-						this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_DIRT),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
 				break;
 			default:
 				break;
@@ -208,12 +183,12 @@ public class GroundBlock extends Entity {
 		} else {
 			switch (this.theme) {
 			case GRASS:
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_BLOCK_WITH_SMILE), this.getX() + current_scroll, this.getY()
-						- this.getHeight() * 2, this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_BLOCK_WITH_SMILE),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
 				break;
 			case SNOW:
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_DIRT_WITH_SMILE), this.getX() + current_scroll,
-						this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
+				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_DIRT_WITH_SMILE),
+						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
 				break;
 			default:
 				break;

@@ -15,4 +15,12 @@ public class Bird extends Entity {
 		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 10 + 15), getX() + current_scroll, getY(), Map.size, Map.size);
 	}
 
+	@Override
+	public void update(float delta) {
+	}
+
+	@Override
+	public void render() {		
+	}
+
 }

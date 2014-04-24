@@ -1,8 +1,10 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.TextureManager;
+import com.uladzislau.dairy_run.world.Map;
 
 public class Background extends Entity {
 
@@ -14,29 +16,34 @@ public class Background extends Entity {
 
 	private byte type;
 
-	public Background(int x, int y, int width, int height, byte type) {
-		super(x, y, width, height);
+	public Background(int x, int y, int width, int height, byte type, SpriteBatch sb) {
+		super(x, y, width, height, sb);
 		setType(type);
 	}
 
-	public void update(int current_scroll) {
-		if (getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + current_scroll * Background.SCROLL_RATE < 0) {
+	@Override
+	public void update(float delta) {
+		if (getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE < 0) {
 			setX(getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() * 2);
 		}
 	}
 
-	public void render(SpriteBatch sb, int current_scroll) {
+	@Override
+	public void render() {
 		// Make sure background is on-screen before rendering.
-		if (getX() + current_scroll * Background.SCROLL_RATE < ScreenUtil.screen_width) {
+		if (getX() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE < ScreenUtil.screen_width) {
 			switch (this.type) {
 			case BLUE:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BLUE, (int) (this.getX() + current_scroll * Background.SCROLL_RATE), this.getY());
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(this.getSpriteBatch(), BLUE,
+						(int) (this.getX() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE), (int) this.getY());
 				break;
 			case GREEN:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, GREEN, (int) (this.getX() + current_scroll * Background.SCROLL_RATE), this.getY());
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(this.getSpriteBatch(), GREEN, (int) (this.getX() + Map.getCurrentScrollAsInt()
+						* Background.SCROLL_RATE), (int) this.getY());
 				break;
 			case BROWN:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BROWN, (int) (this.getX() + current_scroll * Background.SCROLL_RATE), this.getY());
+				TextureManager.SPRITESHEET.BACKGROUNDS.render(this.getSpriteBatch(), BROWN, (int) (this.getX() + Map.getCurrentScrollAsInt()
+						* Background.SCROLL_RATE), (int) this.getY());
 				break;
 			default:
 				break;
@@ -67,4 +74,5 @@ public class Background extends Entity {
 			break;
 		}
 	}
+
 }

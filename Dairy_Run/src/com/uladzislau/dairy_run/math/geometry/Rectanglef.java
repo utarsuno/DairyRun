@@ -15,16 +15,16 @@ public class Rectanglef {
 	}
 
 	public boolean isCollidingWithRect(Rectanglei rectangle) {
-		if (x + width < rectangle.getX() || x > rectangle.getX() + rectangle.getWidth() || y > rectangle.getY() + rectangle.getHeight()
-				|| y + height < rectangle.getY()) {
+		if (this.x + this.width < rectangle.getX() || this.x > rectangle.getX() + rectangle.getWidth() || this.y > rectangle.getY() + rectangle.getHeight()
+				|| this.y + this.height < rectangle.getY()) {
 			return false;
 		}
 		return true;
 	}
 
 	public boolean isCollidingWithRect(Rectanglef rectangle) {
-		if (x + width < rectangle.getX() || x > rectangle.getX() + rectangle.getWidth() || y > rectangle.getY() + rectangle.getHeight()
-				|| y + height < rectangle.getY()) {
+		if (this.x + this.width < rectangle.getX() || this.x > rectangle.getX() + rectangle.getWidth() || this.y > rectangle.getY() + rectangle.getHeight()
+				|| this.y + this.height < rectangle.getY()) {
 			return false;
 		}
 		return true;
@@ -50,7 +50,7 @@ public class Rectanglef {
 	}
 
 	public float getX() {
-		return x;
+		return this.x;
 	}
 
 	public void setX(float x) {
@@ -58,7 +58,7 @@ public class Rectanglef {
 	}
 
 	public float getY() {
-		return y;
+		return this.y;
 	}
 
 	public void setY(float y) {
@@ -66,7 +66,7 @@ public class Rectanglef {
 	}
 
 	public float getWidth() {
-		return width;
+		return this.width;
 	}
 
 	public void setWidth(float width) {
@@ -74,11 +74,15 @@ public class Rectanglef {
 	}
 
 	public float getHeight() {
-		return height;
+		return this.height;
 	}
 
 	public void setHeight(float height) {
 		this.height = height;
+	}
+
+	public float getTop() {
+		return this.y + this.height;
 	}
 
 }

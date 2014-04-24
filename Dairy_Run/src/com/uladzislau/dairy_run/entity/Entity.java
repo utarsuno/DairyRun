@@ -7,8 +7,8 @@ public abstract class Entity {
 
 	private SpriteBatch sprite_batch;
 
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	private int width;
 	private int height;
 
@@ -18,26 +18,31 @@ public abstract class Entity {
 		this.play = play;
 	}
 
-	public Entity(int x, int y, int width, int height) {
+	public Entity(float x, float y, int width, int height, SpriteBatch sprite_batch) {
 		setX(x);
 		setY(y);
 		setWidth(width);
 		setHeight(height);
+		setSpriteBatch(sprite_batch);
 	}
+	
+	public abstract void update(float delta);
+	
+	public abstract void render();
 
-	public int getX() {
+	public float getX() {
 		return this.x;
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
-	public int getY() {
+	public float getY() {
 		return this.y;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
