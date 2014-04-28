@@ -17,7 +17,6 @@ import com.uladzislau.dairy_run.entity.button.MilkButton;
 import com.uladzislau.dairy_run.entity.button.RunButton;
 import com.uladzislau.dairy_run.gui.ClickableText;
 import com.uladzislau.dairy_run.gui.StaticGUI;
-import com.uladzislau.dairy_run.information.InfoUtil;
 import com.uladzislau.dairy_run.information.Score;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
@@ -73,7 +72,7 @@ public class Play extends GameState {
 
 	private boolean just_resumed = false;
 
-	private boolean pc_mouse_down_on_first_resume_update = false;
+	private boolean mouse_down_on_first_resume_update = false;
 	private boolean allow_resume = true;
 	private boolean reset = false;
 
@@ -163,32 +162,30 @@ public class Play extends GameState {
 	@Override
 	public void update(float delta) {
 		if (this.just_resumed) {
-			if (InfoUtil.CURRENT_PLATEFORM == InfoUtil.DESKTOP) {
-				if (this.resumeTimer.getTotalDelta() == 0) {
-					if (InputManager.pointersDown[0]) {
-						this.pc_mouse_down_on_first_resume_update = true;
-						this.allow_resume = false;
-					}
+			if (this.resumeTimer.getTotalDelta() == 0) {
+				if (InputManager.pointersDown[0]) {
+					this.mouse_down_on_first_resume_update = true;
+					this.allow_resume = false;
 				}
-				if (this.pc_mouse_down_on_first_resume_update) {
-					if (!InputManager.pointersDown[0]) {
-						this.allow_resume = true;
-					}
-				}
-				this.resumeTimer.update(delta);
-				if (this.resumeTimer.getTotalDelta() > 50) {
-					if (InputManager.pointersDown[0]) {
-						if (this.allow_resume) {
-							this.just_resumed = false;
-						}
-					}
-				}
-				this.allow_tap_to_start = false;
-				this.reset = true;
 			}
+			if (this.mouse_down_on_first_resume_update) {
+				if (!InputManager.pointersDown[0]) {
+					this.allow_resume = true;
+				}
+			}
+			this.resumeTimer.update(delta);
+			if (this.resumeTimer.getTotalDelta() > 50) {
+				if (InputManager.pointersDown[0]) {
+					if (this.allow_resume) {
+						this.just_resumed = false;
+					}
+				}
+			}
+			this.allow_tap_to_start = false;
+			this.reset = true;
 		} else {
 			if (this.reset) {
-				this.pc_mouse_down_on_first_resume_update = false;
+				this.mouse_down_on_first_resume_update = false;
 				this.allow_resume = true;
 				this.resumeTimer.reset();
 				this.reset = false;
@@ -244,6 +241,7 @@ public class Play extends GameState {
 					if (this.level.isStrawberryMilkButtonEnabled()) {
 						this.buttons[3].update(delta);
 					}
+
 				} else {
 					this.paused.update(delta);
 					this.retry.update(delta);
@@ -467,6 +465,8 @@ public class Play extends GameState {
 		}
 	}
 
+	private boolean life_already_gained[] = new boolean[10];
+
 	public void attemptToDeliver(short milk_type) {
 		boolean milk_delivered = false;
 		for (House house : this.houses) {
@@ -477,6 +477,16 @@ public class Play extends GameState {
 					if (house.isMilkNeeded(milk_type) && house.needsMoreMilk()) {
 						AudioManager.SOUND.COMPLETED.playSound();
 						this.player.incrementNumberOfMilksDelivered();
+						for (int i = 0; i < this.life_already_gained.length; i++) {
+							if (this.player.getNumberOfMilksDelivered() == this.level.getScoresNeededToGainOneLife()[i]) {
+								if (!this.life_already_gained[i]) {
+									if (this.player.getLife() != Player.MAX_LIFE) {
+										this.player.setLife((byte) (this.player.getLife() + 1));
+									}
+									this.life_already_gained[i] = true;
+								}
+							}
+						}
 						house.deliverMilk(milk_type);
 						milk_delivered = true;
 					}
@@ -501,6 +511,9 @@ public class Play extends GameState {
 		Chaser.number_of_chasers_created = 0;
 		this.player.reset();
 		this.velocity = this.level.getInitialVelocity();
+		for (int i = 0; i < this.life_already_gained.length; i++) {
+			this.life_already_gained[i] = false;
+		}
 	}
 
 	public void lose() {

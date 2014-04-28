@@ -24,6 +24,8 @@ public class Level {
 		ENDLESS.setStrawberryMilkButtonEnabled(true);
 		ENDLESS.setGroundTheme(GroundBlock.Theme.GRASS);
 		ENDLESS.setShowTimer(true);
+		ENDLESS.setPowerUpsGainedAt(25, 50, 100);
+		ENDLESS.setScoresNeededToGainOneLife(25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800);
 	}
 
 	private String description;
@@ -48,10 +50,15 @@ public class Level {
 	private boolean velocity_matters = false;
 	private boolean show_timer = false;
 	private Score score;
-	
+	private int power_up_first_acheived_every_consecutive_amount;
+	private int power_up_second_acheived_every_consecutive_amount;
+	private int power_up_third_acheived_every_consecutive_amount;
+	private int scores_needed_to_gain_one_life[];
+
 	public Level(boolean locked_or_not) {
 		this.unlocked = locked_or_not;
 		this.setScore(new Score());
+		this.scores_needed_to_gain_one_life = new int[10];
 	}
 
 	public int getNumberOfMilksNeededToWin() {
@@ -234,11 +241,58 @@ public class Level {
 	}
 
 	public Score getScore() {
-		return score;
+		return this.score;
 	}
 
 	public void setScore(Score score) {
 		this.score = score;
+	}
+
+	public void setScoresNeededToGainOneLife(int i, int j, int k, int l, int m, int n, int o, int p, int q, int r) {
+		this.scores_needed_to_gain_one_life[0] = i;
+		this.scores_needed_to_gain_one_life[1] = j;
+		this.scores_needed_to_gain_one_life[2] = k;
+		this.scores_needed_to_gain_one_life[3] = l;
+		this.scores_needed_to_gain_one_life[4] = m;
+		this.scores_needed_to_gain_one_life[5] = n;
+		this.scores_needed_to_gain_one_life[6] = o;
+		this.scores_needed_to_gain_one_life[7] = p;
+		this.scores_needed_to_gain_one_life[8] = q;
+		this.scores_needed_to_gain_one_life[9] = r;
+	}
+
+	public int[] getScoresNeededToGainOneLife() {
+		return this.scores_needed_to_gain_one_life;
+	}
+
+	public void setPowerUpsGainedAt(int first, int second, int third) {
+		this.power_up_first_acheived_every_consecutive_amount = first;
+		this.power_up_second_acheived_every_consecutive_amount = second;
+		this.power_up_third_acheived_every_consecutive_amount = third;
+	}
+
+	public int getPowerUpFirstAcheivedEveryConsecutiveAmount() {
+		return power_up_first_acheived_every_consecutive_amount;
+	}
+
+	public void setPowerUpFirstAcheivedEveryConsecutiveAmount(int power_up_first_acheived_every_consecutive_amount) {
+		this.power_up_first_acheived_every_consecutive_amount = power_up_first_acheived_every_consecutive_amount;
+	}
+
+	public int getPowerSecondAcheivedEveryConsecutiveAmount() {
+		return power_up_second_acheived_every_consecutive_amount;
+	}
+
+	public void setPowerSecondAcheivedEveryConsecutiveAmount(int power_second_acheived_every_consecutive_amount) {
+		this.power_up_second_acheived_every_consecutive_amount = power_second_acheived_every_consecutive_amount;
+	}
+
+	public int getPowerUpThirdAcheivedEveryConsecutiveAmount() {
+		return power_up_third_acheived_every_consecutive_amount;
+	}
+
+	public void setPowerUpThirdAcheivedEveryConsecutiveAmount(int power_up_third_acheived_every_consecutive_amount) {
+		this.power_up_third_acheived_every_consecutive_amount = power_up_third_acheived_every_consecutive_amount;
 	}
 
 }

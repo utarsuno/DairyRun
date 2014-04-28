@@ -30,7 +30,7 @@ public class Main {
 		Rectangle bounds = ge.getMaximumWindowBounds();
 
 		cfg.width = (int) (bounds.getWidth() * .80);
-		// cfg.width = 4500;
+//		cfg.width = 4600;
 		cfg.height = (int) (bounds.getHeight() * .70);
 		cfg.samples = 1;
 		cfg.resizable = false;

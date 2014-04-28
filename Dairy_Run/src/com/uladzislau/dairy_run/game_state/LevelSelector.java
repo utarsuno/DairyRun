@@ -85,6 +85,8 @@ public class LevelSelector extends GameState {
 		this.levels[0].setChocolateMilkButtonEnabled(false);
 		this.levels[0].setStrawberryMilkButtonEnabled(false);
 		this.levels[0].setGroundTheme(GroundBlock.Theme.GRASS);
+		this.levels[0].setScoresNeededToGainOneLife(25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800);
+		this.levels[0].setPowerUpsGainedAt(25, 50, 100);
 		// Level Two.
 		this.levels[1].setThisLevelEqualToLevel(this.levels[0]);
 		this.levels[1].setDescription("Deliver 10 milks.");
