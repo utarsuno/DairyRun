@@ -162,7 +162,7 @@ public class Options extends GameState {
 			this.musicPercentage.render(this.sprite_batch, false);
 
 			// Underline the audio text.
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), this.audio.getRectanglei().getX() - Map.size
+			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), this.audio.getRectanglei().getX() - Map.size
 					/ 2, this.audio.getRectanglei().getY() - Map.size / 4, this.audio.getTitle().length() * Map.size + Map.size, Map.size / 4);
 		} else {
 
@@ -171,41 +171,41 @@ public class Options extends GameState {
 				this.layout_two.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_three.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_four.setColor(0.0f, 0.0f, 0.0f, 0.5f);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, Map.size * 3, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, Map.size * 4, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, Map.size * 3, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, Map.size * 4, 0);
 			} else if (Options.current_layout == 1) {
 				this.layout_one.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_two.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 				this.layout_three.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_four.setColor(0.0f, 0.0f, 0.0f, 0.5f);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, ScreenUtil.screen_width - Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, ScreenUtil.screen_width - Map.size * 3, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, ScreenUtil.screen_width - Map.size * 2, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, ScreenUtil.screen_width - Map.size * 3, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
 			} else if (Options.current_layout == 2) {
 				this.layout_one.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_two.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_three.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 				this.layout_four.setColor(0.0f, 0.0f, 0.0f, 0.5f);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 3, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 2, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 3, 0);
 			} else if (Options.current_layout == 3) {
 				this.layout_one.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_two.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_three.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_four.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, Map.size * 3, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, Map.size * 4, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, ScreenUtil.screen_width - Map.size * 2, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, ScreenUtil.screen_width - Map.size * 3, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
-				TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, Map.size, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, Map.size * 3, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, Map.size * 4, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, 31 * 6 + 19, ScreenUtil.screen_width - Map.size * 2, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, ScreenUtil.screen_width - Map.size * 3, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
+				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
 			}
 			this.layout_one.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 			this.layout_two.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
@@ -213,7 +213,7 @@ public class Options extends GameState {
 			this.layout_four.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
 
 			// Underline the controls text.
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), this.controls.getRectanglei().getX() - Map.size
+			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), this.controls.getRectanglei().getX() - Map.size
 					/ 2, this.controls.getRectanglei().getY() - Map.size / 4, this.controls.getTitle().length() * Map.size + Map.size, Map.size / 4);
 		}
 

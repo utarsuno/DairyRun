@@ -42,22 +42,22 @@ public class ResourceManager {
 		this.spriteBatch = new SpriteBatch();
 
 		// Textures are created here because OpenGL context may only exist on the main thread.
-		for (TextureManager.SPRITESHEET spritesheet : TextureManager.SPRITESHEET.values()) {
+		for (TextureManager.Spritesheet spritesheet : TextureManager.Spritesheet.values()) {
 			spritesheet.initialize();
 		}
-		TextureManager.TEXTURE.BACKGROUND.initialize();
-		TextureManager.SPRITESHEET.BACKGROUNDS.setHeight((ScreenUtil.screen_height));
-		TextureManager.SPRITESHEET.BACKGROUNDS.setWidth((int) (ScreenUtil.screen_height / 63.0f * 231.0f));
-		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setHeight(Map.size);
-		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.setWidth(Map.size);
-		for (TextureManager.ANIMATION_SPRITESHEET animation_spritesheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
+		TextureManager.TextureXv.BACKGROUND.initialize();
+		TextureManager.Spritesheet.BACKGROUNDS.setHeight((ScreenUtil.screen_height));
+		TextureManager.Spritesheet.BACKGROUNDS.setWidth((int) (ScreenUtil.screen_height / 63.0f * 231.0f));
+		TextureManager.Spritesheet.PIXEL_SPRITESHEET.setHeight(Map.size);
+		TextureManager.Spritesheet.PIXEL_SPRITESHEET.setWidth(Map.size);
+		for (TextureManager.Animation_Spritesheet animation_spritesheet : TextureManager.Animation_Spritesheet.values()) {
 			animation_spritesheet.initialize();
 		}
 		FontManager.FONT.PIXEL_REGULAR.initialize();
 		this.texture_initialized = true;
 
 		StaticGUI.inititialize(dairyRun);
-		
+
 		Level.createEndlessLevel();
 
 		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
@@ -66,7 +66,7 @@ public class ResourceManager {
 	private Thread music_initializer = new Thread() {
 		@Override
 		public void run() {
-			for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
+			for (AudioManager.MusicXv music : AudioManager.MusicXv.values()) {
 				music.initialize();
 			}
 			System.out.println("Music Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
@@ -79,7 +79,7 @@ public class ResourceManager {
 	private Thread sound_initializer = new Thread() {
 		@Override
 		public void run() {
-			for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
+			for (AudioManager.SoundXv sound : AudioManager.SoundXv.values()) {
 				sound.initialize();
 			}
 			System.out.println("Sound Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
@@ -91,19 +91,19 @@ public class ResourceManager {
 
 	public static String credits_information() {
 		String returnString = null;
-		for (TextureManager.TEXTURE texture : TextureManager.TEXTURE.values()) {
+		for (TextureManager.TextureXv texture : TextureManager.TextureXv.values()) {
 			returnString += texture.getName() + "\t: " + texture.getSource();
 			returnString += "\n";
 		}
-		for (TextureManager.SPRITESHEET sprite_sheet : TextureManager.SPRITESHEET.values()) {
+		for (TextureManager.Spritesheet sprite_sheet : TextureManager.Spritesheet.values()) {
 			returnString += sprite_sheet.getName() + "\t: " + sprite_sheet.getSource();
 			returnString += "\n";
 		}
-		for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
+		for (AudioManager.SoundXv sound : AudioManager.SoundXv.values()) {
 			returnString += sound.getName() + "\t: " + sound.getSource();
 			returnString += "\n";
 		}
-		for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
+		for (AudioManager.MusicXv music : AudioManager.MusicXv.values()) {
 			returnString += music.getName() + "\t: " + music.getSource();
 			returnString += "\n";
 		}
@@ -117,15 +117,15 @@ public class ResourceManager {
 	public void dipose_all_resources() {
 		this.spriteBatch.dispose();
 		this.shapeRenderer.dispose();
-		TextureManager.TEXTURE.BACKGROUND.dispose();
-		TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.dispose();
-		for (TextureManager.ANIMATION_SPRITESHEET animation_sprite_sheet : TextureManager.ANIMATION_SPRITESHEET.values()) {
+		TextureManager.TextureXv.BACKGROUND.dispose();
+		TextureManager.Spritesheet.PIXEL_SPRITESHEET.dispose();
+		for (TextureManager.Animation_Spritesheet animation_sprite_sheet : TextureManager.Animation_Spritesheet.values()) {
 			animation_sprite_sheet.dispose();
 		}
-		for (AudioManager.SOUND sound : AudioManager.SOUND.values()) {
+		for (AudioManager.SoundXv sound : AudioManager.SoundXv.values()) {
 			sound.dispose();
 		}
-		for (AudioManager.MUSIC music : AudioManager.MUSIC.values()) {
+		for (AudioManager.MusicXv music : AudioManager.MusicXv.values()) {
 			music.dispose();
 		}
 		for (FontManager.FONT font : FontManager.FONT.values()) {

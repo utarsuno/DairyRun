@@ -30,7 +30,7 @@ public class PauseButton extends CircleButton {
 		Color temp = sb.getColor();
 		sb.setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
 		// Render the button.
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.PAUSE), this.getX() - this.getRadius(), this.getY() - this.getRadius(),
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.PAUSE), this.getX() - this.getRadius(), this.getY() - this.getRadius(),
 				this.getRadius() * 2, this.getRadius() * 2);
 		sb.setColor(temp);
 	}

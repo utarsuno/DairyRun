@@ -23,7 +23,7 @@ public class AudioManager {
 	public static boolean music_fading_in = false;
 	public static boolean music_fading_out = false;
 
-	public enum SOUND implements Resource {
+	public enum SoundXv implements Resource {
 		INTERFACE_00("beep" + java.io.File.separator + "interface_00", "Created with BFxr."), INTERFACE_01("beep" + java.io.File.separator + "interface_01",
 				"http://www.freesound.org/people/LloydEvans09/sounds/185828/"), COMPLETED("completed", "http://opengameart.org/content/completion-sound"), COIN_ECHO(
 				"coin_echo", "http://opengameart.org/content/picked-coin-echo"), PAIN_ONE("pain" + java.io.File.separator + "pain_jack_01",
@@ -46,7 +46,7 @@ public class AudioManager {
 		private boolean initialized;
 		private boolean muted;
 
-		SOUND(String name, String source) {
+		SoundXv(String name, String source) {
 			this.name = name;
 			this.source = source;
 			this.initialized = false;
@@ -114,7 +114,7 @@ public class AudioManager {
 
 	}
 
-	public enum MUSIC implements Resource {
+	public enum MusicXv implements Resource {
 		TEMP_MUSIC("HolFix - Pixel Parade", "get it later lol"), TEMP_MAIN_MENU_MUSIC("HolFix - Happy Moment Remix", "Holflix, get it later though"), LEVEL_SELECTOR_MUSIC(
 				"Lively Meadow", "http://www.matthewpablo.com/archives/many-new-tracks-1-29-14"), TEMP_OPTIONS("HolFix - Jeremy the Different Giraffe Theme",
 				"http://www.youtube.com/watch?v=5Alrqovf9E8&index=9&list=PLyBvLDmLwbZsHRnniCV5cJ9FM2WLR7a7I"), CREDITS_MUSIC("HolFix - Finally Home",
@@ -127,7 +127,7 @@ public class AudioManager {
 		private boolean initialized;
 		private boolean muted;
 
-		MUSIC(String name, String source) {
+		MusicXv(String name, String source) {
 			this.name = name;
 			this.source = source;
 			this.paused = false;
@@ -237,9 +237,9 @@ public class AudioManager {
 
 	public static void setMusicLevel(float music_level) {
 		AudioManager.music_level = music_level;
-		for (int i = 0; i < MUSIC.values().length; i++) {
-			if (MUSIC.values()[i].isInitialized() && MUSIC.values()[i].isPlaying()) {
-				MUSIC.values()[i].setVolume(music_level);
+		for (int i = 0; i < MusicXv.values().length; i++) {
+			if (MusicXv.values()[i].isInitialized() && MusicXv.values()[i].isPlaying()) {
+				MusicXv.values()[i].setVolume(music_level);
 			}
 		}
 	}
@@ -266,13 +266,13 @@ public class AudioManager {
 	public static void setMusicOn(boolean b) {
 		music_on = b;
 		if (!music_on) {
-			for (MUSIC music : MUSIC.values()) {
+			for (MusicXv music : MusicXv.values()) {
 				if (music.isInitialized() && music.isPlaying()) {
 					music.pause();
 				}
 			}
 		} else {
-			for (MUSIC music : MUSIC.values()) {
+			for (MusicXv music : MusicXv.values()) {
 				if (music.isPaused()) {
 					music.play();
 					music.setPaused(true);
@@ -282,10 +282,10 @@ public class AudioManager {
 	}
 
 	public static void dispose() {
-		for (SOUND sound : SOUND.values()) {
+		for (SoundXv sound : SoundXv.values()) {
 			sound.dispose();
 		}
-		for (MUSIC music : MUSIC.values()) {
+		for (MusicXv music : MusicXv.values()) {
 			music.dispose();
 		}
 	}

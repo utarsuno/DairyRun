@@ -13,7 +13,7 @@ public abstract class GameState {
 
 	private final GameStateManager.STATE state;
 
-	private AudioManager.MUSIC music;
+	private AudioManager.MusicXv music;
 
 	protected boolean first_update = true;
 	protected boolean first_render = true;
@@ -53,11 +53,11 @@ public abstract class GameState {
 		// This method was created for the play state.
 	}
 
-	public AudioManager.MUSIC getMusic() {
+	public AudioManager.MusicXv getMusic() {
 		return this.music;
 	}
 
-	public void setMusic(AudioManager.MUSIC music) {
+	public void setMusic(AudioManager.MusicXv music) {
 		this.music = music;
 	}
 

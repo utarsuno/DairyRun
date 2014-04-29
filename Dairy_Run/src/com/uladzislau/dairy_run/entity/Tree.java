@@ -80,32 +80,32 @@ public class Tree {
 	public void render(SpriteBatch sb, int current_scroll) {
 		if (this.render) {
 			if (this.type == 1) {
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.short_tree_type), this.x + current_scroll, this.y,
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.short_tree_type), this.x + current_scroll, this.y,
 						Map.size, Map.size);
 			} else if (this.type == 2) {
 				// Base
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 1), this.x + current_scroll, this.y, Map.size,
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 22 + 1), this.x + current_scroll, this.y, Map.size,
 						Map.size);
 				// Green block
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), this.x + current_scroll, this.y + Map.size,
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), this.x + current_scroll, this.y + Map.size,
 						Map.size, Map.size);
 				// Green block
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), this.x + current_scroll, this.y + Map.size * 2,
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 22 + 9), this.x + current_scroll, this.y + Map.size * 2,
 						Map.size, Map.size);
 				// Left block
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), this.x - Map.size + current_scroll, this.y
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), this.x - Map.size + current_scroll, this.y
 						+ Map.size, Map.size, Map.size);
 				// Left block
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), this.x - Map.size + current_scroll, this.y
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 22 + 8), this.x - Map.size + current_scroll, this.y
 						+ Map.size * 2, Map.size, Map.size);
 				// Right block
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), this.x + Map.size + current_scroll, this.y
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), this.x + Map.size + current_scroll, this.y
 						+ Map.size, Map.size, Map.size);
 				// Right block
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), this.x + Map.size + current_scroll, this.y
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 22 + 10), this.x + Map.size + current_scroll, this.y
 						+ Map.size * 2, Map.size, Map.size);
 				// Top block
-				sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 21 + 0), this.x + current_scroll, this.y + Map.size * 3,
+				sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 21 + 0), this.x + current_scroll, this.y + Map.size * 3,
 						Map.size, Map.size);
 
 			}

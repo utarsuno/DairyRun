@@ -66,7 +66,7 @@ public class RunButton extends CircleButton {
 
 	@Override
 	public void render(SpriteBatch sb) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 19), this.getX() - Map.size / 2, this.getY() - Map.size / 2, Map.size, Map.size);
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 19), this.getX() - Map.size / 2, this.getY() - Map.size / 2, Map.size, Map.size);
 	}
 
 	public void reset() {
@@ -94,7 +94,7 @@ public class RunButton extends CircleButton {
 		this.timer_transition.add(true);
 		this.pixels.add(0f);
 		this.play.setVelocity(this.play.getVelocity() + 0.1f);
-		AudioManager.SOUND.POP.playSound();
+		AudioManager.SoundXv.POP.playSound();
 	}
 
 }

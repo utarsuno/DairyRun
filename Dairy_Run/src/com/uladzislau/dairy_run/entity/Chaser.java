@@ -102,8 +102,8 @@ public class Chaser {
 			FontManager.FONT.PIXEL_REGULAR.render(sb, "MILK!", Color.RED, this.x - Map.size / 4, this.x + Map.size / 4 + Map.size, this.play.ground_level
 					+ Map.size * 1.0f, this.play.ground_level + Map.size * 1.5f);
 		}
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.character + 28
-				+ TextureManager.ANIMATION_SPRITESHEET.WALKING.getCurrentFrameNumber()), this.x, this.play.ground_level, Map.size, Map.size);
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.character + 28
+				+ TextureManager.Animation_Spritesheet.WALKING.getCurrentFrameNumber()), this.x, this.play.ground_level, Map.size, Map.size);
 	}
 
 	public int getX() {

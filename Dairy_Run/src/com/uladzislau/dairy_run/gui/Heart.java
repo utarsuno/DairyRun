@@ -13,39 +13,39 @@ public class Heart {
 	public static void render(SpriteBatch sb, int x, int y, int health) {
 		switch (health) {
 		case 6:
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x + Map.size, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x + Map.size * 2, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x + Map.size, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x + Map.size * 2, y, Map.size, Map.size);
 			break;
 		case 5:
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x + Map.size, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(HALF_FULL), x + Map.size * 2, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x + Map.size, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(HALF_FULL), x + Map.size * 2, y, Map.size, Map.size);
 			break;
 		case 4:
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x + Map.size, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x + Map.size, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
 			break;
 		case 3:
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(HALF_FULL), x + Map.size, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(HALF_FULL), x + Map.size, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
 			break;
 		case 2:
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(FULL), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
 			break;
 		case 1:
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(HALF_FULL), x, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(HALF_FULL), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
 			break;
 		default:
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size, y, Map.size, Map.size);
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(EMPTY), x + Map.size * 2, y, Map.size, Map.size);
 			break;
 		}
 	}

@@ -14,6 +14,8 @@ import com.uladzislau.dairy_run.entity.Player;
 import com.uladzislau.dairy_run.entity.Tree;
 import com.uladzislau.dairy_run.entity.button.CircleButton;
 import com.uladzislau.dairy_run.entity.button.MilkButton;
+import com.uladzislau.dairy_run.entity.button.PowerUpButton;
+import com.uladzislau.dairy_run.entity.button.PowerUpButton.Power;
 import com.uladzislau.dairy_run.entity.button.RunButton;
 import com.uladzislau.dairy_run.gui.ClickableText;
 import com.uladzislau.dairy_run.gui.StaticGUI;
@@ -41,6 +43,7 @@ public class Play extends GameState {
 	private ArrayList<Chaser> chasers;
 
 	private CircleButton[] buttons;
+	private CircleButton[] power_up_buttons;
 
 	private float current_scroll;
 	private float velocity;
@@ -69,6 +72,9 @@ public class Play extends GameState {
 
 	private int current_streak;
 	private int max_streak;
+	private int power_up_one_counter;
+	private int power_up_two_counter;
+	private int power_up_three_counter;
 
 	private boolean just_resumed = false;
 
@@ -100,9 +106,9 @@ public class Play extends GameState {
 		Map.setGroundLevel(this.ground_level);
 		// Create the background.
 		this.backgrounds = new Background[2];
-		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE,
+		this.backgrounds[0] = new Background(0, 0, TextureManager.Spritesheet.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE,
 				this.sprite_batch);
-		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(),
+		this.backgrounds[1] = new Background(TextureManager.Spritesheet.BACKGROUNDS.getWidth(), 0, TextureManager.Spritesheet.BACKGROUNDS.getWidth(),
 				ScreenUtil.screen_height, Background.BLUE, this.sprite_batch);
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[ScreenUtil.screen_width / Map.size + 2];
@@ -135,6 +141,14 @@ public class Play extends GameState {
 				Map.size * 0.6f, TextureManager.CHOCOLATE, this);
 		this.buttons[3] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) - Map.size / 2, Map.size / 8 + Map.size / 2,
 				Map.size * 0.6f, TextureManager.STRAWBERRY, this);
+
+		this.power_up_buttons = new CircleButton[3];
+		this.power_up_buttons[0] = new PowerUpButton(ScreenUtil.screen_width / 2 - Map.size, Map.size / 8 + Map.size / 2, Map.size * 0.6f, Power.TIME_SLOW,
+				this);
+		this.power_up_buttons[1] = new PowerUpButton(ScreenUtil.screen_width / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f,
+				Power.SCREEN_CLEAR, this);
+		this.power_up_buttons[2] = new PowerUpButton(ScreenUtil.screen_width / 2 + Map.size, Map.size / 8 + Map.size / 2, Map.size * 0.6f, Power.NUCLEAR,
+				this);
 		// Create the player.
 		this.player = new Player((int) (Map.size * 2.5f), this.ground_level, this);
 		this.score = new Score();
@@ -242,6 +256,10 @@ public class Play extends GameState {
 						this.buttons[3].update(delta);
 					}
 
+					for (int i = 0; i < this.power_up_buttons.length; i++) {
+						this.power_up_buttons[i].update(delta);
+					}
+
 				} else {
 					this.paused.update(delta);
 					this.retry.update(delta);
@@ -311,7 +329,7 @@ public class Play extends GameState {
 					if (this.level.getNumberOfMilksNeededToWin() != -1) {
 						if (this.player.getNumberOfMilksDelivered() >= this.level.getNumberOfMilksNeededToWin()) {
 							this.level.setBeaten(true);
-							AudioManager.SOUND.VICTORY.playSound();
+							AudioManager.SoundXv.VICTORY.playSound();
 							this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.PREVIOUS_STATE);
 							this.state_is_transitioning = true;
 						}
@@ -384,6 +402,10 @@ public class Play extends GameState {
 			this.buttons[3].render(this.sprite_batch);
 		}
 
+		for (int i = 0; i < this.power_up_buttons.length; i++) {
+			this.power_up_buttons[i].render(this.sprite_batch);
+		}
+
 		for (Chaser chaser : this.chasers) {
 			chaser.render(this.sprite_batch, (int) this.current_scroll);
 		}
@@ -418,7 +440,7 @@ public class Play extends GameState {
 			}
 
 			if (this.lost) {
-				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1, ScreenUtil.screen_width
+				this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1, ScreenUtil.screen_width
 						- Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
 
 				this.game_over.render(this.sprite_batch, false);
@@ -426,7 +448,7 @@ public class Play extends GameState {
 				this.main_menu.render(this.sprite_batch, false);
 				this.options.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont(), false);
 			} else if (this.pause_menu_open) {
-				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1, ScreenUtil.screen_width
+				this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1, ScreenUtil.screen_width
 						- Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
 				if (this.pause_menu_open) {
 					this.paused.render(this.sprite_batch, this.sprite_batch.getColor());
@@ -445,13 +467,13 @@ public class Play extends GameState {
 
 	private void setLost(boolean b) {
 		this.lost = false;
-		AudioManager.SOUND.DEATH_ONE.setMuted(false);
-		AudioManager.SOUND.DEATH_TWO.setMuted(false);
+		AudioManager.SoundXv.DEATH_ONE.setMuted(false);
+		AudioManager.SoundXv.DEATH_TWO.setMuted(false);
 	}
 
 	public void resetPositionsForAllEntities() {
 		this.backgrounds[0].setX(0);
-		this.backgrounds[1].setX(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth());
+		this.backgrounds[1].setX(TextureManager.Spritesheet.BACKGROUNDS.getWidth());
 		this.buttons[0].reset();
 		this.player.reset();
 		for (int i = 0; i < this.houses.length; i++) {
@@ -475,8 +497,15 @@ public class Play extends GameState {
 				if (this.player.getX() + Map.size > house.getX() + this.current_scroll
 						&& this.player.getX() < house.getX() + house.getWidth() * Map.size + this.current_scroll) {
 					if (house.isMilkNeeded(milk_type) && house.needsMoreMilk()) {
-						AudioManager.SOUND.COMPLETED.playSound();
+						AudioManager.SoundXv.COMPLETED.playSound();
 						this.player.incrementNumberOfMilksDelivered();
+						this.current_streak++;
+						this.power_up_one_counter++;
+						this.power_up_two_counter++;
+						this.power_up_three_counter++;
+						if (this.current_streak > this.max_streak) {
+							this.max_streak = this.current_streak;
+						}
 						for (int i = 0; i < this.life_already_gained.length; i++) {
 							if (this.player.getNumberOfMilksDelivered() == this.level.getScoresNeededToGainOneLife()[i]) {
 								if (!this.life_already_gained[i]) {
@@ -494,11 +523,14 @@ public class Play extends GameState {
 			}
 		}
 		if (!milk_delivered) {
-			AudioManager.SOUND.COIN_ECHO.playSound();
+			AudioManager.SoundXv.COIN_ECHO.playSound();
 			this.player.loseOneLife();
 			if (this.current_streak > this.max_streak) {
 				this.max_streak = this.current_streak;
 			}
+			this.power_up_one_counter = 0;
+			this.power_up_two_counter = 0;
+			this.power_up_three_counter = 0;
 			this.current_streak = 0;
 		}
 	}
@@ -518,8 +550,9 @@ public class Play extends GameState {
 
 	public void lose() {
 		this.lost = true;
-		AudioManager.SOUND.DEATH_ONE.setMuted(true);
-		AudioManager.SOUND.DEATH_TWO.setMuted(true);
+		// TODO: Don't toggle mute/un-mute, just don't play the sound...lol
+		AudioManager.SoundXv.DEATH_ONE.setMuted(true);
+		AudioManager.SoundXv.DEATH_TWO.setMuted(true);
 	}
 
 	public void retry() {

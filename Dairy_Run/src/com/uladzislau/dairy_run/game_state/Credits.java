@@ -92,7 +92,7 @@ public class Credits extends GameState {
 			}
 		}
 
-		TextureManager.ANIMATION_SPRITESHEET.CLIMBING_STAIRS.update(delta);
+		TextureManager.Animation_Spritesheet.CLIMBING_STAIRS.update(delta);
 		StaticGUI.music_button.update(delta);
 		StaticGUI.back_button.update(delta);
 	}
@@ -103,10 +103,10 @@ public class Credits extends GameState {
 
 		for (int i = 0; i < this.layer_y.length; i++) {
 			for (int j = 0; j < Map.number_of_horizontal_blocks_off_edge_included; j++) {
-				this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.CREDITS_TILE), Map.size * 2 * j,
+				this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.CREDITS_TILE), Map.size * 2 * j,
 						(int) (this.layer_y[i]), Map.size * 2, Map.size * 2);
 			}
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.LADDER), Map.size, (int) (this.layer_y[i]),
+			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.LADDER), Map.size, (int) (this.layer_y[i]),
 					Map.size * 2, Map.size * 2);
 		}
 
@@ -126,7 +126,7 @@ public class Credits extends GameState {
 
 		}
 
-		this.sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.CLIMBING_STAIRS.getCurrentFrame(), Map.size, Map.size, Map.size * 2, Map.size * 2);
+		this.sprite_batch.draw(TextureManager.Animation_Spritesheet.CLIMBING_STAIRS.getCurrentFrame(), Map.size, Map.size, Map.size * 2, Map.size * 2);
 
 		StaticGUI.music_button.render(this.sprite_batch, ColorXv.ORANGE);
 		StaticGUI.back_button.render(this.sprite_batch, ColorXv.ORANGE);

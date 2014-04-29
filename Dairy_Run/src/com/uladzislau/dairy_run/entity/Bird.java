@@ -12,7 +12,7 @@ public class Bird extends Entity {
 	}
 
 	public void render(SpriteBatch sb, int current_scroll) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 10 + 15), getX() + current_scroll, getY(), Map.size, Map.size);
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 10 + 15), getX() + current_scroll, getY(), Map.size, Map.size);
 	}
 
 	@Override

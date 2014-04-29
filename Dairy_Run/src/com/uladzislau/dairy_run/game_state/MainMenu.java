@@ -112,7 +112,8 @@ public class MainMenu extends GameState {
 			if (InputManager.pointers[0].x >= this.house_corner_x) {
 				if (InputManager.pointers[0].y >= (this.slope * InputManager.pointers[0].x + this.b)) {
 					if (!this.doorbell_just_played) {
-						AudioManager.SOUND.DOORBELL.playSound();
+						//TODO: Make sure a button hasn't been pressed first.
+						AudioManager.SoundXv.DOORBELL.playSound();
 						this.doorbell_just_played = true;
 					}
 				}
@@ -156,7 +157,7 @@ public class MainMenu extends GameState {
 	public void render() {
 		this.sprite_batch.begin();
 
-		this.sprite_batch.draw(TextureManager.TEXTURE.BACKGROUND.getTexture(), 0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height);
+		this.sprite_batch.draw(TextureManager.TextureXv.BACKGROUND.getTexture(), 0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height);
 		FontManager.FONT.PIXEL_REGULAR.getFont().setScale(FontManager.FONT.PIXEL_REGULAR.getFont().getScaleX() * 0.8f,
 				FontManager.FONT.PIXEL_REGULAR.getFont().getScaleY() * 0.8f);
 		FontManager.FONT.PIXEL_REGULAR.setColor(ColorXv.YELLOW);
@@ -178,7 +179,7 @@ public class MainMenu extends GameState {
 		} else {
 			this.sprite_batch.setColor(ColorXv.YELLOW.getR(), ColorXv.YELLOW.getG(), ColorXv.YELLOW.getB(), this.sun_timer.percentComplete() / 4.9f);
 		}
-		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.WHITE), 0, 0, ScreenUtil.screen_width,
+		this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.WHITE), 0, 0, ScreenUtil.screen_width,
 				ScreenUtil.screen_height);
 		this.sprite_batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}

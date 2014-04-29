@@ -23,8 +23,8 @@ public class Background extends Entity {
 
 	@Override
 	public void update(float delta) {
-		if (getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE < 0) {
-			setX(getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() * 2);
+		if (getX() + TextureManager.Spritesheet.BACKGROUNDS.getWidth() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE < 0) {
+			setX(getX() + TextureManager.Spritesheet.BACKGROUNDS.getWidth() * 2);
 		}
 	}
 
@@ -34,15 +34,15 @@ public class Background extends Entity {
 		if (getX() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE < ScreenUtil.screen_width) {
 			switch (this.type) {
 			case BLUE:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(this.getSpriteBatch(), BLUE,
+				TextureManager.Spritesheet.BACKGROUNDS.render(this.getSpriteBatch(), BLUE,
 						(int) (this.getX() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE), (int) this.getY());
 				break;
 			case GREEN:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(this.getSpriteBatch(), GREEN, (int) (this.getX() + Map.getCurrentScrollAsInt()
+				TextureManager.Spritesheet.BACKGROUNDS.render(this.getSpriteBatch(), GREEN, (int) (this.getX() + Map.getCurrentScrollAsInt()
 						* Background.SCROLL_RATE), (int) this.getY());
 				break;
 			case BROWN:
-				TextureManager.SPRITESHEET.BACKGROUNDS.render(this.getSpriteBatch(), BROWN, (int) (this.getX() + Map.getCurrentScrollAsInt()
+				TextureManager.Spritesheet.BACKGROUNDS.render(this.getSpriteBatch(), BROWN, (int) (this.getX() + Map.getCurrentScrollAsInt()
 						* Background.SCROLL_RATE), (int) this.getY());
 				break;
 			default:
@@ -62,13 +62,13 @@ public class Background extends Entity {
 	public static void render(SpriteBatch sb, byte t) {
 		switch (t) {
 		case BLUE:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BLUE, 0, 0);
+			TextureManager.Spritesheet.BACKGROUNDS.render(sb, BLUE, 0, 0);
 			break;
 		case GREEN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, GREEN, 0, 0);
+			TextureManager.Spritesheet.BACKGROUNDS.render(sb, GREEN, 0, 0);
 			break;
 		case BROWN:
-			TextureManager.SPRITESHEET.BACKGROUNDS.render(sb, BROWN, 0, 0);
+			TextureManager.Spritesheet.BACKGROUNDS.render(sb, BROWN, 0, 0);
 			break;
 		default:
 			break;

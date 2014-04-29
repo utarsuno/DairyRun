@@ -56,11 +56,11 @@ public class Player {
 			this.scared = false;
 		}
 		if (this.scared) {
-			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.update(delta);
-			TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
+			TextureManager.Animation_Spritesheet.SAD_PIXEL_WALKING.update(delta);
+			TextureManager.Animation_Spritesheet.SAD_PIXEL_WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
 		} else {
-			TextureManager.ANIMATION_SPRITESHEET.WALKING.update(delta);
-			TextureManager.ANIMATION_SPRITESHEET.WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
+			TextureManager.Animation_Spritesheet.WALKING.update(delta);
+			TextureManager.Animation_Spritesheet.WALKING.setFrameTime((int) (180 / (this.play.getVelocity() / 5)));
 		}
 	}
 
@@ -69,9 +69,9 @@ public class Player {
 		if (this.render_player) {
 			// Render the player.
 			if (this.scared) {
-				sb.draw(TextureManager.ANIMATION_SPRITESHEET.SAD_PIXEL_WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
+				sb.draw(TextureManager.Animation_Spritesheet.SAD_PIXEL_WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
 			} else {
-				sb.draw(TextureManager.ANIMATION_SPRITESHEET.WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
+				sb.draw(TextureManager.Animation_Spritesheet.WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
 			}
 		}
 
@@ -79,15 +79,15 @@ public class Player {
 
 	public void renderPlayerStats(SpriteBatch sb, int current_scroll) {
 		// TODO: Rendering these in a pretty fashion will need serious work.
-		FontManager.FONT.PIXEL_REGULAR.render(sb, "" + MathUtil.round(this.play.getVelocity(), 2), Color.BLACK, Map.size * 0.1f,
-				Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 0.9f, ScreenUtil.screen_height - Map.size * 0.1f);
+		FontManager.FONT.PIXEL_REGULAR.render(sb, "" + MathUtil.round(this.play.getVelocity(), 2), Color.BLACK, Map.size * 0.1f, Map.size * 1.9f,
+				ScreenUtil.screen_height - Map.size * 0.9f, ScreenUtil.screen_height - Map.size * 0.1f);
 
 		if (getNumberOfMilksDelivered() < 10) {
-			FontManager.FONT.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 0.9f,
-					ScreenUtil.screen_height - Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
+			FontManager.FONT.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 0.9f, ScreenUtil.screen_height
+					- Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
 		} else {
-			FontManager.FONT.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 1.9f,
-					ScreenUtil.screen_height - Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
+			FontManager.FONT.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 1.9f, ScreenUtil.screen_height
+					- Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
 		}
 
 		// Render the player's health at the top right of the screen.
@@ -113,18 +113,18 @@ public class Player {
 		if (this.life >= 0) {
 			int r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
 			if (r == 0) {
-				AudioManager.SOUND.PAIN_ONE.playSound();
+				AudioManager.SoundXv.PAIN_ONE.playSound();
 			} else if (r == 1) {
-				AudioManager.SOUND.PAIN_TWO.playSound();
+				AudioManager.SoundXv.PAIN_TWO.playSound();
 			} else if (r == 2) {
-				AudioManager.SOUND.PAIN_THREE.playSound();
+				AudioManager.SoundXv.PAIN_THREE.playSound();
 			}
 		}
 		if (this.life < 0) {
 			if (Dice.nextBoolean()) {
-				AudioManager.SOUND.DEATH_ONE.playSound();
+				AudioManager.SoundXv.DEATH_ONE.playSound();
 			} else {
-				AudioManager.SOUND.DEATH_TWO.playSound();
+				AudioManager.SoundXv.DEATH_TWO.playSound();
 			}
 			this.play.lose();
 		}
@@ -185,10 +185,10 @@ public class Player {
 	public static void render(SpriteBatch sprite_batch, int x, int y, int w, int h, short type) {
 		switch (type) {
 		case Player.READY_TO_SPRINT:
-			sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(type), x, y, w, h);
+			sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(type), x, y, w, h);
 			break;
 		case SPRINTING:
-			sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.WALKING.getCurrentFrame(), x, y, w, h);
+			sprite_batch.draw(TextureManager.Animation_Spritesheet.WALKING.getCurrentFrame(), x, y, w, h);
 			break;
 		default:
 			break;
@@ -204,8 +204,7 @@ public class Player {
 		case SPRINTING:
 			// sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.PIXEL_WALKING.getCurrentFrame(), (float) x, (float) y, (float) w,
 			// (float) h, 1.0f, 1.0f, (float) rotation);
-			sprite_batch.draw(TextureManager.ANIMATION_SPRITESHEET.WALKING.getCurrentFrame(), x, y, xr, yr, w, h, 1.0f, 1.0f,
-					rotation);
+			sprite_batch.draw(TextureManager.Animation_Spritesheet.WALKING.getCurrentFrame(), x, y, xr, yr, w, h, 1.0f, 1.0f, rotation);
 			break;
 		default:
 			break;
@@ -217,8 +216,8 @@ public class Player {
 		case Player.READY_TO_SPRINT:
 			break;
 		case SPRINTING:
-			sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame((TextureManager.ANIMATION_SPRITESHEET.WALKING
-					.getCurrentFrameNumber() + (31 * 6) + 26)), x, y, w, h);
+			sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame((TextureManager.Animation_Spritesheet.WALKING.getCurrentFrameNumber()
+					+ (31 * 6) + 26)), x, y, w, h);
 			break;
 		default:
 			break;

@@ -41,7 +41,7 @@ public class Level {
 	private boolean createChasers;
 	private float velocity_needed;
 	private float initial_velocity;
-	private AudioManager.MUSIC music;
+	private AudioManager.MusicXv music;
 	private GroundBlock.Theme ground_theme;
 	private boolean bronze_recieved = false;
 	private boolean silver_recieved = false;
@@ -224,11 +224,11 @@ public class Level {
 		return this.ground_theme;
 	}
 
-	public AudioManager.MUSIC getMusic() {
+	public AudioManager.MusicXv getMusic() {
 		return this.music;
 	}
 
-	public void setMusic(AudioManager.MUSIC music) {
+	public void setMusic(AudioManager.MusicXv music) {
 		this.music = music;
 	}
 

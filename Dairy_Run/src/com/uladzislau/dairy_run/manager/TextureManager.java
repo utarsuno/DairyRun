@@ -14,7 +14,7 @@ public class TextureManager {
 	public static final short WHITE = 0;
 	public static final short BLACK = 1;
 	public static final short CREDITS_TILE = 2;
-	
+
 	public static final short PAUSE = 31 * 7 + 23;
 	public static final short REGULAR = 31 * 6 + 20;
 	public static final short CHOCOLATE = 31 * 6 + 21;
@@ -46,7 +46,11 @@ public class TextureManager {
 	public static final short GOLD_COIN = 31 * 3 + 2;
 	public static final short LADDER = 31 * 3 + 3;
 
-	public enum TEXTURE implements Resource {
+	public static final short POWER_UP_ONE = 31 * 4;
+	public static final short POWER_UP_TWO = 31 * 4 + 1;
+	public static final short POWER_UP_THREE = 31 * 4 + 2;
+
+	public enum TextureXv implements Resource {
 		BACKGROUND("main_menu_hd", "brozie");
 
 		private final String name;
@@ -56,7 +60,7 @@ public class TextureManager {
 		private Texture texture;
 		private boolean initialized;
 
-		TEXTURE(String name, String source) {
+		TextureXv(String name, String source) {
 			this.name = name;
 			this.source = source;
 			this.setInitialized(false);
@@ -120,7 +124,7 @@ public class TextureManager {
 		}
 
 		public boolean isInitialized() {
-			return initialized;
+			return this.initialized;
 		}
 
 		public void setInitialized(boolean initialized) {
@@ -129,7 +133,7 @@ public class TextureManager {
 
 	}
 
-	public static enum SPRITESHEET implements TextureResource {
+	public static enum Spritesheet implements TextureResource {
 		PIXEL_SPRITESHEET("pixel_spritesheet", "http://opengameart.org/content/platformer-art-pixel-redux", 31, 31, 2, 2, 21, 21), BACKGROUNDS("Backgrounds",
 				"http://opengameart.org/content/platformer-art-pixel-redux", PIXEL_SPRITESHEET, 793, 835, 3, 1, 0, 0, 231, 63);
 
@@ -147,10 +151,10 @@ public class TextureManager {
 		private TextureRegion[] frames;
 		private int start_pixel_x = -1;
 		private int start_pixel_y;
-		private SPRITESHEET spritesheet;
+		private Spritesheet spritesheet;
 		private boolean initialized;
 
-		SPRITESHEET(String name, String source, int cols, int rows, int x_padding, int y_padding, int subimage_pixel_width, int subimage_pixel_height) {
+		Spritesheet(String name, String source, int cols, int rows, int x_padding, int y_padding, int subimage_pixel_width, int subimage_pixel_height) {
 			this.name = name;
 			this.source = source;
 			this.cols = cols;
@@ -162,7 +166,7 @@ public class TextureManager {
 			this.frames = new TextureRegion[this.rows * this.cols];
 		}
 
-		SPRITESHEET(String name, String source, SPRITESHEET spritesheet, int start_pixel_x, int start_pixel_y, int cols, int rows, int x_padding,
+		Spritesheet(String name, String source, Spritesheet spritesheet, int start_pixel_x, int start_pixel_y, int cols, int rows, int x_padding,
 				int y_padding, int subimage_pixel_width, int subimage_pixel_height) {
 			this.name = name;
 			this.source = source;
@@ -288,7 +292,7 @@ public class TextureManager {
 
 	}
 
-	public enum ANIMATION_SPRITESHEET implements Resource {
+	public enum Animation_Spritesheet implements Resource {
 		WALKING("walking", "http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 28, 29 }), SAD_PIXEL_WALKING("pixel_walking",
 				"http://opengameart.org/content/platformer-art-pixel-redux", 90, new int[] { 31 * 6 + 28, 31 * 6 + 29 }), CLIMBING_STAIRS("climbing",
 				"http://opengameart.org/content/platformer-art-pixel-redux", 250, new int[] { 24, 25 });
@@ -301,7 +305,7 @@ public class TextureManager {
 		private int current_frame;
 		private boolean initialized;
 
-		ANIMATION_SPRITESHEET(String name, String source, int frame_time, int frames[]) {
+		Animation_Spritesheet(String name, String source, int frame_time, int frames[]) {
 			this.setName(name);
 			this.source = source;
 			this.setDeltaTimer(new DeltaTimer());
@@ -327,7 +331,7 @@ public class TextureManager {
 		}
 
 		public TextureRegion getCurrentFrame() {
-			return TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.frames[this.current_frame]);
+			return TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.frames[this.current_frame]);
 		}
 
 		@Override

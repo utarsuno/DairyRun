@@ -268,7 +268,7 @@ public class House extends Entity {
 				this.door);
 
 		renderWindowLayer(this.getSpriteBatch(), (int) (this.getX() + Map.getCurrentScrollAsInt()) + this.window_location,
-				(int) (this.getY() + Map.size - Map.size / 2), this.window);
+				(int) (this.getY() + Map.size - Map.size / 2));
 
 		for (int i = this.getHeight() / 2; i < this.getHeight() - 1; i++) {
 			renderRoofLayer(this.getSpriteBatch(), 27, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size * i), this.getWidth()
@@ -282,7 +282,7 @@ public class House extends Entity {
 			this.getSpriteBatch().setColor(this.getSpriteBatch().getColor().r, this.getSpriteBatch().getColor().g, this.getSpriteBatch().getColor().b,
 					1.0f - this.milkFader[i].percentComplete());
 			this.getSpriteBatch().draw(
-					TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_needed[i]),
+					TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.milk_needed[i]),
 					(int) (this.getX() + Map.getCurrentScrollAsInt())
 							+ (this.getWidth() - MathUtils.round(((Map.size * 0.1f)) * (this.number_of_milks - 1) + Map.size * this.number_of_milks)) / 2
 							+ Map.size * i + (Map.size * 0.1f) * i - (Map.size * (1.0f + this.milkFader[i].percentComplete())) / 2 + Map.size / 2,
@@ -292,41 +292,41 @@ public class House extends Entity {
 		}
 	}
 
-	public void renderWindowLayer(SpriteBatch sb, int x, int y, short window) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.window + (this.house / 3) * 4), x, y, Map.size, Map.size);
+	public void renderWindowLayer(SpriteBatch sb, int x, int y) {
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.window + (this.house / 3) * 4), x, y, Map.size, Map.size);
 	}
 
 	public void renderDoorLayer(SpriteBatch sb, int layer, int x, int y, byte door) {
 		if (this.house == TAN_HOUSE) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + door), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + door), x, y, Map.size, Map.size);
 		} else if (this.house == House.DARK_BLUE_HOUSE) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + door + 8), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + door + 8), x, y, Map.size, Map.size);
 		} else {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + door + 4), x, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + door + 4), x, y, Map.size, Map.size);
 		}
 	}
 
 	private void renderHouseLayer(SpriteBatch sb, int layer, int x, int y, int w, byte house) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + house), x, y, Map.size, Map.size);
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + house), x, y, Map.size, Map.size);
 		int current_height_layer = (y / Map.size) - 1;
 		for (int i = 1; i < w - 1; i++) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 1 + house), x + Map.size * i, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + 1 + house), x + Map.size * i, y, Map.size, Map.size);
 			for (int j = 0; j < this.brick_layers[current_height_layer].length; j++) {
 				if (current_height_layer > 0 && j > 0 && j < w - 1 && this.brick_layers[current_height_layer][j] != -1) {
-					sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * this.brick_layers[current_height_layer][j] + 9), x + Map.size * j, y,
+					sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * this.brick_layers[current_height_layer][j] + 9), x + Map.size * j, y,
 							Map.size, Map.size);
 				}
 			}
 		}
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 2 + house), x + Map.size * (w - 1), y, Map.size, Map.size);
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + 2 + house), x + Map.size * (w - 1), y, Map.size, Map.size);
 	}
 
 	private void renderRoofLayer(SpriteBatch sb, int layer, int x, int y, int w, byte roof) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + roof), x - Map.size, y, Map.size, Map.size);
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + roof), x - Map.size, y, Map.size, Map.size);
 		for (int i = 0; i < w; i++) {
-			sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 1 + roof), x + Map.size * i, y, Map.size, Map.size);
+			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + 1 + roof), x + Map.size * i, y, Map.size, Map.size);
 		}
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * layer + 2 + roof), x + Map.size * w, y, Map.size, Map.size);
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + 2 + roof), x + Map.size * w, y, Map.size, Map.size);
 	}
 
 	public boolean isMouseDownOnMe() {

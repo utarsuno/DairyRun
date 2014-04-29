@@ -103,11 +103,11 @@ public class ClickableText {
 			if (!this.sound_played) {
 				switch (this.type) {
 				case ClickableText.TEXT:
-					AudioManager.SOUND.INTERFACE_01.playSound();
+					AudioManager.SoundXv.INTERFACE_01.playSound();
 					this.sound_played = true;
 					break;
 				case ClickableText.BUTTON:
-					AudioManager.SOUND.INTERFACE_01.playSound();
+					AudioManager.SoundXv.INTERFACE_01.playSound();
 					this.sound_played = true;
 					break;
 				default:

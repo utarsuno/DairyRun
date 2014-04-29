@@ -54,9 +54,9 @@ public class LevelSelector extends GameState {
 
 		// Create the background.
 		this.backgrounds = new Background[2];
-		this.backgrounds[0] = new Background(0, 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE,
+		this.backgrounds[0] = new Background(0, 0, TextureManager.Spritesheet.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE,
 				this.sprite_batch);
-		this.backgrounds[1] = new Background(TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(), 0, TextureManager.SPRITESHEET.BACKGROUNDS.getWidth(),
+		this.backgrounds[1] = new Background(TextureManager.Spritesheet.BACKGROUNDS.getWidth(), 0, TextureManager.Spritesheet.BACKGROUNDS.getWidth(),
 				ScreenUtil.screen_height, Background.BLUE, this.sprite_batch);
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[(ScreenUtil.screen_width / Map.size) + 2];
@@ -181,10 +181,10 @@ public class LevelSelector extends GameState {
 		}
 
 		if (this.transition_left) {
-			TextureManager.ANIMATION_SPRITESHEET.WALKING.update(delta);
+			TextureManager.Animation_Spritesheet.WALKING.update(delta);
 			this.backgrounds[0]
-					.setX((int) (-1 * (int) ((this.current_level + 1) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / (float) this.levels.length)) + ((float) this.offset / ScreenUtil.screen_width)
-							* (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / this.levels.length)));
+					.setX((int) (-1 * (int) ((this.current_level + 1) * (TextureManager.Spritesheet.BACKGROUNDS.getWidth() / (float) this.levels.length)) + ((float) this.offset / ScreenUtil.screen_width)
+							* (TextureManager.Spritesheet.BACKGROUNDS.getWidth() / this.levels.length)));
 			for (int i = 0; i < this.ground_blocks.length; i++) {
 				this.ground_blocks[i].setX(this.ground_blocks[i].getX() + this.delta_offset);
 				if (this.ground_blocks[i].getX() > ScreenUtil.screen_width) {
@@ -193,10 +193,10 @@ public class LevelSelector extends GameState {
 				}
 			}
 		} else if (this.transition_right) {
-			TextureManager.ANIMATION_SPRITESHEET.WALKING.update(delta);
+			TextureManager.Animation_Spritesheet.WALKING.update(delta);
 			this.backgrounds[0]
-					.setX((int) (-1 * (int) ((this.current_level - 1) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / (float) this.levels.length)) + ((float) this.offset / ScreenUtil.screen_width)
-							* (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / this.levels.length)));
+					.setX((int) (-1 * (int) ((this.current_level - 1) * (TextureManager.Spritesheet.BACKGROUNDS.getWidth() / (float) this.levels.length)) + ((float) this.offset / ScreenUtil.screen_width)
+							* (TextureManager.Spritesheet.BACKGROUNDS.getWidth() / this.levels.length)));
 			for (int i = 0; i < this.ground_blocks.length; i++) {
 				this.ground_blocks[i].setX(this.ground_blocks[i].getX() + this.delta_offset);
 				if (this.ground_blocks[i].getX() + Map.size < 0) {
@@ -205,7 +205,7 @@ public class LevelSelector extends GameState {
 				}
 			}
 		} else {
-			this.backgrounds[0].setX(-1 * (int) ((this.current_level) * (TextureManager.SPRITESHEET.BACKGROUNDS.getWidth() / (float) this.levels.length)));
+			this.backgrounds[0].setX(-1 * (int) ((this.current_level) * (TextureManager.Spritesheet.BACKGROUNDS.getWidth() / (float) this.levels.length)));
 
 			if (InputManager.pointersDown[0] && !InputManager.pointersDragging[0] && !this.button_pressed) {
 				// Check to see if the first button has been pressed.
@@ -238,7 +238,7 @@ public class LevelSelector extends GameState {
 			}
 		}
 
-		this.backgrounds[1].setX(this.backgrounds[0].getX() + TextureManager.SPRITESHEET.BACKGROUNDS.getWidth());
+		this.backgrounds[1].setX(this.backgrounds[0].getX() + TextureManager.Spritesheet.BACKGROUNDS.getWidth());
 
 		// Detect if the music toggle button has been pressed.
 		StaticGUI.music_button.update(delta);
@@ -261,11 +261,11 @@ public class LevelSelector extends GameState {
 		}
 
 		// Render the left button.
-		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 15 + 11), 0, ScreenUtil.screen_height / 2 - Map.size, Map.size * 2,
+		this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 15 + 11), 0, ScreenUtil.screen_height / 2 - Map.size, Map.size * 2,
 				Map.size * 2);
 
 		// Render the right button.
-		this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 15 + 12), ScreenUtil.screen_width - Map.size * 2,
+		this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 15 + 12), ScreenUtil.screen_width - Map.size * 2,
 				ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2);
 
 		if (this.transition_left) {
@@ -326,22 +326,22 @@ public class LevelSelector extends GameState {
 	private void renderLevelSign(int x_offset, int level) {
 		if (this.levels[level].isUnlocked()) {
 			// Render the play button.
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 14), ScreenUtil.screen_width / 2 - Map.size + x_offset
+			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 14), ScreenUtil.screen_width / 2 - Map.size + x_offset
 					+ this.offset, Map.getGroundLevel(), Map.size * 2, Map.size * 2);
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width / 2 - Map.size - Map.size / 2
+			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width / 2 - Map.size - Map.size / 2
 					+ x_offset + this.offset, Map.getGroundLevel(), Map.size * 2, Map.size * 2);
 			// TODO: Either fix texture or create constant scale.
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width / 2 - Map.size + Map.size / 2
+			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width / 2 - Map.size + Map.size / 2
 					+ x_offset + this.offset, Map.getGroundLevel(), Map.size * 1.9f, Map.size * 2);
 			// Render the play text.
 			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Play", Color.BLACK, ScreenUtil.screen_width / 2 + x_offset + this.offset,
 					(int) (Map.getGroundLevel() + Map.size - Map.size * 0.15f), (int) (Map.size * .7f));
 		} else {
 			// Render the play button.
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 8 + 14), ScreenUtil.screen_width / 2 - Map.size + x_offset
+			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 14), ScreenUtil.screen_width / 2 - Map.size + x_offset
 					+ this.offset, Map.getGroundLevel(), Map.size * 2, Map.size * 2);
 			// Render the play button.
-			this.sprite_batch.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(31 * 7 + 13), ScreenUtil.screen_width / 2 - Map.size * 1.05f
+			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 7 + 13), ScreenUtil.screen_width / 2 - Map.size * 1.05f
 					+ x_offset + this.offset, Map.getGroundLevel() + Map.size * 0.30f, Map.size * 2, Map.size * 2);
 		}
 	}

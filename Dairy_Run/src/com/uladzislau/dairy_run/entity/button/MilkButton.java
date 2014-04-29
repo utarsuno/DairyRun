@@ -25,7 +25,7 @@ public class MilkButton extends CircleButton {
 
 	@Override
 	public void render(SpriteBatch sb) {
-		sb.draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.milk_type), this.getX() - Map.size / 2, this.getY() - Map.size / 2, Map.size,
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.milk_type), this.getX() - Map.size / 2, this.getY() - Map.size / 2, Map.size,
 				Map.size);
 	}
 

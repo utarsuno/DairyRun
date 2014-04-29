@@ -127,14 +127,14 @@ public class GroundBlock extends Entity {
 	public void render() {
 		if (this.doodads_enabled) {
 			if (this.doodad == TextureManager.LEFT_WEIRD_THING_BOTTOM_HALF) {
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.LEFT_WEIRD_THING_TOP_HALF),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.LEFT_WEIRD_THING_TOP_HALF),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() + this.getHeight(), this.getWidth(), this.getHeight());
 			} else if (this.doodad == TextureManager.RIGHT_WEIRD_THING_BOTTOM_HALF) {
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.RIGHT_WEIRD_THING_TOP_HALF),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.RIGHT_WEIRD_THING_TOP_HALF),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() + this.getHeight(), this.getWidth(), this.getHeight());
 			}
 			if (this.doodad != 0) {
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(this.doodad), this.getX() + Map.getCurrentScrollAsInt(),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.doodad), this.getX() + Map.getCurrentScrollAsInt(),
 						this.getY(), this.getWidth(), this.getHeight());
 			}
 		}
@@ -142,11 +142,11 @@ public class GroundBlock extends Entity {
 		if (this.regular_block) {
 			switch (this.theme) {
 			case GRASS:
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_BLOCK),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_BLOCK),
 					this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 				break;
 			case SNOW:
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 				break;
 			default:
@@ -155,11 +155,11 @@ public class GroundBlock extends Entity {
 		} else {
 			switch (this.theme) {
 			case GRASS:
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_BLOCK_WITH_SMILE),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.GRASS_BLOCK_WITH_SMILE),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 				break;
 			case SNOW:
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_WITH_SMILE),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_WITH_SMILE),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight(), this.getWidth(), this.getHeight());
 				break;
 			default:
@@ -170,11 +170,11 @@ public class GroundBlock extends Entity {
 		if (this.lower_block_is_regular) {
 			switch (this.theme) {
 			case GRASS:
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_BLOCK),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_BLOCK),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
 				break;
 			case SNOW:
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_DIRT),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_DIRT),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
 				break;
 			default:
@@ -183,11 +183,11 @@ public class GroundBlock extends Entity {
 		} else {
 			switch (this.theme) {
 			case GRASS:
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_BLOCK_WITH_SMILE),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.DIRT_BLOCK_WITH_SMILE),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
 				break;
 			case SNOW:
-				this.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_DIRT_WITH_SMILE),
+				this.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.SNOW_BLOCK_DIRT_WITH_SMILE),
 						this.getX() + Map.getCurrentScrollAsInt(), this.getY() - this.getHeight() * 2, this.getWidth(), this.getHeight());
 				break;
 			default:

@@ -36,15 +36,15 @@ public class GameStateManager {
 		this.resourceManager = rm;
 		this.transitioning_states_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 200);
 		this.main_menu = new MainMenu(dr, STATE.MAIN_MENU);
-		this.main_menu.setMusic(AudioManager.MUSIC.TEMP_MAIN_MENU_MUSIC);
+		this.main_menu.setMusic(AudioManager.MusicXv.TEMP_MAIN_MENU_MUSIC);
 		this.play = new Play(dr, STATE.PLAY);
-		this.play.setMusic(AudioManager.MUSIC.TEMP_MUSIC);
+		this.play.setMusic(AudioManager.MusicXv.TEMP_MUSIC);
 		this.level_selector = new LevelSelector(dr, STATE.LEVEL_SELECTOR, (Play) this.play);
-		this.level_selector.setMusic(AudioManager.MUSIC.LEVEL_SELECTOR_MUSIC);
+		this.level_selector.setMusic(AudioManager.MusicXv.LEVEL_SELECTOR_MUSIC);
 		this.options = new Options(dr, STATE.OPTIONS);
-		this.options.setMusic(AudioManager.MUSIC.TEMP_OPTIONS);
+		this.options.setMusic(AudioManager.MusicXv.TEMP_OPTIONS);
 		this.credits = new Credits(dr, STATE.CREDITS);
-		this.credits.setMusic(AudioManager.MUSIC.CREDITS_MUSIC);
+		this.credits.setMusic(AudioManager.MusicXv.CREDITS_MUSIC);
 		this.options.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.main_menu.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
 		this.level_selector.initialize(rm.getShapeRenderer(), rm.getSpriteBatch());
@@ -103,7 +103,7 @@ public class GameStateManager {
 		} else {
 			this.resourceManager.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, this.transitioning_states_timer.percentComplete());
 		}
-		this.resourceManager.getSpriteBatch().draw(TextureManager.SPRITESHEET.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), 0, 0, ScreenUtil.screen_width,
+		this.resourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), 0, 0, ScreenUtil.screen_width,
 				ScreenUtil.screen_height);
 
 		this.resourceManager.getSpriteBatch().end();
@@ -111,7 +111,7 @@ public class GameStateManager {
 	}
 
 	public void changeState(GameStateManager.STATE state) {
-		AudioManager.SOUND.TRANSITION_00.playSound();
+		AudioManager.SoundXv.TRANSITION_00.playSound();
 		transitioning_states = true;
 		if (this.current_state.getMusic().isPlaying()) {
 			this.current_state.getMusic().pause();
