@@ -1,6 +1,5 @@
 package com.uladzislau.dairy_run;
 
-//I like big black chicks
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
