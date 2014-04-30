@@ -34,12 +34,12 @@ public class Credits extends GameState {
 			this.layer_y[i] = Map.size * 2 * i;
 		}
 
-		this.credits_y = new float[27];
+		this.credits_y = new float[24];
 		for (int i = 0; i < this.credits_y.length; i++) {
 			this.credits_y[i] = ScreenUtil.screen_height + Map.size * i;
 		}
 
-		this.credits = new String[27];
+		this.credits = new String[24];
 		this.credits[0] = "Thanks for playing";
 		this.credits[1] = "";
 		this.credits[2] = "Uladzislau Tarsunou";
@@ -62,11 +62,8 @@ public class Credits extends GameState {
 		this.credits[19] = "@ GitHub";
 		this.credits[20] = "Source Code";
 		this.credits[21] = "";
-		this.credits[22] = "Anthony Nedumgottil";
-		this.credits[23] = "Idea Consultant:";
-		this.credits[24] = "";
-		this.credits[25] = "libGDX";
-		this.credits[26] = "Development Framework:";
+		this.credits[22] = "libGDX";
+		this.credits[23] = "Development Framework:";
 
 	}
 
