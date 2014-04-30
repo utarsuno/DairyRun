@@ -175,6 +175,8 @@ public class Options extends GameState {
 				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.REGULAR, Map.size * 2, 0);
 				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, Map.size * 3, 0);
 				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, Map.size * 4, 0);
+				
+				
 			} else if (Options.current_layout == 1) {
 				this.layout_one.setColor(0.0f, 0.0f, 0.0f, 0.5f);
 				this.layout_two.setColor(0.0f, 0.0f, 0.0f, 1.0f);

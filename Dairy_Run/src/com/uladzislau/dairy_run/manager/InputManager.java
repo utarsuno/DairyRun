@@ -31,6 +31,9 @@ public class InputManager implements InputProcessor, GestureListener {
 
 	public InputManager(DairyRun dairy_run) {
 		this.dairy_run = dairy_run;
+	}
+
+	public void initialize() {
 		ignore_input = false;
 		pointers = new Vector2i[NUMBER_OF_POINTERS];
 		for (int i = 0; i < NUMBER_OF_POINTERS; i++) {
@@ -107,9 +110,9 @@ public class InputManager implements InputProcessor, GestureListener {
 		return false;
 	}
 
-	public static final int A = 29, B = 30, C = 31, D = 32, E = 33, F = 34, G = 35, H = 36, I = 37, J = 38, K = 39, L = 40, M = 41, N = 42,
-			O = 43, P = 44, Q = 45, R = 46, S = 47, T = 48, U = 49, V = 50, W = 51, X = 52, Y = 53, Z = 54, UP = 19, LEFT = 21, DOWN = 20,
-			RIGHT = 22, BACKSPACE = 67, LEFT_CONTROL = 129, RIGHT_CONTROL = 130, ESCAPE = 131;
+	public static final int A = 29, B = 30, C = 31, D = 32, E = 33, F = 34, G = 35, H = 36, I = 37, J = 38, K = 39, L = 40, M = 41, N = 42, O = 43, P = 44,
+			Q = 45, R = 46, S = 47, T = 48, U = 49, V = 50, W = 51, X = 52, Y = 53, Z = 54, UP = 19, LEFT = 21, DOWN = 20, RIGHT = 22, BACKSPACE = 67,
+			LEFT_CONTROL = 129, RIGHT_CONTROL = 130, ESCAPE = 131;
 
 	public static boolean isKeyDown(int keycode) {
 		return keyDown[keycode];

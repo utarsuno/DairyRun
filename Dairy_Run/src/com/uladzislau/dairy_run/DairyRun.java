@@ -1,4 +1,5 @@
 package com.uladzislau.dairy_run;
+
 //I like big black chicks
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -18,13 +19,15 @@ public class DairyRun implements ApplicationListener {
 
 	public static boolean paused = false;
 
-	@SuppressWarnings("unused")
+	private InputManager input_manager;
+
 	@Override
 	public void create() {
 
 		DairyRun.start_time = System.currentTimeMillis();
 
-		new InputManager(this);
+		this.input_manager = new InputManager(this);
+		this.input_manager.initialize();
 
 		this.resourceManager = new ResourceManager();
 		this.resourceManager.initialize_all_resources_and_information(this);
