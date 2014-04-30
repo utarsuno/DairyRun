@@ -1,5 +1,6 @@
 package com.uladzislau.dairy_run.colorxv;
 
+import com.badlogic.gdx.graphics.Color;
 import com.uladzislau.dairy_run.math.Dice;
 
 public class ColorXv {
@@ -57,7 +58,7 @@ public class ColorXv {
 		if (startingColorXv.getR() == endingColorXv.getR()) {
 			setR(startingColorXv.getR());
 		} else if (startingColorXv.getR() > endingColorXv.getR()) {
-			setR(endingColorXv.getR() + (startingColorXv.getR() - endingColorXv.getR()) * (percentage));
+			setR(endingColorXv.getR() + (startingColorXv.getR() - endingColorXv.getR()) * percentage);
 		} else {
 			setR(endingColorXv.getR() - (endingColorXv.getR() - startingColorXv.getR()) * percentage);
 		}
@@ -81,6 +82,46 @@ public class ColorXv {
 			setA(endingColorXv.getA() + (startingColorXv.getA() - endingColorXv.getA()) * percentage);
 		} else {
 			setA(endingColorXv.getA() - (endingColorXv.getA() - startingColorXv.getA()) * percentage);
+		}
+	}
+
+	public static float getRComponentToFrom(Color startingColor, Color endingColor, float percentage) {
+		if (startingColor.r == endingColor.r) {
+			return startingColor.r;
+		} else if (startingColor.r > endingColor.r) {
+			return endingColor.r + (startingColor.r - endingColor.r) * percentage;
+		} else {
+			return endingColor.r - (endingColor.r - startingColor.r) * percentage;
+		}
+	}
+
+	public static float getGComponentToFrom(Color startingColor, Color endingColor, float percentage) {
+		if (startingColor.g == endingColor.g) {
+			return startingColor.g;
+		} else if (startingColor.g > endingColor.g) {
+			return endingColor.g + (startingColor.g - endingColor.g) * percentage;
+		} else {
+			return endingColor.g - (endingColor.g - startingColor.g) * percentage;
+		}
+	}
+
+	public static float getBComponentToFrom(Color startingColor, Color endingColor, float percentage) {
+		if (startingColor.b == endingColor.b) {
+			return startingColor.b;
+		} else if (startingColor.b > endingColor.b) {
+			return endingColor.b + (startingColor.b - endingColor.b) * percentage;
+		} else {
+			return endingColor.b - (endingColor.b - startingColor.b) * percentage;
+		}
+	}
+
+	public static float getAComponentToFrom(Color startingColor, Color endingColor, float percentage) {
+		if (startingColor.a == endingColor.a) {
+			return startingColor.a;
+		} else if (startingColor.a > endingColor.a) {
+			return endingColor.a + (startingColor.a - endingColor.a) * percentage;
+		} else {
+			return endingColor.a - (endingColor.a - startingColor.a) * percentage;
 		}
 	}
 

@@ -262,7 +262,7 @@ public class ClickableText {
 
 	public void render(SpriteBatch sprite_batch, boolean centerX) {
 
-		FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, this.colorXv, this.rectangle.getX(), this.rectangle.getY(),
+		FontManager.Font.PIXEL_REGULAR.render(sprite_batch, (String) this.title, this.colorXv, this.rectangle.getX(), this.rectangle.getY(),
 				this.rectangle.getHeight(), centerX);
 
 		// if (centerX) {
@@ -282,12 +282,12 @@ public class ClickableText {
 	}
 
 	public void render(SpriteBatch sprite_batch, ColorXv colurXv) {
-		FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new ColorXv(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(),
+		FontManager.Font.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new ColorXv(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(),
 				colurXv.getA()), this.rectangle.getX(), this.rectangle.getY(), this.rectangle.getHeight(), false);
 	}
 
 	public void render(SpriteBatch sprite_batch, Color color) {
-		FontManager.FONT.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new ColorXv(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(),
+		FontManager.Font.PIXEL_REGULAR.render(sprite_batch, (String) this.title, new ColorXv(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(),
 				color.a), this.rectangle.getX(), this.rectangle.getY(), this.rectangle.getHeight(), false);
 	}
 

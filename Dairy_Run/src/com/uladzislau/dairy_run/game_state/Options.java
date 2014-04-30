@@ -153,11 +153,11 @@ public class Options extends GameState {
 		}
 
 		if (this.audio_state) {
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Sound", Color.BLACK, Map.size / 2, Map.size * 3, Map.size, false);
+			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "Sound", Color.BLACK, Map.size / 2, Map.size * 3, Map.size, false);
 			this.soundSlider.render(this.sprite_batch);
 			this.soundPercentage.render(this.sprite_batch, false);
 
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Music", Color.BLACK, Map.size / 2, (int) (Map.size * 5.0f), Map.size, false);
+			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "Music", Color.BLACK, Map.size / 2, (int) (Map.size * 5.0f), Map.size, false);
 			this.musicSlider.render(this.sprite_batch);
 			this.musicPercentage.render(this.sprite_batch, false);
 
@@ -209,18 +209,18 @@ public class Options extends GameState {
 				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.CHOCOLATE, ScreenUtil.screen_width - Map.size * 4, 0);
 				TextureManager.Spritesheet.PIXEL_SPRITESHEET.render(this.sprite_batch, TextureManager.STRAWBERRY, ScreenUtil.screen_width - Map.size * 5, 0);
 			}
-			this.layout_one.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-			this.layout_two.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-			this.layout_three.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-			this.layout_four.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
+			this.layout_one.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+			this.layout_two.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+			this.layout_three.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+			this.layout_four.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
 
 			// Underline the controls text.
 			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), this.controls.getRectanglei().getX() - Map.size
 					/ 2, this.controls.getRectanglei().getY() - Map.size / 4, this.controls.getTitle().length() * Map.size + Map.size, Map.size / 4);
 		}
 
-		this.audio.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		this.controls.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
+		this.audio.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+		this.controls.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
 
 		StaticGUI.music_button.render(this.sprite_batch, ColorXv.DARK_TEAL);
 		StaticGUI.back_button.render(this.sprite_batch, ColorXv.DARK_TEAL);

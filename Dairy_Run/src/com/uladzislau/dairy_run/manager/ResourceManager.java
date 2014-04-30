@@ -53,7 +53,7 @@ public class ResourceManager {
 		for (TextureManager.Animation_Spritesheet animation_spritesheet : TextureManager.Animation_Spritesheet.values()) {
 			animation_spritesheet.initialize();
 		}
-		FontManager.FONT.PIXEL_REGULAR.initialize();
+		FontManager.Font.PIXEL_REGULAR.initialize();
 		this.texture_initialized = true;
 
 		StaticGUI.inititialize(dairyRun);
@@ -107,7 +107,7 @@ public class ResourceManager {
 			returnString += music.getName() + "\t: " + music.getSource();
 			returnString += "\n";
 		}
-		for (FontManager.FONT font : FontManager.FONT.values()) {
+		for (FontManager.Font font : FontManager.Font.values()) {
 			returnString += font.getName() + "\t: " + font.getSource();
 			returnString += "\n";
 		}
@@ -128,7 +128,7 @@ public class ResourceManager {
 		for (AudioManager.MusicXv music : AudioManager.MusicXv.values()) {
 			music.dispose();
 		}
-		for (FontManager.FONT font : FontManager.FONT.values()) {
+		for (FontManager.Font font : FontManager.Font.values()) {
 			font.dispose();
 		}
 	}

@@ -49,22 +49,22 @@ public class MainMenu extends GameState {
 		this.house_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 6000);
 		this.initial_colorXv = new ColorXv(ColorXv.YELLOW);
 		this.initial_colorXv.setA(0.6f);
-		this.exit = new ClickableText("Exit", new Rectanglei(ScreenUtil.screen_width - FontManager.FONT.PIXEL_REGULAR.getWidth("Exit") * 0.8f, 0, Map.size
+		this.exit = new ClickableText("Exit", new Rectanglei(ScreenUtil.screen_width - FontManager.Font.PIXEL_REGULAR.getWidth("Exit") * 0.8f, 0, Map.size
 				* "Exit".length(), Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
-		this.credits = new ClickableText("Credits", new Rectanglei(ScreenUtil.screen_width - FontManager.FONT.PIXEL_REGULAR.getWidth("Credits") * 0.8f,
+		this.credits = new ClickableText("Credits", new Rectanglei(ScreenUtil.screen_width - FontManager.Font.PIXEL_REGULAR.getWidth("Credits") * 0.8f,
 				Map.size * 1.0f, Map.size * "Credits".length() * 0.8f, Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
-		this.tutorial = new ClickableText("Tutorial", new Rectanglei(ScreenUtil.screen_width - FontManager.FONT.PIXEL_REGULAR.getWidth("Tutorial") * 0.8f,
+		this.tutorial = new ClickableText("Tutorial", new Rectanglei(ScreenUtil.screen_width - FontManager.Font.PIXEL_REGULAR.getWidth("Tutorial") * 0.8f,
 				Map.size * 2.0f, Map.size * "Tutorial".length() * 0.8f, Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
 		this.endless = new ClickableText("Endless", new Rectanglei(Map.size / 10.0f, Map.size * 1.0f, Map.size * "Endless".length() * 0.8f, Map.size * 0.8f),
 				this.initial_colorXv, ColorXv.RED, 800);
 
-		this.levels = new ClickableText("Levels", new Rectanglei(Map.size / 10.0f, Map.size * 2.0f, FontManager.FONT.PIXEL_REGULAR.getWidth("Levels") * 0.8f,
+		this.levels = new ClickableText("Levels", new Rectanglei(Map.size / 10.0f, Map.size * 2.0f, FontManager.Font.PIXEL_REGULAR.getWidth("Levels") * 0.8f,
 				Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
-		this.options = new ClickableText("Options", new Rectanglei(Map.size + Map.size / 2, 0, FontManager.FONT.PIXEL_REGULAR.getWidth("Options") * 0.8f,
+		this.options = new ClickableText("Options", new Rectanglei(Map.size + Map.size / 2, 0, FontManager.Font.PIXEL_REGULAR.getWidth("Options") * 0.8f,
 				Map.size * 0.8f), this.initial_colorXv, ColorXv.RED, 800);
 
 		this.house_corner_x *= ScreenUtil.screen_width;
@@ -158,17 +158,17 @@ public class MainMenu extends GameState {
 		this.sprite_batch.begin();
 
 		this.sprite_batch.draw(TextureManager.TextureXv.BACKGROUND.getTexture(), 0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height);
-		FontManager.FONT.PIXEL_REGULAR.getFont().setScale(FontManager.FONT.PIXEL_REGULAR.getFont().getScaleX() * 0.8f,
-				FontManager.FONT.PIXEL_REGULAR.getFont().getScaleY() * 0.8f);
-		FontManager.FONT.PIXEL_REGULAR.setColor(ColorXv.YELLOW);
-		this.endless.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		this.credits.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		this.levels.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		this.exit.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		this.options.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		this.tutorial.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont());
-		FontManager.FONT.PIXEL_REGULAR.getFont().setScale(FontManager.FONT.PIXEL_REGULAR.getFont().getScaleX() / 0.8f,
-				FontManager.FONT.PIXEL_REGULAR.getFont().getScaleY() / 0.8f);
+		FontManager.Font.PIXEL_REGULAR.getFont().setScale(FontManager.Font.PIXEL_REGULAR.getFont().getScaleX() * 0.8f,
+				FontManager.Font.PIXEL_REGULAR.getFont().getScaleY() * 0.8f);
+		FontManager.Font.PIXEL_REGULAR.setColor(ColorXv.YELLOW);
+		this.endless.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+		this.credits.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+		this.levels.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+		this.exit.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+		this.options.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+		this.tutorial.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+		FontManager.Font.PIXEL_REGULAR.getFont().setScale(FontManager.Font.PIXEL_REGULAR.getFont().getScaleX() / 0.8f,
+				FontManager.Font.PIXEL_REGULAR.getFont().getScaleY() / 0.8f);
 
 		// Render the music toggle button.
 		StaticGUI.music_button.render(this.sprite_batch, ColorXv.YELLOW);

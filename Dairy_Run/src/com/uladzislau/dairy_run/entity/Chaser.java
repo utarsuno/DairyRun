@@ -99,7 +99,7 @@ public class Chaser {
 
 	public void render(SpriteBatch sb, int current_scroll) {
 		if (this.yelling) {
-			FontManager.FONT.PIXEL_REGULAR.render(sb, "MILK!", Color.RED, this.x - Map.size / 4, this.x + Map.size / 4 + Map.size, this.play.ground_level
+			FontManager.Font.PIXEL_REGULAR.render(sb, "MILK!", Color.RED, this.x - Map.size / 4, this.x + Map.size / 4 + Map.size, this.play.ground_level
 					+ Map.size * 1.0f, this.play.ground_level + Map.size * 1.5f);
 		}
 		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.character + 28

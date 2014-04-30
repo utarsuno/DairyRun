@@ -17,7 +17,7 @@ import com.uladzislau.dairy_run.world.Map;
 
 public class Player {
 
-	public static final byte MAX_LIFE = 6;
+	public static final byte MAX_LIFE = 5;
 
 	public static final short READY_TO_SPRINT = 22;
 
@@ -78,17 +78,13 @@ public class Player {
 	}
 
 	public void renderPlayerStats(SpriteBatch sb, int current_scroll) {
-		// TODO: Rendering these in a pretty fashion will need serious work.
-		FontManager.FONT.PIXEL_REGULAR.render(sb, "" + MathUtil.round(this.play.getVelocity(), 2), Color.BLACK, Map.size * 0.1f, Map.size * 1.9f,
+		// Render the current velocity.
+		FontManager.Font.PIXEL_REGULAR.render(sb, "" + MathUtil.round(this.play.getVelocity(), 2), Color.BLACK, Map.size * 0.1f, Map.size * 1.9f,
 				ScreenUtil.screen_height - Map.size * 0.9f, ScreenUtil.screen_height - Map.size * 0.1f);
 
-		if (getNumberOfMilksDelivered() < 10) {
-			FontManager.FONT.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 0.9f, ScreenUtil.screen_height
-					- Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
-		} else {
-			FontManager.FONT.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 1.9f, ScreenUtil.screen_height
-					- Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
-		}
+		// Render the current number of milks delivered.
+		FontManager.Font.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 0.9f, ScreenUtil.screen_height
+				- Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
 
 		// Render the player's health at the top right of the screen.
 		Heart.render(sb, ScreenUtil.screen_width - Map.size * 3, ScreenUtil.screen_height - Map.size, this.life);

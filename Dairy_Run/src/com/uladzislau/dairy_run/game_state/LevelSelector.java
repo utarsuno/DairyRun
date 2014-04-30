@@ -293,10 +293,10 @@ public class LevelSelector extends GameState {
 			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.SPRINTING);
 		} else {
 			// Render the current level title.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (this.current_level + 1), Color.BLACK, ScreenUtil.screen_width / 2,
+			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (this.current_level + 1), Color.BLACK, ScreenUtil.screen_width / 2,
 					(int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
 			// Render the current level description.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK,
+			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK,
 					ScreenUtil.screen_width / 2, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
 			renderLevelSign(0, this.current_level);
 			// Render the player ready to sprint.
@@ -311,7 +311,7 @@ public class LevelSelector extends GameState {
 	}
 
 	private void renderLevelTitle(int x_offset, int level) {
-		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (level + 1), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset + x_offset,
+		FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (level + 1), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset + x_offset,
 				(int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
 	}
 
@@ -319,7 +319,7 @@ public class LevelSelector extends GameState {
 		// if () {
 		//
 		// }
-		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.levels[level].getDescription(), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset
+		FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, this.levels[level].getDescription(), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset
 				+ x_offset, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
 	}
 
@@ -334,7 +334,7 @@ public class LevelSelector extends GameState {
 			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width / 2 - Map.size + Map.size / 2
 					+ x_offset + this.offset, Map.getGroundLevel(), Map.size * 1.9f, Map.size * 2);
 			// Render the play text.
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "Play", Color.BLACK, ScreenUtil.screen_width / 2 + x_offset + this.offset,
+			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "Play", Color.BLACK, ScreenUtil.screen_width / 2 + x_offset + this.offset,
 					(int) (Map.getGroundLevel() + Map.size - Map.size * 0.15f), (int) (Map.size * .7f));
 		} else {
 			// Render the play button.

@@ -118,7 +118,7 @@ public class Credits extends GameState {
 			// ScreenUtil.screen_width - Map.size);
 			// }
 
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.credits[i], ColorXv.WHITE, (int) (Map.size * 3.5f), (int) this.credits_y[i],
+			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, this.credits[i], ColorXv.WHITE, (int) (Map.size * 3.5f), (int) this.credits_y[i],
 					(int) (Map.size * .75f), false, ScreenUtil.screen_width - Map.size);
 
 		}

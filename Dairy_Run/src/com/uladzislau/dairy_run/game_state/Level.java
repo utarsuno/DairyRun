@@ -50,9 +50,9 @@ public class Level {
 	private boolean velocity_matters = false;
 	private boolean show_timer = false;
 	private Score score;
-	private int power_up_first_acheived_every_consecutive_amount;
-	private int power_up_second_acheived_every_consecutive_amount;
-	private int power_up_third_acheived_every_consecutive_amount;
+	private int number_of_consecutive_milks_needed_to_gain_first_power_up;
+	private int number_of_consecutive_milks_needed_to_gain_second_power_up;
+	private int number_of_consecutive_milks_needed_to_gain_third_power_up;
 	private int scores_needed_to_gain_one_life[];
 
 	public Level(boolean locked_or_not) {
@@ -266,33 +266,33 @@ public class Level {
 	}
 
 	public void setPowerUpsGainedAt(int first, int second, int third) {
-		this.power_up_first_acheived_every_consecutive_amount = first;
-		this.power_up_second_acheived_every_consecutive_amount = second;
-		this.power_up_third_acheived_every_consecutive_amount = third;
+		this.number_of_consecutive_milks_needed_to_gain_first_power_up = first;
+		this.number_of_consecutive_milks_needed_to_gain_second_power_up = second;
+		this.number_of_consecutive_milks_needed_to_gain_third_power_up = third;
 	}
 
-	public int getPowerUpFirstAcheivedEveryConsecutiveAmount() {
-		return power_up_first_acheived_every_consecutive_amount;
+	public int getNumberOfConsecutiveMilksNeededToGainFirstPowerUp() {
+		return this.number_of_consecutive_milks_needed_to_gain_first_power_up;
 	}
 
-	public void setPowerUpFirstAcheivedEveryConsecutiveAmount(int power_up_first_acheived_every_consecutive_amount) {
-		this.power_up_first_acheived_every_consecutive_amount = power_up_first_acheived_every_consecutive_amount;
+	public void setNumberofConsecutiveMilksNeededToGainFirstPowerUp(int milks) {
+		this.number_of_consecutive_milks_needed_to_gain_first_power_up = milks;
 	}
 
-	public int getPowerSecondAcheivedEveryConsecutiveAmount() {
-		return power_up_second_acheived_every_consecutive_amount;
+	public int getNumberOfConsecutiveMilksNeededToGainSecondPowerUp() {
+		return this.number_of_consecutive_milks_needed_to_gain_second_power_up;
 	}
 
-	public void setPowerSecondAcheivedEveryConsecutiveAmount(int power_second_acheived_every_consecutive_amount) {
-		this.power_up_second_acheived_every_consecutive_amount = power_second_acheived_every_consecutive_amount;
+	public void setNumberofConsecutiveMilksNeededToGainSecondPowerUp(int milks) {
+		this.number_of_consecutive_milks_needed_to_gain_second_power_up = milks;
 	}
 
-	public int getPowerUpThirdAcheivedEveryConsecutiveAmount() {
-		return power_up_third_acheived_every_consecutive_amount;
+	public int getNumberOfConsecutiveMilksNeededToGainThirdPowerUp() {
+		return this.number_of_consecutive_milks_needed_to_gain_third_power_up;
 	}
 
-	public void setPowerUpThirdAcheivedEveryConsecutiveAmount(int power_up_third_acheived_every_consecutive_amount) {
-		this.power_up_third_acheived_every_consecutive_amount = power_up_third_acheived_every_consecutive_amount;
+	public void setNumberofConsecutiveMilksNeededToGainThirdPowerUp(int milks) {
+		this.number_of_consecutive_milks_needed_to_gain_third_power_up = milks;
 	}
 
 }

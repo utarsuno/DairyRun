@@ -17,8 +17,10 @@ import com.uladzislau.dairy_run.entity.button.MilkButton;
 import com.uladzislau.dairy_run.entity.button.PowerUpButton;
 import com.uladzislau.dairy_run.entity.button.PowerUpButton.Power;
 import com.uladzislau.dairy_run.entity.button.RunButton;
+import com.uladzislau.dairy_run.gui.AnimatedText;
 import com.uladzislau.dairy_run.gui.ClickableText;
 import com.uladzislau.dairy_run.gui.StaticGUI;
+import com.uladzislau.dairy_run.gui.AnimatedText.AnimatedTextType;
 import com.uladzislau.dairy_run.information.Score;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
@@ -43,7 +45,7 @@ public class Play extends GameState {
 	private ArrayList<Chaser> chasers;
 
 	private CircleButton[] buttons;
-	private CircleButton[] power_up_buttons;
+	private PowerUpButton[] power_up_buttons;
 
 	private float current_scroll;
 	private float velocity;
@@ -87,6 +89,8 @@ public class Play extends GameState {
 	private boolean state_is_transitioning = false;
 
 	private DeltaTimer play_timer;
+
+	private AnimatedText plus_one_life_animated_text;
 
 	public Play(DairyRun dairy_run, GameStateManager.STATE state) {
 		super(dairy_run, state);
@@ -142,13 +146,11 @@ public class Play extends GameState {
 		this.buttons[3] = new MilkButton((ScreenUtil.screen_width) - (ScreenUtil.screen_width / 20) - Map.size / 2, Map.size / 8 + Map.size / 2,
 				Map.size * 0.6f, TextureManager.STRAWBERRY, this);
 
-		this.power_up_buttons = new CircleButton[3];
+		this.power_up_buttons = new PowerUpButton[3];
 		this.power_up_buttons[0] = new PowerUpButton(ScreenUtil.screen_width / 2 - Map.size, Map.size / 8 + Map.size / 2, Map.size * 0.6f, Power.TIME_SLOW,
 				this);
-		this.power_up_buttons[1] = new PowerUpButton(ScreenUtil.screen_width / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f,
-				Power.SCREEN_CLEAR, this);
-		this.power_up_buttons[2] = new PowerUpButton(ScreenUtil.screen_width / 2 + Map.size, Map.size / 8 + Map.size / 2, Map.size * 0.6f, Power.NUCLEAR,
-				this);
+		this.power_up_buttons[1] = new PowerUpButton(ScreenUtil.screen_width / 2, Map.size / 8 + Map.size / 2, Map.size * 0.6f, Power.SCREEN_CLEAR, this);
+		this.power_up_buttons[2] = new PowerUpButton(ScreenUtil.screen_width / 2 + Map.size, Map.size / 8 + Map.size / 2, Map.size * 0.6f, Power.NUCLEAR, this);
 		// Create the player.
 		this.player = new Player((int) (Map.size * 2.5f), this.ground_level, this);
 		this.score = new Score();
@@ -171,6 +173,11 @@ public class Play extends GameState {
 				"main_menu".length() * Map.size, Map.size), ColorXv.BLACK, ColorXv.WHITE, 800);
 
 		this.play_timer = new DeltaTimer();
+
+		this.plus_one_life_animated_text = new AnimatedText(ScreenUtil.screen_width / 2, ScreenUtil.screen_height / 2 - Map.size / 2, ScreenUtil.screen_height
+				/ 2 + Map.size / 2, "+1 life".length() * Map.size, Map.size, "+1 life", new Color(0.0f, 0.0f, 0.0f, 1.0f), new Color(0.0f, 0.0f, 0.0f, 0.0f),
+				2000, AnimatedTextType.FADE_UP, this.sprite_batch);
+		this.plus_one_life_animated_text.end();
 	}
 
 	@Override
@@ -255,6 +262,8 @@ public class Play extends GameState {
 					if (this.level.isStrawberryMilkButtonEnabled()) {
 						this.buttons[3].update(delta);
 					}
+
+					this.plus_one_life_animated_text.update(delta);
 
 					for (int i = 0; i < this.power_up_buttons.length; i++) {
 						this.power_up_buttons[i].update(delta);
@@ -406,25 +415,28 @@ public class Play extends GameState {
 			this.power_up_buttons[i].render(this.sprite_batch);
 		}
 
+		this.plus_one_life_animated_text.render();
+
 		for (Chaser chaser : this.chasers) {
 			chaser.render(this.sprite_batch, (int) this.current_scroll);
 		}
 
 		if (this.just_resumed) {
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "TAP TO RESUME",
-					ScreenUtil.screen_width / 2 - FontManager.FONT.PIXEL_REGULAR.getWidth("TAP TO RESUME") / 2, ScreenUtil.screen_height / 2
-							- FontManager.FONT.PIXEL_REGULAR.getHeight("TAP TO RESUME") / 2);
+			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "TAP TO RESUME",
+					ScreenUtil.screen_width / 2 - FontManager.Font.PIXEL_REGULAR.getWidth("TAP TO RESUME") / 2, ScreenUtil.screen_height / 2
+							- FontManager.Font.PIXEL_REGULAR.getHeight("TAP TO RESUME") / 2);
 		}
 
-		FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Score.convertTimeInSecondsToClockTime((int) ((this.play_timer.getTotalDelta() / 1000.0f))),
+		// Draw the time playing the current level here.
+		FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, Score.convertTimeInSecondsToClockTime((int) ((this.play_timer.getTotalDelta() / 1000.0f))),
 				Color.BLACK, ScreenUtil.screen_width / 2, ScreenUtil.screen_height - (int) (Map.size * 0.9f), (int) (Map.size * 0.8f));
 
 		StaticGUI.pause_button.render(this.sprite_batch, this.PAUSE_COLOR);
 
 		if (!this.tapped_to_start) {
-			FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "Tap To Begin",
-					ScreenUtil.screen_width / 2 - FontManager.FONT.PIXEL_REGULAR.getWidth("Tap To Begin") / 2, ScreenUtil.screen_height / 2
-							- FontManager.FONT.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
+			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, Color.RED, "Tap To Begin",
+					ScreenUtil.screen_width / 2 - FontManager.Font.PIXEL_REGULAR.getWidth("Tap To Begin") / 2, ScreenUtil.screen_height / 2
+							- FontManager.Font.PIXEL_REGULAR.getHeight("Tap To Begin") / 2);
 			// Render the player ready to sprint.
 			Player.render(this.sprite_batch, this.player.getX(), this.ground_level, Map.size, Map.size, Player.READY_TO_SPRINT);
 			this.player.renderPlayerStats(this.sprite_batch, (int) this.current_scroll);
@@ -434,7 +446,7 @@ public class Play extends GameState {
 			this.player.renderPlayerStats(this.sprite_batch, (int) this.current_scroll);
 
 			if (this.player.isScared()) {
-				FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, "RUN!", Color.RED, ScreenUtil.screen_width / 2 - ScreenUtil.screen_width / 4,
+				FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "RUN!", Color.RED, ScreenUtil.screen_width / 2 - ScreenUtil.screen_width / 4,
 						ScreenUtil.screen_width / 2 + ScreenUtil.screen_width / 4, ScreenUtil.screen_height / 2 - ScreenUtil.screen_height / 8,
 						ScreenUtil.screen_height / 2 + ScreenUtil.screen_height / 8);
 			}
@@ -446,7 +458,7 @@ public class Play extends GameState {
 				this.game_over.render(this.sprite_batch, false);
 				this.retry.render(this.sprite_batch, false);
 				this.main_menu.render(this.sprite_batch, false);
-				this.options.render(this.sprite_batch, FontManager.FONT.PIXEL_REGULAR.getFont(), false);
+				this.options.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont(), false);
 			} else if (this.pause_menu_open) {
 				this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 12), Map.size * 1, Map.size * 1, ScreenUtil.screen_width
 						- Map.size * 2, ScreenUtil.screen_height - Map.size * 2);
@@ -500,17 +512,30 @@ public class Play extends GameState {
 						AudioManager.SoundXv.COMPLETED.playSound();
 						this.player.incrementNumberOfMilksDelivered();
 						this.current_streak++;
-						this.power_up_one_counter++;
-						this.power_up_two_counter++;
-						this.power_up_three_counter++;
 						if (this.current_streak > this.max_streak) {
 							this.max_streak = this.current_streak;
+						}
+						this.power_up_one_counter++;
+						if (this.level.getNumberOfConsecutiveMilksNeededToGainFirstPowerUp() == this.power_up_one_counter) {
+							this.power_up_buttons[0].incrementStock();
+							this.power_up_one_counter = 0;
+						}
+						this.power_up_two_counter++;
+						if (this.level.getNumberOfConsecutiveMilksNeededToGainSecondPowerUp() == this.power_up_two_counter) {
+							this.power_up_buttons[1].incrementStock();
+							this.power_up_two_counter = 0;
+						}
+						this.power_up_three_counter++;
+						if (this.level.getNumberOfConsecutiveMilksNeededToGainThirdPowerUp() == this.power_up_three_counter) {
+							this.power_up_buttons[2].incrementStock();
+							this.power_up_three_counter = 0;
 						}
 						for (int i = 0; i < this.life_already_gained.length; i++) {
 							if (this.player.getNumberOfMilksDelivered() == this.level.getScoresNeededToGainOneLife()[i]) {
 								if (!this.life_already_gained[i]) {
 									if (this.player.getLife() != Player.MAX_LIFE) {
 										this.player.setLife((byte) (this.player.getLife() + 1));
+										this.plus_one_life_animated_text.play();
 									}
 									this.life_already_gained[i] = true;
 								}

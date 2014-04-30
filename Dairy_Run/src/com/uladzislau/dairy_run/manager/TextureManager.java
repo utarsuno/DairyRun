@@ -50,6 +50,10 @@ public class TextureManager {
 	public static final short POWER_UP_TWO = 31 * 4 + 1;
 	public static final short POWER_UP_THREE = 31 * 4 + 2;
 
+	public static final short FULL_HEART = 31 * 12 + 13;
+	public static final short HALF_FULL_HEART = 31 * 12 + 14;
+	public static final short EMPTY_HEART = 31 * 12 + 15;
+
 	public enum TextureXv implements Resource {
 		BACKGROUND("main_menu_hd", "brozie");
 

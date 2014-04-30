@@ -97,7 +97,7 @@ public class Slider {
 	public void render(SpriteBatch sb) {
 
 		sb.setColor(1.0f, 1.0f, 1.0f, 0.15f);
-		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 4 + 2), this.rectanglei.getX(), this.rectanglei.getY(), this.rectanglei.getWidth(),
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.BLACK), this.rectanglei.getX(), this.rectanglei.getY(), this.rectanglei.getWidth(),
 				this.rectanglei.getHeight());
 
 		if (!this.slidable) {
@@ -106,7 +106,7 @@ public class Slider {
 			sb.setColor(this.colorXv.getR(), this.colorXv.getG(), this.colorXv.getB(), this.colorXv.getA());
 		}
 
-		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 21 + 9), this.rectanglei.getX(), this.rectanglei.getY(), this.rectanglei.getWidth()
+		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.WHITE), this.rectanglei.getX(), this.rectanglei.getY(), this.rectanglei.getWidth()
 				* this.percentageFull(), this.rectanglei.getHeight());
 
 		sb.setColor(1.0f, 1.0f, 1.0f, 1.0f);

@@ -38,6 +38,7 @@ public class DeltaTimer {
 
 	public void end() {
 		this.total_delta = this.duration;
+		this.update(1);
 	}
 
 	public float percentComplete() {

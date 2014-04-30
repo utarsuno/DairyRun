@@ -3,6 +3,7 @@ package com.uladzislau.dairy_run.entity.button;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.manager.TextureManager;
+import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 import com.uladzislau.dairy_run.world.Map;
 
 public class PowerUpButton extends CircleButton {
@@ -22,26 +23,33 @@ public class PowerUpButton extends CircleButton {
 		super.inititialize();
 	}
 
+	// TODO: Add DeltaTimer and AnimatedText
+
 	@Override
 	public void doButtonAction() {
 		// TODO: Fully implement this
-		switch (this.power) {
-		case NUCLEAR:
-			this.play.setVelocity(this.play.getVelocity() * 5);
-			break;
-		case SCREEN_CLEAR:
-			break;
-		case TIME_SLOW:
-			this.play.setVelocity(this.play.getVelocity() / 5);
-			break;
-		default:
-			break;
+		if (this.stock > 0) {
+			switch (this.power) {
+			case NUCLEAR:
+				this.play.setVelocity(this.play.getVelocity() * 5);
+				break;
+			case SCREEN_CLEAR:
+				break;
+			case TIME_SLOW:
+				this.play.setVelocity(this.play.getVelocity() / 5);
+				break;
+			default:
+				break;
+			}
+			this.stock--;
 		}
-		this.stock--;
 	}
 
 	@Override
 	public void render(SpriteBatch sb) {
+		if (this.stock == 0) {
+			sb.setColor(sb.getColor().r, sb.getColor().r, sb.getColor().r, 0.2f);
+		}
 		switch (this.power) {
 		case NUCLEAR:
 			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.POWER_UP_THREE), this.getX() - Map.size / 2, this.getY() - Map.size
@@ -57,6 +65,9 @@ public class PowerUpButton extends CircleButton {
 			break;
 		default:
 			break;
+		}
+		if (this.stock == 0) {
+			sb.setColor(sb.getColor().r, sb.getColor().r, sb.getColor().r, 1.0f);
 		}
 	}
 
