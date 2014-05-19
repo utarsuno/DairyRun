@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.manager.InputManager;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 import com.uladzislau.dairy_run.math.geometry.Rectanglef;
@@ -64,8 +65,8 @@ public class House extends Entity {
 	private int start_gap;
 	private int ending_gap;
 
-	public House(Play play, SpriteBatch sb) {
-		super(0, 0, 0, 0, sb);
+	public House(Play play) {
+		super(0, 0, 0, 0);
 		this.houseRectanglef = new Rectanglef(-1, -1, -1, -1);
 		this.roofRectanglef = new Rectanglef(-1, -1, -1, -1);
 		this.brick_layers = new byte[2][6];
@@ -121,8 +122,7 @@ public class House extends Entity {
 		for (int i = 0; i < this.number_of_milks; i++) {
 			this.milk_delievered[i] = false;
 			int r;
-			if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled()
-					&& this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+			if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 				r = Dice.get_Random_Integer_From_Min_To_Max(0, 2);
 				if (r == 0) {
 					this.milk_needed[i] = TextureManager.REGULAR;
@@ -131,35 +131,29 @@ public class House extends Entity {
 				} else if (r == 2) {
 					this.milk_needed[i] = TextureManager.STRAWBERRY;
 				}
-			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled()
-					&& !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled() && !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 				if (Dice.nextBoolean()) {
 					this.milk_needed[i] = TextureManager.REGULAR;
 				} else {
 					this.milk_needed[i] = TextureManager.CHOCOLATE;
 				}
-			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled()
-					&& this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 				if (Dice.nextBoolean()) {
 					this.milk_needed[i] = TextureManager.REGULAR;
 				} else {
 					this.milk_needed[i] = TextureManager.STRAWBERRY;
 				}
-			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled()
-					&& !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+			} else if (this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled() && !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 				this.milk_needed[i] = TextureManager.REGULAR;
-			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled()
-					&& this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 				if (Dice.nextBoolean()) {
 					this.milk_needed[i] = TextureManager.CHOCOLATE;
 				} else {
 					this.milk_needed[i] = TextureManager.STRAWBERRY;
 				}
-			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled()
-					&& this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && !this.play.getLevel().isChocolateMilkButtonEnabled() && this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 				this.milk_needed[i] = TextureManager.STRAWBERRY;
-			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled()
-					&& !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
+			} else if (!this.play.getLevel().isRegularMilkButtonEnabled() && this.play.getLevel().isChocolateMilkButtonEnabled() && !this.play.getLevel().isStrawberryMilkButtonEnabled()) {
 				this.milk_needed[i] = TextureManager.CHOCOLATE;
 			}
 			this.milkFader[i].reset();
@@ -254,41 +248,39 @@ public class House extends Entity {
 
 	@Override
 	public void render() {
-		renderHouseLayer(this.getSpriteBatch(), 25, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) this.getY(), this.getWidth() / Map.size,
-				this.house);
+		renderHouseLayer(ResourceManager.getSpriteBatch(), 25, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) this.getY(), this.getWidth() / Map.size, this.house);
 		for (int i = 1; i < this.getHeight() / 2 - 1; i++) {
-			renderHouseLayer(this.getSpriteBatch(), 23, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size * i), this.getWidth()
-					/ Map.size, this.house);
+			renderHouseLayer(ResourceManager.getSpriteBatch(), 23, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size * i), this.getWidth() / Map.size,
+					this.house);
 		}
-		renderHouseLayer(this.getSpriteBatch(), 24, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size
-				* (this.getHeight() / 2 - 1)), this.getWidth() / Map.size, this.house);
+		renderHouseLayer(ResourceManager.getSpriteBatch(), 24, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size * (this.getHeight() / 2 - 1)),
+				this.getWidth() / Map.size, this.house);
 
-		renderDoorLayer(this.getSpriteBatch(), 24, (int) (this.getX() + Map.getCurrentScrollAsInt()) + this.door_location, (int) this.getY(), this.door);
-		renderDoorLayer(this.getSpriteBatch(), 23, (int) (this.getX() + Map.getCurrentScrollAsInt()) + this.door_location, (int) (this.getY() + Map.size),
-				this.door);
+		renderDoorLayer(ResourceManager.getSpriteBatch(), 24, (int) (this.getX() + Map.getCurrentScrollAsInt()) + this.door_location, (int) this.getY(), this.door);
+		renderDoorLayer(ResourceManager.getSpriteBatch(), 23, (int) (this.getX() + Map.getCurrentScrollAsInt()) + this.door_location, (int) (this.getY() + Map.size), this.door);
 
-		renderWindowLayer(this.getSpriteBatch(), (int) (this.getX() + Map.getCurrentScrollAsInt()) + this.window_location,
-				(int) (this.getY() + Map.size - Map.size / 2));
+		renderWindowLayer(ResourceManager.getSpriteBatch(), (int) (this.getX() + Map.getCurrentScrollAsInt()) + this.window_location, (int) (this.getY() + Map.size - Map.size / 2));
 
 		for (int i = this.getHeight() / 2; i < this.getHeight() - 1; i++) {
-			renderRoofLayer(this.getSpriteBatch(), 27, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size * i), this.getWidth()
-					/ Map.size, this.roof);
+			renderRoofLayer(ResourceManager.getSpriteBatch(), 27, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size * i), this.getWidth() / Map.size,
+					this.roof);
 		}
-		renderRoofLayer(this.getSpriteBatch(), 26, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size * (this.getHeight() - 1)),
-				this.getWidth() / Map.size, this.roof);
+		renderRoofLayer(ResourceManager.getSpriteBatch(), 26, (int) (this.getX() + Map.getCurrentScrollAsInt()), (int) (this.getY() + Map.size * (this.getHeight() - 1)), this.getWidth()
+				/ Map.size, this.roof);
 
 		// Render the milk-needed.
 		for (int i = 0; i < this.number_of_milks; i++) {
-			this.getSpriteBatch().setColor(this.getSpriteBatch().getColor().r, this.getSpriteBatch().getColor().g, this.getSpriteBatch().getColor().b,
-					1.0f - this.milkFader[i].percentComplete());
-			this.getSpriteBatch().draw(
+			ResourceManager.getSpriteBatch().setColor(ResourceManager.getSpriteBatch().getColor().r, ResourceManager.getSpriteBatch().getColor().g,
+					ResourceManager.getSpriteBatch().getColor().b, 1.0f - this.milkFader[i].percentComplete());
+			ResourceManager.getSpriteBatch().draw(
 					TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(this.milk_needed[i]),
 					(int) (this.getX() + Map.getCurrentScrollAsInt())
-							+ (this.getWidth() - MathUtils.round(((Map.size * 0.1f)) * (this.number_of_milks - 1) + Map.size * this.number_of_milks)) / 2
-							+ Map.size * i + (Map.size * 0.1f) * i - (Map.size * (1.0f + this.milkFader[i].percentComplete())) / 2 + Map.size / 2,
+							+ (this.getWidth() - MathUtils.round(((Map.size * 0.1f)) * (this.number_of_milks - 1) + Map.size * this.number_of_milks)) / 2 + Map.size * i + (Map.size * 0.1f)
+							* i - (Map.size * (1.0f + this.milkFader[i].percentComplete())) / 2 + Map.size / 2,
 					Map.size * (this.getHeight() + 2) - Map.size / 2 - (Map.size * (1.0f + this.milkFader[i].percentComplete())) / 2 + Map.size / 2,
 					Map.size * (1.0f + this.milkFader[i].percentComplete()), Map.size * (1.0f + this.milkFader[i].percentComplete()));
-			this.getSpriteBatch().setColor(this.getSpriteBatch().getColor().r, this.getSpriteBatch().getColor().g, this.getSpriteBatch().getColor().b, 1.0f);
+			ResourceManager.getSpriteBatch().setColor(ResourceManager.getSpriteBatch().getColor().r, ResourceManager.getSpriteBatch().getColor().g,
+					ResourceManager.getSpriteBatch().getColor().b, 1.0f);
 		}
 	}
 
@@ -313,8 +305,7 @@ public class House extends Entity {
 			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * layer + 1 + house), x + Map.size * i, y, Map.size, Map.size);
 			for (int j = 0; j < this.brick_layers[current_height_layer].length; j++) {
 				if (current_height_layer > 0 && j > 0 && j < w - 1 && this.brick_layers[current_height_layer][j] != -1) {
-					sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * this.brick_layers[current_height_layer][j] + 9), x + Map.size * j, y,
-							Map.size, Map.size);
+					sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * this.brick_layers[current_height_layer][j] + 9), x + Map.size * j, y, Map.size, Map.size);
 				}
 			}
 		}
@@ -358,6 +349,15 @@ public class House extends Entity {
 	public void deliverMilk(short milk_type) {
 		for (int i = 0; i < this.number_of_milks; i++) {
 			if (milk_type == this.milk_needed[i] && !this.milk_delievered[i]) {
+				this.milk_delievered[i] = true;
+				return;
+			}
+		}
+	}
+
+	public void deliverMilk() {
+		for (int i = 0; i < this.number_of_milks; i++) {
+			if (!this.milk_delievered[i]) {
 				this.milk_delievered[i] = true;
 				return;
 			}

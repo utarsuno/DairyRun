@@ -1,8 +1,6 @@
 package com.uladzislau.dairy_run.game_state;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.entity.Background;
@@ -12,6 +10,7 @@ import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
@@ -36,15 +35,18 @@ public class LevelSelector extends GameState {
 
 	private Play play;
 
+	private int previous_offset;
+	private int delta_offset;
+
+	private DeltaTimer errorMessageTimer;
+
 	public LevelSelector(DairyRun dairy_run, GameStateManager.STATE state, Play play) {
 		super(dairy_run, state);
 		this.play = play;
 	}
 
 	@Override
-	public void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch) {
-		this.shape_renderer = shapeRenderer;
-		this.sprite_batch = batch;
+	public void initialize() {
 		this.levels = new Level[20];
 		for (int i = 0; i < this.levels.length; i++) {
 			this.levels[i] = new Level(false);
@@ -54,25 +56,25 @@ public class LevelSelector extends GameState {
 
 		// Create the background.
 		this.backgrounds = new Background[2];
-		this.backgrounds[0] = new Background(0, 0, TextureManager.Spritesheet.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE,
-				this.sprite_batch);
-		this.backgrounds[1] = new Background(TextureManager.Spritesheet.BACKGROUNDS.getWidth(), 0, TextureManager.Spritesheet.BACKGROUNDS.getWidth(),
-				ScreenUtil.screen_height, Background.BLUE, this.sprite_batch);
+		this.backgrounds[0] = new Background(0, 0, TextureManager.Spritesheet.BACKGROUNDS.getWidth(), ScreenUtil.screen_height, Background.BLUE);
+		this.backgrounds[1] = new Background(TextureManager.Spritesheet.BACKGROUNDS.getWidth(), 0, TextureManager.Spritesheet.BACKGROUNDS.getWidth(), ScreenUtil.screen_height,
+				Background.BLUE);
 		// Create the ground blocks.
 		this.ground_blocks = new GroundBlock[(ScreenUtil.screen_width / Map.size) + 2];
 		// this.ground_blocks = new GroundBlock[1];
 		for (int i = 0; i < this.ground_blocks.length; i++) {
-			this.ground_blocks[i] = new GroundBlock(i * Map.size, Map.size * 1.5f, Map.size, Map.size, this.ground_blocks.length, true,
-					GroundBlock.Theme.GRASS, this.sprite_batch);
+			this.ground_blocks[i] = new GroundBlock(i * Map.size, Map.size * 1.5f, Map.size, Map.size, this.ground_blocks.length, true, GroundBlock.Theme.GRASS);
 			this.ground_blocks[i].setSpawnDoodads(true);
 		}
+		this.errorMessageTimer = new DeltaTimer(DeltaTimer.RUN_ONCE, 500);
+		this.errorMessageTimer.finish();
 		createLevels();
 	}
 
 	private void createLevels() {
 		// Level One.
-		this.levels[0].setDescription("Deliver 5 milks.");
-		this.levels[0].setPauseOnFirstHouseReached("To deliever milk");
+		this.levels[0].setDescription("Deliver 5 milks."); //$NON-NLS-1$
+		this.levels[0].setPauseOnFirstHouseReached("To deliever milk"); //$NON-NLS-1$
 		this.levels[0].setBeaten(false);
 		this.levels[0].setInitialVelocity(5f);
 		this.levels[0].setVelocityMatters(false);
@@ -89,50 +91,50 @@ public class LevelSelector extends GameState {
 		this.levels[0].setPowerUpsGainedAt(25, 50, 100);
 		// Level Two.
 		this.levels[1].setThisLevelEqualToLevel(this.levels[0]);
-		this.levels[1].setDescription("Deliver 10 milks.");
+		this.levels[1].setDescription("Deliver 10 milks."); //$NON-NLS-1$
 		this.levels[1].setInitialVelocity(7.5f);
 		this.levels[1].setNumberOfMilksNeededToWin(10);
 		this.levels[1].setUnlocked(false);
 		// Level Three. This is the last level that is only regular milk.
 		this.levels[2].setThisLevelEqualToLevel(this.levels[1]);
-		this.levels[2].setDescription("Deliver 15 milks.");
+		this.levels[2].setDescription("Deliver 15 milks."); //$NON-NLS-1$
 		this.levels[2].setInitialVelocity(10f);
 		this.levels[2].setNumberOfMilksNeededToWin(15);
 		// Level Four.
 		this.levels[3].setThisLevelEqualToLevel(this.levels[2]);
-		this.levels[3].setDescription("Deliver 6 milks.");
+		this.levels[3].setDescription("Deliver 6 milks."); //$NON-NLS-1$
 		this.levels[3].setInitialVelocity(6f);
 		this.levels[3].setNumberOfMilksNeededToWin(6);
 		this.levels[3].setChocolateMilkButtonEnabled(true);
 		// Level Five.
 		this.levels[4].setThisLevelEqualToLevel(this.levels[3]);
-		this.levels[4].setDescription("Deliver 12 milks.");
+		this.levels[4].setDescription("Deliver 12 milks."); //$NON-NLS-1$
 		this.levels[4].setInitialVelocity(9f);
 		this.levels[4].setNumberOfMilksNeededToWin(12);
 		// Level Six. This is the last level that is only regular milk and chocolate milk.
 		this.levels[5].setThisLevelEqualToLevel(this.levels[4]);
-		this.levels[5].setDescription("Deliver 18 milks.");
+		this.levels[5].setDescription("Deliver 18 milks."); //$NON-NLS-1$
 		this.levels[5].setInitialVelocity(12f);
 		this.levels[5].setNumberOfMilksNeededToWin(18);
 		// Level Seven.
 		this.levels[6].setThisLevelEqualToLevel(this.levels[5]);
-		this.levels[6].setDescription("Deliver 7 milks.");
+		this.levels[6].setDescription("Deliver 7 milks."); //$NON-NLS-1$
 		this.levels[6].setInitialVelocity(8f);
 		this.levels[6].setNumberOfMilksNeededToWin(7);
 		this.levels[6].setStrawberryMilkButtonEnabled(true);
 		// Level Eight.
 		this.levels[7].setThisLevelEqualToLevel(this.levels[6]);
-		this.levels[7].setDescription("Deliver 14 milks.");
+		this.levels[7].setDescription("Deliver 14 milks."); //$NON-NLS-1$
 		this.levels[7].setInitialVelocity(12f);
 		this.levels[7].setNumberOfMilksNeededToWin(14);
 		// Level Nine.
 		this.levels[8].setThisLevelEqualToLevel(this.levels[7]);
-		this.levels[8].setDescription("Deliver 21 milks.");
+		this.levels[8].setDescription("Deliver 21 milks."); //$NON-NLS-1$
 		this.levels[8].setInitialVelocity(16f);
 		this.levels[8].setNumberOfMilksNeededToWin(21);
 		// TODO: TEMP!!!!!!!!!!!!!!!!!!!!!
 		for (int i = 9; i < 20; i++) {
-			this.levels[i].setDescription(":D");
+			this.levels[i].setDescription(":D"); //$NON-NLS-1$
 			this.levels[i].setBeaten(false);
 			this.levels[i].setVelocityMatters(false);
 			this.levels[i].setVelocityNeededToWin(0);
@@ -146,11 +148,26 @@ public class LevelSelector extends GameState {
 		}
 	}
 
-	private int previous_offset;
-	private int delta_offset;
+	private boolean reverse = false;
+	private boolean displayingErrorMessage = false;
+	private int total_offset = 0;
 
 	@Override
 	public void update(float delta) {
+
+		if (this.displayingErrorMessage) {
+			this.errorMessageTimer.update(delta);
+			if (this.errorMessageTimer.isFinished()) {
+				if (!reverse) {
+					this.errorMessageTimer.reset();
+					this.reverse = true;
+				} else {
+					this.reverse = false;
+					this.errorMessageTimer.end();
+					this.displayingErrorMessage = false;
+				}
+			}
+		}
 
 		Map.setCurrentScroll(0);
 
@@ -169,6 +186,7 @@ public class LevelSelector extends GameState {
 				this.transition_left = false;
 				this.transition_right = false;
 				this.transitionTimer.reset();
+				total_offset += this.offset;
 				this.offset = 0;
 			}
 		}
@@ -209,8 +227,7 @@ public class LevelSelector extends GameState {
 
 			if (InputManager.pointersDown[0] && !InputManager.pointersDragging[0] && !this.button_pressed) {
 				// Check to see if the first button has been pressed.
-				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, 0, ScreenUtil.screen_height / 2 - Map.size,
-						Map.size * 2, Map.size * 2)) {
+				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, 0, ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2)) {
 					if (this.current_level != 0) {
 						this.current_level--;
 						this.button_pressed = true;
@@ -218,8 +235,8 @@ public class LevelSelector extends GameState {
 					}
 				}
 				// Check to see if the second button has been pressed.
-				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, ScreenUtil.screen_width - Map.size * 2,
-						ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2)) {
+				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, ScreenUtil.screen_width - Map.size * 2, ScreenUtil.screen_height / 2
+						- Map.size, Map.size * 2, Map.size * 2)) {
 					if (this.current_level != this.levels.length - 1) {
 						this.current_level++;
 						this.button_pressed = true;
@@ -227,12 +244,15 @@ public class LevelSelector extends GameState {
 					}
 				}
 				// Check to see if the play button has been pressed.
-				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, ScreenUtil.screen_width / 2 - Map.size,
-						((Play) this.dairy_run.getGameStateManager().getState(GameStateManager.STATE.PLAY)).ground_level, Map.size * 2, Map.size * 2)) {
+				if (Rectanglei.isPointerInsideARectanglei(InputManager.pointers[0].x, InputManager.pointers[0].y, ScreenUtil.screen_width / 2 - Map.size, ((Play) this.dairy_run
+						.getGameStateManager().getState(GameStateManager.STATE.PLAY)).ground_level, Map.size * 2, Map.size * 2)) {
 					if (this.levels[this.current_level].isUnlocked()) {
 						this.play.setLevel(this.levels[this.current_level]);
 						this.play.initialize();
 						this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.PLAY);
+					} else {
+						this.displayingErrorMessage = true;
+						this.errorMessageTimer.reset();
 					}
 				}
 			}
@@ -246,9 +266,39 @@ public class LevelSelector extends GameState {
 		StaticGUI.back_button.update(delta);
 	}
 
+	private void renderLevelDoodads(int level) {
+		switch (level) {
+		case 0:
+			for (int i = 0; i < 5; i++) {
+				ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.REGULAR),
+						ScreenUtil.screen_width / 4 * 3 - Map.size / 2 + this.total_offset + this.offset - Map.size + (Map.size * i), Map.getGroundLevel(), Map.size, Map.size);
+			}
+			break;
+		case 1:
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 2; j++) {
+					ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.REGULAR),
+							ScreenUtil.screen_width / 4 * 3 + ScreenUtil.screen_width - Map.size / 2 + this.total_offset + this.offset - Map.size + (Map.size * i),
+							Map.getGroundLevel() + Map.size * j, Map.size, Map.size);
+				}
+			}
+			break;
+		case 2:
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 3; j++) {
+					ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.REGULAR),
+							ScreenUtil.screen_width / 4 * 3 + ScreenUtil.screen_width * 2 - Map.size / 2 + this.total_offset + this.offset - Map.size + (Map.size * i),
+							Map.getGroundLevel() + Map.size * j, Map.size, Map.size);
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
 	@Override
 	public void render() {
-		this.sprite_batch.begin();
 
 		// Render the background and ground.
 		this.backgrounds[0].render();
@@ -256,16 +306,23 @@ public class LevelSelector extends GameState {
 			this.backgrounds[1].render();
 		}
 
+		if (this.current_level != 0) {
+			renderLevelDoodads(this.current_level - 1);
+		}
+		renderLevelDoodads(this.current_level);
+		if (this.current_level != 19) {
+			renderLevelDoodads(this.current_level + 1);
+		}
+
 		for (int i = 0; i < this.ground_blocks.length; i++) {
 			this.ground_blocks[i].render();
 		}
 
 		// Render the left button.
-		this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 15 + 11), 0, ScreenUtil.screen_height / 2 - Map.size, Map.size * 2,
-				Map.size * 2);
+		ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 15 + 11), 0, ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2);
 
 		// Render the right button.
-		this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 15 + 12), ScreenUtil.screen_width - Map.size * 2,
+		ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 15 + 12), ScreenUtil.screen_width - Map.size * 2,
 				ScreenUtil.screen_height / 2 - Map.size, Map.size * 2, Map.size * 2);
 
 		if (this.transition_left) {
@@ -278,7 +335,7 @@ public class LevelSelector extends GameState {
 			renderLevelSign(0, this.current_level + 1);
 			renderLevelSign(-ScreenUtil.screen_width, this.current_level);
 
-			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.SPRINTING, true);
+			Player.render(ResourceManager.getSpriteBatch(), Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.SPRINTING, true);
 		} else if (this.transition_right) {
 
 			renderLevelTitle(0, this.current_level - 1);
@@ -290,59 +347,63 @@ public class LevelSelector extends GameState {
 			renderLevelSign(0, this.current_level - 1);
 			renderLevelSign(ScreenUtil.screen_width, this.current_level);
 
-			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.SPRINTING);
+			Player.render(ResourceManager.getSpriteBatch(), Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.SPRINTING);
 		} else {
 			// Render the current level title.
-			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (this.current_level + 1), Color.BLACK, ScreenUtil.screen_width / 2,
-					(int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
+			FontManager.Font.PIXEL_REGULAR.render("Level: " + (this.current_level + 1), Color.BLACK, //$NON-NLS-1$
+					ScreenUtil.screen_width / 2, (int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size, true, -1);
 			// Render the current level description.
-			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, this.levels[this.current_level].getDescription(), Color.BLACK,
-					ScreenUtil.screen_width / 2, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
+			FontManager.Font.PIXEL_REGULAR.render(this.levels[this.current_level].getDescription(), Color.BLACK, ScreenUtil.screen_width / 2,
+					(int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size, true, -2);
 			renderLevelSign(0, this.current_level);
 			// Render the player ready to sprint.
-			Player.render(this.sprite_batch, Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.READY_TO_SPRINT);
+			Player.render(ResourceManager.getSpriteBatch(), Map.size * 2, (int) (Map.size * 1.5f), Map.size, Map.size, Player.READY_TO_SPRINT);
+		}
+
+		if (this.displayingErrorMessage) {
+			if (this.reverse) {
+				StaticGUI.renderErrorMessage("Locked", 1.0f - this.errorMessageTimer.percentComplete()); //$NON-NLS-1$
+			} else {
+				StaticGUI.renderErrorMessage("Locked", this.errorMessageTimer.percentComplete()); //$NON-NLS-1$
+			}
 		}
 
 		// Render the toggle music button.
-		StaticGUI.music_button.render(this.sprite_batch, ColorXv.BROWN);
+		StaticGUI.music_button.render(ColorXv.BROWN);
 		// Render the back button.
-		StaticGUI.back_button.render(this.sprite_batch, ColorXv.BROWN);
+		StaticGUI.back_button.render(ColorXv.BROWN);
 
 	}
 
 	private void renderLevelTitle(int x_offset, int level) {
-		FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "Level: " + (level + 1), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset + x_offset,
-				(int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size);
+		FontManager.Font.PIXEL_REGULAR.render("Level: " + (level + 1), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset //$NON-NLS-1$
+				+ x_offset, (int) (ScreenUtil.screen_height - Map.size * 1.1f), Map.size, true, -2);
 	}
 
 	private void renderLevelDescription(int x_offset, int level) {
-		// if () {
-		//
-		// }
-		FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, this.levels[level].getDescription(), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset
-				+ x_offset, (int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size);
+		FontManager.Font.PIXEL_REGULAR.render(this.levels[level].getDescription(), Color.BLACK, ScreenUtil.screen_width / 2 + this.offset + x_offset,
+				(int) (ScreenUtil.screen_height - Map.size * 2.6f), Map.size, true, -2);
 	}
 
 	private void renderLevelSign(int x_offset, int level) {
 		if (this.levels[level].isUnlocked()) {
 			// Render the play button.
-			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 14), ScreenUtil.screen_width / 2 - Map.size + x_offset
-					+ this.offset, Map.getGroundLevel(), Map.size * 2, Map.size * 2);
-			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width / 2 - Map.size - Map.size / 2
-					+ x_offset + this.offset, Map.getGroundLevel(), Map.size * 2, Map.size * 2);
-			// TODO: Either fix texture or create constant scale.
-			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13), ScreenUtil.screen_width / 2 - Map.size + Map.size / 2
-					+ x_offset + this.offset, Map.getGroundLevel(), Map.size * 1.9f, Map.size * 2);
+			ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 14), ScreenUtil.screen_width / 2 - Map.size + x_offset + this.offset,
+					Map.getGroundLevel(), Map.size * 2, Map.size * 2);
+			ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13),
+					ScreenUtil.screen_width / 2 - Map.size - Map.size / 2 + x_offset + this.offset, Map.getGroundLevel(), Map.size * 2, Map.size * 2);
+			ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 13),
+					ScreenUtil.screen_width / 2 - Map.size + Map.size / 2 + x_offset + this.offset, Map.getGroundLevel(), Map.size * 1.9f, Map.size * 2);
 			// Render the play text.
-			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, "Play", Color.BLACK, ScreenUtil.screen_width / 2 + x_offset + this.offset,
-					(int) (Map.getGroundLevel() + Map.size - Map.size * 0.15f), (int) (Map.size * .7f));
+			FontManager.Font.PIXEL_REGULAR.render("Play", Color.BLACK, ScreenUtil.screen_width / 2 + x_offset + this.offset, //$NON-NLS-1$
+					(int) (Map.getGroundLevel() + Map.size - Map.size * 0.15f), (int) (Map.size * .7f), true, -1);
 		} else {
 			// Render the play button.
-			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 14), ScreenUtil.screen_width / 2 - Map.size + x_offset
-					+ this.offset, Map.getGroundLevel(), Map.size * 2, Map.size * 2);
+			ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 8 + 14), ScreenUtil.screen_width / 2 - Map.size + x_offset + this.offset,
+					Map.getGroundLevel(), Map.size * 2, Map.size * 2);
 			// Render the play button.
-			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 7 + 13), ScreenUtil.screen_width / 2 - Map.size * 1.05f
-					+ x_offset + this.offset, Map.getGroundLevel() + Map.size * 0.30f, Map.size * 2, Map.size * 2);
+			ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 7 + 13),
+					ScreenUtil.screen_width / 2 - Map.size * 1.05f + x_offset + this.offset, Map.getGroundLevel() + Map.size * 0.30f, Map.size * 2, Map.size * 2);
 		}
 	}
 

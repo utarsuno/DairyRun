@@ -54,9 +54,9 @@ public abstract class CircleButton extends Circlef {
 
 	public abstract void doButtonAction();
 
-	public abstract void render(SpriteBatch sb);
+	public abstract void render();
 
-	public void render(SpriteBatch sb, ColorXv colorXv) {
+	public void render(ColorXv colorXv) {
 	}
 
 	public boolean[] getTrack() {
@@ -77,4 +77,5 @@ public abstract class CircleButton extends Circlef {
 
 	public void reset() {
 	}
+
 }

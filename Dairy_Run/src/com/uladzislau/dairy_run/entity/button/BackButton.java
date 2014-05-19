@@ -1,15 +1,11 @@
 package com.uladzislau.dairy_run.entity.button;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.game_state.GameStateManager;
-import com.uladzislau.dairy_run.information.ScreenUtil;
-import com.uladzislau.dairy_run.manager.InputManager;
 import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
-import com.uladzislau.dairy_run.math.geometry.Circlef;
 
 public class BackButton extends CircleButton {
 
@@ -27,12 +23,12 @@ public class BackButton extends CircleButton {
 	}
 
 	@Override
-	public void render(SpriteBatch sb, ColorXv colorXv) {
-		Color temp = sb.getColor();
-		sb.setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
-		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 25), this.getX() - this.getRadius(), this.getY() - this.getRadius(),
-				this.getRadius() * 2, this.getRadius() * 2);
-		sb.setColor(temp);
+	public void render(ColorXv colorXv) {
+		Color temp = ResourceManager.getSpriteBatch().getColor();
+		ResourceManager.getSpriteBatch().setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
+		ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 25), this.getX() - this.getRadius(),
+				this.getY() - this.getRadius(), this.getRadius() * 2, this.getRadius() * 2);
+		ResourceManager.getSpriteBatch().setColor(temp);
 	}
 
 	@Override
@@ -41,7 +37,7 @@ public class BackButton extends CircleButton {
 	}
 
 	@Override
-	public void render(SpriteBatch sb) {
+	public void render() {
 	}
 
 }

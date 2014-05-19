@@ -1,15 +1,10 @@
 package com.uladzislau.dairy_run.game_state;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.game_state.GameStateManager.STATE;
 import com.uladzislau.dairy_run.manager.AudioManager;
 
 public abstract class GameState {
-
-	protected ShapeRenderer shape_renderer;
-	protected SpriteBatch sprite_batch;
 
 	private final GameStateManager.STATE state;
 
@@ -17,7 +12,7 @@ public abstract class GameState {
 
 	protected boolean first_update = true;
 	protected boolean first_render = true;
-	
+
 	protected DairyRun dairy_run;
 
 	public GameState(DairyRun dairy_run, GameStateManager.STATE state) {
@@ -25,7 +20,7 @@ public abstract class GameState {
 		this.state = state;
 	}
 
-	public abstract void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch);
+	public abstract void initialize();
 
 	public abstract void update(float delta);
 

@@ -31,11 +31,11 @@ public class DairyRun implements ApplicationListener {
 		this.resourceManager = new ResourceManager();
 		this.resourceManager.initialize_all_resources_and_information(this);
 
-		this.gameStateManager = new GameStateManager(this, this.resourceManager, this.resourceManager.getAudioManager());
+		this.gameStateManager = new GameStateManager(this, this.resourceManager.getAudioManager());
 
 		DairyRun.paused = false;
 
-		StaticUtil.log("Create Method Init Time ", (System.currentTimeMillis() - DairyRun.start_time) + "ms");
+		StaticUtil.log("Create Method Init Time ", (System.currentTimeMillis() - DairyRun.start_time) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void update(float delta) {
@@ -79,7 +79,7 @@ public class DairyRun implements ApplicationListener {
 
 	@Override
 	public void dispose() {
-		this.resourceManager.dipose_all_resources();
+		ResourceManager.dipose_all_resources();
 	}
 
 	public static void exit() {

@@ -1,8 +1,8 @@
 package com.uladzislau.dairy_run.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.uladzislau.dairy_run.game_state.Play;
 import com.uladzislau.dairy_run.information.ScreenUtil;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.world.Map;
 
@@ -16,8 +16,8 @@ public class Background extends Entity {
 
 	private byte type;
 
-	public Background(int x, int y, int width, int height, byte type, SpriteBatch sb) {
-		super(x, y, width, height, sb);
+	public Background(int x, int y, int width, int height, byte type) {
+		super(x, y, width, height);
 		setType(type);
 	}
 
@@ -34,15 +34,15 @@ public class Background extends Entity {
 		if (getX() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE < ScreenUtil.screen_width) {
 			switch (this.type) {
 			case BLUE:
-				TextureManager.Spritesheet.BACKGROUNDS.render(this.getSpriteBatch(), BLUE,
-						(int) (this.getX() + Map.getCurrentScrollAsInt() * Background.SCROLL_RATE), (int) this.getY());
+				TextureManager.Spritesheet.BACKGROUNDS.render(ResourceManager.getSpriteBatch(), BLUE, (int) (this.getX() + Map.getCurrentScrollAsInt()
+						* Background.SCROLL_RATE), (int) this.getY());
 				break;
 			case GREEN:
-				TextureManager.Spritesheet.BACKGROUNDS.render(this.getSpriteBatch(), GREEN, (int) (this.getX() + Map.getCurrentScrollAsInt()
+				TextureManager.Spritesheet.BACKGROUNDS.render(ResourceManager.getSpriteBatch(), GREEN, (int) (this.getX() + Map.getCurrentScrollAsInt()
 						* Background.SCROLL_RATE), (int) this.getY());
 				break;
 			case BROWN:
-				TextureManager.Spritesheet.BACKGROUNDS.render(this.getSpriteBatch(), BROWN, (int) (this.getX() + Map.getCurrentScrollAsInt()
+				TextureManager.Spritesheet.BACKGROUNDS.render(ResourceManager.getSpriteBatch(), BROWN, (int) (this.getX() + Map.getCurrentScrollAsInt()
 						* Background.SCROLL_RATE), (int) this.getY());
 				break;
 			default:

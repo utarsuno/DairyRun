@@ -1,11 +1,11 @@
 package com.uladzislau.dairy_run.entity.button;
 
 import com.badlogic.gdx.graphics.Color;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.manager.AudioManager;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 
 public class MusicButton extends CircleButton {
@@ -24,18 +24,18 @@ public class MusicButton extends CircleButton {
 	}
 
 	@Override
-	public void render(SpriteBatch sb, ColorXv colorXv) {
-		Color temp = sb.getColor();
-		sb.setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
+	public void render(ColorXv colorXv) {
+		Color temp = ResourceManager.getSpriteBatch().getColor();
+		ResourceManager.getSpriteBatch().setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
 		// Render the button.
 		if (AudioManager.isMusicOn()) {
-			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 23), this.getX() - this.getRadius(), this.getY() - this.getRadius(),
-					this.getRadius() * 2, this.getRadius() * 2);
+			ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 23), this.getX() - this.getRadius(),
+					this.getY() - this.getRadius(), this.getRadius() * 2, this.getRadius() * 2);
 		} else {
-			sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 24), this.getX() - this.getRadius(), this.getY() - this.getRadius(),
-					this.getRadius() * 2, this.getRadius() * 2);
+			ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(31 * 6 + 24), this.getX() - this.getRadius(),
+					this.getY() - this.getRadius(), this.getRadius() * 2, this.getRadius() * 2);
 		}
-		sb.setColor(temp);
+		ResourceManager.getSpriteBatch().setColor(temp);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class MusicButton extends CircleButton {
 	}
 
 	@Override
-	public void render(SpriteBatch sb) {
+	public void render() {
 	}
 
 }

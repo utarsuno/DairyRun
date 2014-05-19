@@ -1,7 +1,5 @@
 package com.uladzislau.dairy_run.game_state;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.gui.ClickableText;
@@ -10,6 +8,7 @@ import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
 import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.InputManager;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.geometry.Circlef;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
@@ -41,9 +40,7 @@ public class MainMenu extends GameState {
 	}
 
 	@Override
-	public void initialize(ShapeRenderer sr, SpriteBatch sb) {
-		this.shape_renderer = sr;
-		this.sprite_batch = sb;
+	public void initialize() {
 		this.sun = new Circlef(ScreenUtil.screen_width * (811.0f / 2048.0f), ScreenUtil.screen_height * (894.0f / 1024.0f), ScreenUtil.screen_diagonal * .05f);
 		this.sun_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 600);
 		this.house_timer = new DeltaTimer(DeltaTimer.RUN_ONCE, 6000);
@@ -82,7 +79,7 @@ public class MainMenu extends GameState {
 	private boolean update_sun = false;
 	private boolean sun_fading_out;
 	private boolean doorbell_just_played = false;
-
+	
 	@Override
 	public void update(float delta) {
 		this.levels.update(delta);
@@ -108,11 +105,32 @@ public class MainMenu extends GameState {
 			}
 		}
 
+		if (!InputManager.pointersDragging[0]) {
+			if (this.levels.isMouseDownOnMe()) {
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.LEVEL_SELECTOR);
+			}
+			if (this.options.isMouseDownOnMe()) {
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.OPTIONS);
+			}
+			if (this.exit.isMouseDownOnMe()) {
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.TERMINATE);
+			}
+			if (this.endless.isMouseDownOnMe()) {
+				this.dairy_run.getGameStateManager().resetEndless();
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.PLAY);
+			}
+			if (this.tutorial.isMouseDownOnMe()) {
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.TUTORIAL);
+			}
+			if (this.credits.isMouseDownOnMe()) {
+				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.CREDITS);
+			}
+		}
+		
 		if (InputManager.pointersDown[0]) {
 			if (InputManager.pointers[0].x >= this.house_corner_x) {
 				if (InputManager.pointers[0].y >= (this.slope * InputManager.pointers[0].x + this.b)) {
 					if (!this.doorbell_just_played) {
-						//TODO: Make sure a button hasn't been pressed first.
 						AudioManager.SoundXv.DOORBELL.playSound();
 						this.doorbell_just_played = true;
 					}
@@ -130,58 +148,40 @@ public class MainMenu extends GameState {
 				this.doorbell_just_played = false;
 			}
 		}
-
-		if (!InputManager.pointersDragging[0]) {
-			if (this.levels.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.LEVEL_SELECTOR);
-			}
-			if (this.options.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.OPTIONS);
-			}
-			if (this.exit.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.TERMINATE);
-			}
-			if (this.endless.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().resetEndless();
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.PLAY);
-			}
-			if (this.credits.isMouseDownOnMe()) {
-				this.dairy_run.getGameStateManager().changeState(GameStateManager.STATE.CREDITS);
-			}
-		}
+		
 		// Detect if the music toggle button is pressed.
 		StaticGUI.music_button.update(delta);
 	}
 
 	@Override
 	public void render() {
-		this.sprite_batch.begin();
 
-		this.sprite_batch.draw(TextureManager.TextureXv.BACKGROUND.getTexture(), 0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height);
+		ResourceManager.getSpriteBatch().draw(TextureManager.TextureXv.BACKGROUND.getTexture(), 0, 0, ScreenUtil.screen_width, ScreenUtil.screen_height);
 		FontManager.Font.PIXEL_REGULAR.getFont().setScale(FontManager.Font.PIXEL_REGULAR.getFont().getScaleX() * 0.8f,
 				FontManager.Font.PIXEL_REGULAR.getFont().getScaleY() * 0.8f);
-		FontManager.Font.PIXEL_REGULAR.setColor(ColorXv.YELLOW);
-		this.endless.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
-		this.credits.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
-		this.levels.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
-		this.exit.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
-		this.options.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
-		this.tutorial.render(this.sprite_batch, FontManager.Font.PIXEL_REGULAR.getFont());
+		//FontManager.Font.PIXEL_REGULAR.setColor(ColorXv.YELLOW);
+		this.endless.render(FontManager.Font.PIXEL_REGULAR.getFont());
+		this.credits.render(FontManager.Font.PIXEL_REGULAR.getFont());
+		this.levels.render(FontManager.Font.PIXEL_REGULAR.getFont());
+		this.exit.render(FontManager.Font.PIXEL_REGULAR.getFont());
+		this.options.render(FontManager.Font.PIXEL_REGULAR.getFont());
+		this.tutorial.render(FontManager.Font.PIXEL_REGULAR.getFont());
 		FontManager.Font.PIXEL_REGULAR.getFont().setScale(FontManager.Font.PIXEL_REGULAR.getFont().getScaleX() / 0.8f,
 				FontManager.Font.PIXEL_REGULAR.getFont().getScaleY() / 0.8f);
 
 		// Render the music toggle button.
-		StaticGUI.music_button.render(this.sprite_batch, ColorXv.YELLOW);
+		StaticGUI.music_button.render(ColorXv.YELLOW);
 
 		if (this.sun_fading_out) {
-			this.sprite_batch.setColor(ColorXv.YELLOW.getR(), ColorXv.YELLOW.getG(), ColorXv.YELLOW.getB(), (1.0f / 4.9f)
-					- (this.sun_timer.percentComplete() / 4.9f));
+			ResourceManager.getSpriteBatch().setColor(ColorXv.YELLOW.getR(), ColorXv.YELLOW.getG(), ColorXv.YELLOW.getB(),
+					(1.0f / 4.9f) - (this.sun_timer.percentComplete() / 4.9f));
 		} else {
-			this.sprite_batch.setColor(ColorXv.YELLOW.getR(), ColorXv.YELLOW.getG(), ColorXv.YELLOW.getB(), this.sun_timer.percentComplete() / 4.9f);
+			ResourceManager.getSpriteBatch().setColor(ColorXv.YELLOW.getR(), ColorXv.YELLOW.getG(), ColorXv.YELLOW.getB(),
+					this.sun_timer.percentComplete() / 4.9f);
 		}
-		this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.WHITE), 0, 0, ScreenUtil.screen_width,
+		ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.WHITE), 0, 0, ScreenUtil.screen_width,
 				ScreenUtil.screen_height);
-		this.sprite_batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+		ResourceManager.getSpriteBatch().setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	@Override

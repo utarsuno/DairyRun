@@ -1,13 +1,12 @@
 package com.uladzislau.dairy_run.game_state;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.game_state.GameStateManager.STATE;
 import com.uladzislau.dairy_run.gui.StaticGUI;
 import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.FontManager;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.world.Map;
 
@@ -25,9 +24,7 @@ public class Credits extends GameState {
 	private float y_offset;
 
 	@Override
-	public void initialize(ShapeRenderer shapeRenderer, SpriteBatch batch) {
-		this.shape_renderer = shapeRenderer;
-		this.sprite_batch = batch;
+	public void initialize() {
 
 		this.layer_y = new float[Map.number_of_vertical_blocks / 2 + 1];
 		for (int i = 0; i < this.layer_y.length; i++) {
@@ -96,37 +93,26 @@ public class Credits extends GameState {
 
 	@Override
 	public void render() {
-		this.sprite_batch.begin();
-
 		for (int i = 0; i < this.layer_y.length; i++) {
 			for (int j = 0; j < Map.number_of_horizontal_blocks_off_edge_included; j++) {
-				this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.CREDITS_TILE), Map.size * 2 * j,
-						(int) (this.layer_y[i]), Map.size * 2, Map.size * 2);
+				ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.CREDITS_TILE), Map.size * 2 * j, (int) (this.layer_y[i]),
+						Map.size * 2, Map.size * 2);
 			}
-			this.sprite_batch.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.LADDER), Map.size, (int) (this.layer_y[i]),
-					Map.size * 2, Map.size * 2);
+			ResourceManager.getSpriteBatch()
+					.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.LADDER), Map.size, (int) (this.layer_y[i]), Map.size * 2, Map.size * 2);
 		}
 
 		for (int i = 0; i < this.credits.length; i++) {
 
-			// if (Math.round((-this.total_y_offset + this.credits.length * Map.size * .75f + Map.size * 1.0f * i)) <
-			// ScreenUtil.screen_height
-			// && Math.round((-this.total_y_offset + this.credits.length * Map.size * .75f + Map.size * 1.0f * i)) > 0 - Map.size) {
-			// FontManager.FONT.PIXEL_REGULAR.render(this.sprite_batch, this.credits[i], ColorXv.WHITE, (int) (Map.size * 3.5f),
-			// Math.round((-this.total_y_offset + this.credits.length * Map.size * .75f + Map.size * 1.0f * i)), (int) (Map.size * .75f),
-			// false,
-			// ScreenUtil.screen_width - Map.size);
-			// }
-
-			FontManager.Font.PIXEL_REGULAR.render(this.sprite_batch, this.credits[i], ColorXv.WHITE, (int) (Map.size * 3.5f), (int) this.credits_y[i],
-					(int) (Map.size * .75f), false, ScreenUtil.screen_width - Map.size);
+			FontManager.Font.PIXEL_REGULAR.render(this.credits[i], ColorXv.WHITE, (int) (Map.size * 3.5f), (int) this.credits_y[i], (int) (Map.size * .75f), false, ScreenUtil.screen_width
+					- Map.size);
 
 		}
 
-		this.sprite_batch.draw(TextureManager.Animation_Spritesheet.CLIMBING_STAIRS.getCurrentFrame(), Map.size, Map.size, Map.size * 2, Map.size * 2);
+		ResourceManager.getSpriteBatch().draw(TextureManager.Animation_Spritesheet.CLIMBING_STAIRS.getCurrentFrame(), Map.size, Map.size, Map.size * 2, Map.size * 2);
 
-		StaticGUI.music_button.render(this.sprite_batch, ColorXv.ORANGE);
-		StaticGUI.back_button.render(this.sprite_batch, ColorXv.ORANGE);
+		StaticGUI.music_button.render(ColorXv.ORANGE);
+		StaticGUI.back_button.render(ColorXv.ORANGE);
 	}
 
 	@Override

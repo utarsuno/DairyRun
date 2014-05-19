@@ -1,8 +1,6 @@
 package com.uladzislau.dairy_run.manager;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.game_state.Level;
 import com.uladzislau.dairy_run.gui.StaticGUI;
@@ -16,8 +14,7 @@ public class ResourceManager {
 	public boolean music_initialized;
 	public boolean sound_initialized;
 
-	private ShapeRenderer shapeRenderer;
-	private SpriteBatch spriteBatch;
+	public static SpriteBatch spriteBatch;
 
 	private AudioManager audioManager;
 
@@ -38,7 +35,6 @@ public class ResourceManager {
 
 		this.audioManager = new AudioManager();
 
-		this.shapeRenderer = new ShapeRenderer();
 		this.spriteBatch = new SpriteBatch();
 
 		// Textures are created here because OpenGL context may only exist on the main thread.
@@ -60,7 +56,7 @@ public class ResourceManager {
 
 		Level.createEndlessLevel();
 
-		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
+		System.out.println("Textures + Fonts Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private Thread music_initializer = new Thread() {
@@ -69,7 +65,7 @@ public class ResourceManager {
 			for (AudioManager.MusicXv music : AudioManager.MusicXv.values()) {
 				music.initialize();
 			}
-			System.out.println("Music Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
+			System.out.println("Music Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 			ResourceManager.this.music_initialized = true;
 			Thread.currentThread().interrupt();
 			return;
@@ -82,7 +78,7 @@ public class ResourceManager {
 			for (AudioManager.SoundXv sound : AudioManager.SoundXv.values()) {
 				sound.initialize();
 			}
-			System.out.println("Sound Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms");
+			System.out.println("Sound Init Time: " + (System.currentTimeMillis() - DairyRun.start_time) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 			ResourceManager.this.sound_initialized = true;
 			Thread.currentThread().interrupt();
 			return;
@@ -92,31 +88,30 @@ public class ResourceManager {
 	public static String credits_information() {
 		String returnString = null;
 		for (TextureManager.TextureXv texture : TextureManager.TextureXv.values()) {
-			returnString += texture.getName() + "\t: " + texture.getSource();
-			returnString += "\n";
+			returnString += texture.getName() + "\t: " + texture.getSource(); //$NON-NLS-1$
+			returnString += "\n"; //$NON-NLS-1$
 		}
 		for (TextureManager.Spritesheet sprite_sheet : TextureManager.Spritesheet.values()) {
-			returnString += sprite_sheet.getName() + "\t: " + sprite_sheet.getSource();
-			returnString += "\n";
+			returnString += sprite_sheet.getName() + "\t: " + sprite_sheet.getSource(); //$NON-NLS-1$
+			returnString += "\n"; //$NON-NLS-1$
 		}
 		for (AudioManager.SoundXv sound : AudioManager.SoundXv.values()) {
-			returnString += sound.getName() + "\t: " + sound.getSource();
-			returnString += "\n";
+			returnString += sound.getName() + "\t: " + sound.getSource(); //$NON-NLS-1$
+			returnString += "\n"; //$NON-NLS-1$
 		}
 		for (AudioManager.MusicXv music : AudioManager.MusicXv.values()) {
-			returnString += music.getName() + "\t: " + music.getSource();
-			returnString += "\n";
+			returnString += music.getName() + "\t: " + music.getSource(); //$NON-NLS-1$
+			returnString += "\n"; //$NON-NLS-1$
 		}
 		for (FontManager.Font font : FontManager.Font.values()) {
-			returnString += font.getName() + "\t: " + font.getSource();
-			returnString += "\n";
+			returnString += font.getName() + "\t: " + font.getSource(); //$NON-NLS-1$
+			returnString += "\n"; //$NON-NLS-1$
 		}
 		return returnString;
 	}
 
-	public void dipose_all_resources() {
-		this.spriteBatch.dispose();
-		this.shapeRenderer.dispose();
+	public static void dipose_all_resources() {
+		spriteBatch.dispose();
 		TextureManager.TextureXv.BACKGROUND.dispose();
 		TextureManager.Spritesheet.PIXEL_SPRITESHEET.dispose();
 		for (TextureManager.Animation_Spritesheet animation_sprite_sheet : TextureManager.Animation_Spritesheet.values()) {
@@ -133,20 +128,8 @@ public class ResourceManager {
 		}
 	}
 
-	public ShapeRenderer getShapeRenderer() {
-		return this.shapeRenderer;
-	}
-
-	public void setShapeRenderer(ShapeRenderer shapeRenderer) {
-		this.shapeRenderer = shapeRenderer;
-	}
-
-	public SpriteBatch getSpriteBatch() {
-		return this.spriteBatch;
-	}
-
-	public void setSpriteBatch(SpriteBatch spriteBatch) {
-		this.spriteBatch = spriteBatch;
+	public static SpriteBatch getSpriteBatch() {
+		return spriteBatch;
 	}
 
 	public AudioManager getAudioManager() {

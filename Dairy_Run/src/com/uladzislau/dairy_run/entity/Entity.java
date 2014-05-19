@@ -1,12 +1,9 @@
 package com.uladzislau.dairy_run.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.game_state.Play;
 
 public abstract class Entity {
-
-	private SpriteBatch sprite_batch;
-
+	
 	private float x;
 	private float y;
 	private int width;
@@ -18,12 +15,11 @@ public abstract class Entity {
 		this.play = play;
 	}
 
-	public Entity(float x, float y, int width, int height, SpriteBatch sprite_batch) {
+	public Entity(float x, float y, int width, int height) {
 		setX(x);
 		setY(y);
 		setWidth(width);
 		setHeight(height);
-		setSpriteBatch(sprite_batch);
 	}
 	
 	public abstract void update(float delta);
@@ -64,14 +60,6 @@ public abstract class Entity {
 
 	public Play getPlay() {
 		return this.play;
-	}
-
-	public SpriteBatch getSpriteBatch() {
-		return this.sprite_batch;
-	}
-
-	public void setSpriteBatch(SpriteBatch sprite_batch) {
-		this.sprite_batch = sprite_batch;
 	}
 
 }

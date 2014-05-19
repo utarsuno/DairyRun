@@ -1,10 +1,10 @@
 package com.uladzislau.dairy_run.gui;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
 import com.uladzislau.dairy_run.entity.Entity;
 import com.uladzislau.dairy_run.manager.FontManager;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.math_utility.DeltaTimer;
 
 public class AnimatedText extends Entity {
@@ -22,9 +22,8 @@ public class AnimatedText extends Entity {
 	private float starting_y;
 	AnimatedTextType type;
 
-	public AnimatedText(float x, float y, float ending_y, int width, int height, String text, Color starting_color, Color ending_color, int fade_time,
-			AnimatedTextType type, SpriteBatch sprite_batch) {
-		super(x, y, width, height, sprite_batch);
+	public AnimatedText(float x, float y, float ending_y, int width, int height, String text, Color starting_color, Color ending_color, int fade_time, AnimatedTextType type) {
+		super(x, y, width, height);
 		this.text = text;
 		this.setStartingColor(starting_color);
 		this.setEndingColor(ending_color);
@@ -53,7 +52,7 @@ public class AnimatedText extends Entity {
 
 	@Override
 	public void render() {
-		FontManager.Font.PIXEL_REGULAR.render(this.getSpriteBatch(), this.text, this.current_color, (int) this.getX(), (int) this.getY(), this.getHeight());
+		FontManager.Font.PIXEL_REGULAR.render(this.text, this.current_color, (int) this.getX(), (int) this.getY(), this.getHeight(), false, -1);
 	}
 
 	public void play() {
@@ -64,9 +63,10 @@ public class AnimatedText extends Entity {
 		this.current_color.a = ColorXv.getAComponentToFrom(this.ending_color, this.starting_color, this.deltaTimer.percentComplete());
 		this.setY(this.starting_y);
 	}
-	
+
 	public void end() {
 		this.deltaTimer.end();
+		this.update(1);
 	}
 
 	public DeltaTimer getDeltaTimer() {

@@ -53,6 +53,8 @@ public class TextureManager {
 	public static final short FULL_HEART = 31 * 12 + 13;
 	public static final short HALF_FULL_HEART = 31 * 12 + 14;
 	public static final short EMPTY_HEART = 31 * 12 + 15;
+	
+	public static final short BOOT = 31 * 3 + 4;
 
 	public enum TextureXv implements Resource {
 		BACKGROUND("main_menu_hd", "brozie");
@@ -170,8 +172,8 @@ public class TextureManager {
 			this.frames = new TextureRegion[this.rows * this.cols];
 		}
 
-		Spritesheet(String name, String source, Spritesheet spritesheet, int start_pixel_x, int start_pixel_y, int cols, int rows, int x_padding,
-				int y_padding, int subimage_pixel_width, int subimage_pixel_height) {
+		Spritesheet(String name, String source, Spritesheet spritesheet, int start_pixel_x, int start_pixel_y, int cols, int rows, int x_padding, int y_padding, int subimage_pixel_width,
+				int subimage_pixel_height) {
 			this.name = name;
 			this.source = source;
 			this.spritesheet = spritesheet;
@@ -196,8 +198,7 @@ public class TextureManager {
 					int y = 0;
 					int r = 0;
 					for (int i = 0; i < this.cols * this.rows; i++) {
-						this.frames[i] = new TextureRegion(this.texture, x + this.x_padding, y + this.y_padding, this.subimage_pixel_width,
-								this.subimage_pixel_height);
+						this.frames[i] = new TextureRegion(this.texture, x + this.x_padding, y + this.y_padding, this.subimage_pixel_width, this.subimage_pixel_height);
 						r++;
 						if (r == this.rows) {
 							x = 0;
@@ -216,8 +217,8 @@ public class TextureManager {
 				int y = 0;
 				int r = 0;
 				for (int i = 0; i < this.cols * this.rows; i++) {
-					this.frames[i] = new TextureRegion(this.spritesheet.getTexture(), this.start_pixel_x + x + this.x_padding, this.start_pixel_y + y
-							+ this.y_padding, this.subimage_pixel_width, this.subimage_pixel_height);
+					this.frames[i] = new TextureRegion(this.spritesheet.getTexture(), this.start_pixel_x + x + this.x_padding, this.start_pixel_y + y + this.y_padding,
+							this.subimage_pixel_width, this.subimage_pixel_height);
 					r++;
 					if (r == this.rows) {
 						x = 0;
@@ -383,6 +384,10 @@ public class TextureManager {
 			return this.current_frame;
 		}
 
+	}
+
+	public static void render(int frame, int x, float y, int w, int h) {
+		ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(frame), x, y, w, h);
 	}
 
 }

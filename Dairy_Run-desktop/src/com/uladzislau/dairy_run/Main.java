@@ -1,6 +1,7 @@
 package com.uladzislau.dairy_run;
 
 import java.awt.GraphicsEnvironment;
+
 import java.awt.Rectangle;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;

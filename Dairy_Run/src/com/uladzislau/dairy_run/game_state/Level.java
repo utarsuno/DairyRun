@@ -24,7 +24,7 @@ public class Level {
 		ENDLESS.setStrawberryMilkButtonEnabled(true);
 		ENDLESS.setGroundTheme(GroundBlock.Theme.GRASS);
 		ENDLESS.setShowTimer(true);
-		ENDLESS.setPowerUpsGainedAt(25, 50, 100);
+		ENDLESS.setPowerUpsGainedAt(17, 31, 70);
 		ENDLESS.setScoresNeededToGainOneLife(25, 50, 100, 200, 400, 800, 1600, 3200, 6400, 12800);
 	}
 

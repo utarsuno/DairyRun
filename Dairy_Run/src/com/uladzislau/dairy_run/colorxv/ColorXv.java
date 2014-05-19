@@ -7,6 +7,7 @@ public class ColorXv {
 
 	public static final ColorXv WHITE = new ColorXv(1.0f, 1.0f, 1.0f);
 	public static final ColorXv RED = new ColorXv(1.0f, 0.0f, 0.0f);
+	public static final ColorXv PINK = new ColorXv(1.0f, 0.0f, 1.0f);
 	public static final ColorXv INDIAN_RED = new ColorXv(205.0f / 255.0f, 92.0f / 255.0f, 92.0f / 255.0f);
 	public static final ColorXv ORANGE = new ColorXv(1.0f, 0.78f, 0.0f);
 	public static final ColorXv YELLOW = new ColorXv(1.0f, 1.0f, 0.0f);
@@ -23,6 +24,8 @@ public class ColorXv {
 	public static final ColorXv BROWN = new ColorXv(139.0f / 255.0f, 69.0f / 255.0f, 19.0f / 255.0f);
 	public static final ColorXv GRAY = new ColorXv(190.0f / 255.0f, 190.0f / 255.0f, 190.0f / 255.0f, 1.0f);
 	public static final ColorXv BLACK = new ColorXv(0.0f, 0.0f, 0.0f, 1.0f);
+
+	public static final Color NEW_HIGH_SCORE_COLOR = new Color(29.0f / 255.0f, 151.0f / 255.0f, 0.0f, 1.0f);
 
 	private float r;
 	private float g;
@@ -132,7 +135,7 @@ public class ColorXv {
 
 	@Override
 	public String toString() {
-		return "R: " + this.r + "\tG: " + this.g + "\tB: " + this.b + "\tA: " + this.a;
+		return "R: " + this.r + "\tG: " + this.g + "\tB: " + this.b + "\tA: " + this.a; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	public void setTo(ColorXv colorXv) {

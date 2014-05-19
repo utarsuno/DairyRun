@@ -2,14 +2,16 @@ package com.uladzislau.dairy_run.information;
 
 public class Score {
 
-	private int milk_high_score;
-	private float velocity_high_score;
-	private int lowest_time_in_seconds;
-	private int highest_time_in_seconds;
+	private int milk_high_score = 0;
+	private float velocity_high_score = 0;
+	private int lowest_time_in_seconds = 0;
+	private int highest_time_in_seconds = 0;
+	private int highest_streak = 0;
 
 	private int current_milk_score;
 	private float current_velocity_score;
 	private int current_time_in_seconds;
+	private int current_streak;
 
 	private static int minutes_played;
 	private static int seconds_played;
@@ -19,9 +21,9 @@ public class Score {
 		minutes_played = (int) (seconds / 60.0f);
 		seconds_played = seconds - (minutes_played * 60);
 		if (seconds_played < 10) {
-			time_played = minutes_played + ":0" + seconds_played;
+			time_played = minutes_played + ":0" + seconds_played; //$NON-NLS-1$
 		} else {
-			time_played = minutes_played + ":" + seconds_played;
+			time_played = minutes_played + ":" + seconds_played; //$NON-NLS-1$
 		}
 		return time_played;
 	}
@@ -74,6 +76,21 @@ public class Score {
 			this.lowest_time_in_seconds = this.current_time_in_seconds;
 		} else if (this.current_time_in_seconds > this.highest_time_in_seconds) {
 			this.highest_time_in_seconds = this.current_time_in_seconds;
+		}
+	}
+
+	public int getHighestStreak() {
+		return this.highest_streak;
+	}
+
+	public int getCurrentStreak() {
+		return this.current_streak;
+	}
+
+	public void setCurrentStreak(int current_streak) {
+		this.current_streak = current_streak;
+		if (this.current_streak > this.highest_streak) {
+			this.highest_streak = this.current_streak;
 		}
 	}
 

@@ -1,26 +1,19 @@
 package com.uladzislau.dairy_run.entity;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.uladzislau.dairy_run.game_state.Play;
-import com.uladzislau.dairy_run.gui.Heart;
-import com.uladzislau.dairy_run.information.ScreenUtil;
 import com.uladzislau.dairy_run.manager.AudioManager;
-import com.uladzislau.dairy_run.manager.FontManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 import com.uladzislau.dairy_run.math.Dice;
 import com.uladzislau.dairy_run.math.geometry.Rectanglei;
-import com.uladzislau.dairy_run.math_utility.MathUtil;
 import com.uladzislau.dairy_run.world.Map;
 
 public class Player {
 
-	public static final byte MAX_LIFE = 5;
-
+	public static final byte DEFAULT_LIFE = 5;
 	public static final short READY_TO_SPRINT = 22;
-
 	public static final short SPRINTING = 23;
 
 	private int original_x;
@@ -38,7 +31,7 @@ public class Player {
 	private Play play;
 
 	public Player(int x, int y, Play play) {
-		this.life = MAX_LIFE;
+		this.life = DEFAULT_LIFE;
 		this.original_x = x;
 		this.scared = false;
 		this.x = x;
@@ -48,7 +41,7 @@ public class Player {
 		this.render_player = true;
 	}
 
-	public void update(float delta, int current_scroll) {
+	public void update(float delta) {
 		this.player_rectanglei.setX(this.x);
 		if (this.play.getChasers().size() != 0) {
 			this.scared = true;
@@ -64,8 +57,7 @@ public class Player {
 		}
 	}
 
-	public void render(SpriteBatch sb, int current_scroll) {
-
+	public void render(SpriteBatch sb) {
 		if (this.render_player) {
 			// Render the player.
 			if (this.scared) {
@@ -74,27 +66,13 @@ public class Player {
 				sb.draw(TextureManager.Animation_Spritesheet.WALKING.getCurrentFrame(), this.x, this.y, Map.size, Map.size);
 			}
 		}
-
-	}
-
-	public void renderPlayerStats(SpriteBatch sb, int current_scroll) {
-		// Render the current velocity.
-		FontManager.Font.PIXEL_REGULAR.render(sb, "" + MathUtil.round(this.play.getVelocity(), 2), Color.BLACK, Map.size * 0.1f, Map.size * 1.9f,
-				ScreenUtil.screen_height - Map.size * 0.9f, ScreenUtil.screen_height - Map.size * 0.1f);
-
-		// Render the current number of milks delivered.
-		FontManager.Font.PIXEL_REGULAR.render(sb, "" + getNumberOfMilksDelivered(), Color.BLACK, Map.size * 0.1f, Map.size * 0.9f, ScreenUtil.screen_height
-				- Map.size * 1.9f, ScreenUtil.screen_height - Map.size * 1.1f);
-
-		// Render the player's health at the top right of the screen.
-		Heart.render(sb, ScreenUtil.screen_width - Map.size * 3, ScreenUtil.screen_height - Map.size, this.life);
 	}
 
 	public void reset() {
 		this.x = this.original_x;
 		this.player_rectanglei.setX(this.original_x);
 		this.number_of_milks_delivered = 0;
-		this.life = MAX_LIFE;
+		this.life = DEFAULT_LIFE;
 	}
 
 	public void debugRender(ShapeRenderer sr) {

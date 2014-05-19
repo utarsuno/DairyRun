@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.uladzislau.dairy_run.DairyRun;
 import com.uladzislau.dairy_run.colorxv.ColorXv;
+import com.uladzislau.dairy_run.manager.ResourceManager;
 import com.uladzislau.dairy_run.manager.TextureManager;
 
 public class PauseButton extends CircleButton {
@@ -22,17 +23,17 @@ public class PauseButton extends CircleButton {
 	}
 
 	@Override
-	public void render(SpriteBatch sb) {
+	public void render() {
 	}
 
 	@Override
-	public void render(SpriteBatch sb, ColorXv colorXv) {
-		Color temp = sb.getColor();
-		sb.setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
+	public void render(ColorXv colorXv) {
+		Color temp = ResourceManager.getSpriteBatch().getColor();
+		ResourceManager.getSpriteBatch().setColor(colorXv.getR(), colorXv.getG(), colorXv.getB(), colorXv.getA());
 		// Render the button.
-		sb.draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.PAUSE), this.getX() - this.getRadius(), this.getY() - this.getRadius(),
-				this.getRadius() * 2, this.getRadius() * 2);
-		sb.setColor(temp);
+		ResourceManager.getSpriteBatch().draw(TextureManager.Spritesheet.PIXEL_SPRITESHEET.getFrame(TextureManager.PAUSE), this.getX() - this.getRadius(),
+				this.getY() - this.getRadius(), this.getRadius() * 2, this.getRadius() * 2);
+		ResourceManager.getSpriteBatch().setColor(temp);
 	}
 
 }
